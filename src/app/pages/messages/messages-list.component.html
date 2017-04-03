@@ -1,0 +1,89 @@
+<button class="btn btn-primary" type="button" *ngIf="messages">
+   <i class="fa fa-calendar" aria-hidden="true"></i> Thông báo  
+   <span class="badge">{{totalItems}}</span>
+</button>
+<hr/>
+<!--<button class="btn btn-primary" (click)="viewAddSchedule()">
+    <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>Add</button>-->
+<div [@flyInOut]="'in'">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+               
+                <th>Tên đăng nhập</th>
+                <th>Tiêu đề</th>
+                <th>Trạng thái</th>
+                <th>Domain</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let msg of messages">
+                <td class="text-xs-left"> {{msg.User}}</td>
+                <td class="text-xs-left">{{msg.Title}}</td>
+                <td class="text-xs-left">{{msg.Status}}</td>
+                <td class="text-xs-left">{{msg.Domain}}</td>
+                <td><a class="btn btn-success" (click)="viewMessageDetails(msg)"><i class="fa fa-pencil-square-o" ></i>Chi tiết</a></td>
+        
+
+            </tr>
+        </tbody>
+    </table>
+
+    <pagination [boundaryLinks]="true" [totalItems]="totalItems" [itemsPerPage]="itemsPerPage" [(ngModel)]="currentPage" class="pagination-sm"
+        previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" (pageChanged)="pageChanged($event)"></pagination>
+</div>
+
+<div bsModal #childModal="bs-modal" class="modal fade popup" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-lg" *ngIf="selectedMessageLoaded">
+        <div class="modal-content" style="background-color:darkcyan;">
+            <div class="modal-header">
+                <button type="button" class="close" aria-label="Close" (click)="hideChildModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+                <h4> Chi tiết thông báo: {{selectedMessage.Title}}</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post" #viewMessageForm="ngForm" *ngIf="selectedMessageLoaded" novalidate>
+                                            
+                <!--Validate-->
+                <div class="alert alert-danger" [hidden]="viewMessageForm.form.valid">
+                        <ul *ngIf="(CONTENTSInput.dirty || CONTENTSInput.touched)  && CONTENTSInput.errors">
+                            <li *ngIf="CONTENTSInput.errors.required">Nội dung không được bỏ trống</li>
+                            <li *ngIf="CONTENTSInput.errors.pattern">Nội dung phải từ 1-500 ký tự</li>
+                            
+                        </ul>
+                    </div>
+
+             <!--End Validate-->
+             <div class="form-group">
+    <label for="email">Ngày tạo:</label>
+    <input type="text" class="form-control" readonly value="{{selectedMessage.CreateDt}}"/>
+  </div>
+<div class="form-group">
+    <label for="email">Nội dung:</label>
+    <textarea type="text" class="form-control" readonly>{{selectedMessage.Content}}</textarea>
+  </div>
+  <button class="btn btn-primary" data-toggle="collapse" data-target="#feedback">Nhập phản hồi</button>
+  
+                    <div class="collapse form-group " id="feedback">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="control-label">Nhập phản hồi:</label>
+                                <input type="text" class="form-control" [(ngModel)]="this.feature.Contents" name="CONTENTS" #CONTENTSInput="ngModel"  pattern=".{1,500}" required/>
+                            </div>
+                                
+                        </div>
+                        <label class="control-label">Xác thực:</label>
+                        <re-captcha site_key="6LdYTxsUAAAAAG0lAiX0hqgQu6hVhs6PS6gadku1"></re-captcha>
+                        <button  (click)="addFeature(feature)" [disabled]="!viewMessageForm.form.valid" type="button" class="btn btn-primary">Lưu</button>
+                    </div>
+                    <hr/>          
+                    
+                    <!--<button [class.hidden]="!addingUser" [disabled]="!viewMessageForm.form.valid" (click)="addSchedule(selectedSchedules)" type="button" class="btn btn-danger">Add</button>-->
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

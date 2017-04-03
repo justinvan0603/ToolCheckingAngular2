@@ -1,0 +1,64 @@
+<!--<button class="btn btn-primary" type="button" *ngIf="users">
+   <i class="fa fa-calendar" aria-hidden="true"></i> Links  
+   <span class="badge">{{this.totalItems}}</span>
+</button>-->
+    <h4>DANH SÁCH LINK</h4>
+<hr/>
+
+    <!--<button class="btn btn-primary btn-sm" (click)="viewAddDomain()">
+    <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>Tạo domain</button>-->
+<div [@flyInOut]="'in'">
+    <div class= col-md-10>
+    <form  class="form-inline" method="post" #addOptionForm="ngForm"  novalidate>
+        <div class="alert alert-danger" [hidden]="addOptionForm.form.valid">
+       
+                        <ul *ngIf="LinkInput.dirty && !LinkInput.valid">
+                            <li *ngIf="LinkInput.errors.required">Mô tả không được bỏ trống</li>
+                            <li *ngIf="LinkInput.errors.pattern">Mô tả phải từ 1-500 ký tự</li>
+                            </ul>
+    
+                    </div>
+                    <div class="input-group">
+                <label >Link:</label>
+                <input type="text" class="form-control input-sm"  [(ngModel)]="addOptionLink.Link" name="Link" #LinkInput="ngModel" required pattern=".{1,500}"/>
+            <div class="input-group-btn" ><button style="margin-top:11%;"  [disabled]="!addOptionForm.form.valid" (click)="addNewOption(addOptionLink)" type="button" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Thêm</button></div>
+            </div>
+        
+
+
+    </form>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+               
+                <th class="col-md-7">Link</th>
+                <!--<th>Mô tả</th>
+                <th>Username</th>
+                <th>Họ tên</th>       -->
+                <th class="col-md-5">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of optionlinks">
+                <td class="text-xs-left" > {{item.Link}}</td>
+
+                <td>
+                <a class="btn btn-danger" (click)="deletOptionLink(item)"><i class="fa fa fa-trash-o" ></i>Xóa</a>
+                </td>
+        
+
+            </tr>
+        </tbody>
+    </table>
+
+    <pagination [boundaryLinks]="true" [totalItems]="totalItems" [itemsPerPage]="itemsPerPage" [(ngModel)]="currentPage" class="pagination-sm"
+        previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" (pageChanged)="pageChanged($event)"></pagination>
+
+        <div class="row">
+            <div class="col-md-12 col-md-offset-10">
+                <button (click)="saveOption()" type="button" class="btn btn-info btn-md">Lưu</button>
+            </div>
+        </div>
+</div>
+

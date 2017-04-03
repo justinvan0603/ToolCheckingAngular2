@@ -1,0 +1,70 @@
+<!--<button class="btn btn-primary" type="button" *ngIf="users">
+   <i class="fa fa-calendar" aria-hidden="true"></i> Links  
+   <span class="badge">{{this.totalItems}}</span>
+</button>-->
+    <h4>DANH SÁCH USER QUẢN LÝ</h4>
+<hr/>
+
+    <!--<button class="btn btn-primary btn-sm" (click)="viewAddDomain()">
+    <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>Tạo domain</button>-->
+<div [@flyInOut]="'in'">
+    <div class="col-md-10">
+    <form  class="form-horizontal" method="post" #addOptionForm="ngForm"  novalidate>
+        <div class="alert alert-danger" [hidden]="addOptionForm.form.valid">
+       
+                        <ul *ngIf="NotesInput.dirty && !NotesInput.valid">
+                            <li *ngIf="NotesInput.errors.required">Ghi chú không được bỏ trống</li>
+                            <li *ngIf="NotesInput.errors.pattern">Ghi chú phải từ 1-500 ký tự</li>
+                            </ul>
+    
+                    </div>
+                    <div class="form-group">
+                <label >Người quản lý:</label>
+                <select ngControl="ManageUserInput" name="ManageUser" [(ngModel)]="selectedManageUser" #ManageUserInput="ngModel" [ngModelOptions]="{standalone: true}" class="form-control input-sm" required>
+                    <option *ngFor="let usr of listManageUser" [ngValue]="usr" >{{usr.Username}}</option>
+                </select>
+                </div>
+                    <div class="form-group">
+                <label >Ghi chú:</label>
+                <input type="text" class="form-control input-sm"  [(ngModel)]="addUserDomain.NOTES" name="NOTES" #NotesInput="ngModel" required pattern=".{1,500}"/>
+                <button [disabled]="!addOptionForm.form.valid || (selectedManageUser == null ? true:false)" (click)="addNewDomainUser(addUserDomain)" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Thêm</button>
+            </div>
+
+
+    </form>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+               
+                <th class="col-md-2">Username</th>
+                <th class="col-md-4">Ghi chú</th>
+                <!--<th>Mô tả</th>
+                <th>Username</th>
+                <th>Họ tên</th>       -->
+                <th class="col-md-6">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of userdomains">
+                <td class="text-xs-left"> {{item.USER_ID}}</td>
+                <td class="text-xs-left">{{item.NOTES}}</td>
+                <td>
+                <a class="btn btn-danger" (click)="deleteDomainUser(item)"><i class="fa fa-trash-o" ></i>Xóa</a>
+                </td>
+        
+
+            </tr>
+        </tbody>
+    </table>
+
+    <pagination [boundaryLinks]="true" [totalItems]="totalItems" [itemsPerPage]="itemsPerPage" [(ngModel)]="currentPage" class="pagination-sm"
+        previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" (pageChanged)="pageChanged($event)"></pagination>
+
+        <div class="row">
+            <div class="col-md-12 col-md-offset-10">
+                <button (click)="saveOption()" type="button" class="btn btn-info">Lưu</button>
+            </div>
+        </div>
+</div>
+
