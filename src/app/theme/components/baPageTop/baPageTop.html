@@ -11,7 +11,7 @@
   <div class="user-profile clearfix">
     <div class="dropdown al-user-profile">
       <a class="profile-toggle-link dropdown-toggle" id="user-profile-dd" data-toggle="dropdown" aria-expanded="false">
-        <img src="{{ ( 'Nasta' | baProfilePicture ) }}">
+        <img src="{{ ( 'Default-Icon' | baProfilePicture ) }}">
       </a>
       <ul class="dropdown-menu top-dropdown-menu profile-dropdown" aria-labelledby="user-profile-dd">
         <li class="dropdown-item"><i class="dropdown-arr"></i></li>
@@ -20,11 +20,11 @@
         </li>
         <!--<li class="dropdown-item"><a href><i class="fa fa-user"></i>Profile</a></li>-->
         <!--<li class="dropdown-item"><a href><i class="fa fa-cog"></i>Settings</a></li>-->
-        <li class="dropdown-item"><a href><i class="fa fa-cog"></i>{{getUserName()}}</a></li>
+        <li class="dropdown-item" *ngIf="isUserLoggedIn()"><a [routerLink]="['/pages/userprofile/profiledetail']"><i class="fa fa-cog"></i>{{getUserName()}}</a></li>
 
 
         <li *ngIf="isUserLoggedIn()" class="dropdown-item">
-          <a [routerLink]="['/pages']" (click)="logout()" class="signout"><i class="fa fa-power-off"></i>Sign out</a>
+          <a [routerLink]="['/login']" (click)="logout()" class="signout"><i class="fa fa-power-off"></i>Sign out</a>
         </li>
       </ul>
     </div>

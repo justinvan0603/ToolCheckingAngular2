@@ -55,7 +55,8 @@ import {
   EqualPasswordsValidator
 } from './validators';
 import { MembershipService } from "../pages/login/membership.service";
-import { DataServiceShare } from "../pages/login/data.service";
+import { DataShareService } from "../pages/shared/services/dataShare.service";
+
 
 const NGA_COMPONENTS = [
   BaAmChart,
@@ -126,7 +127,7 @@ export class NgaModule {
         BaThemeConfigProvider,
         BaThemeConfig,
         MembershipService,
-        DataServiceShare,
+        DataShareService,
         ...NGA_VALIDATORS,
         ...NGA_SERVICES
       ],

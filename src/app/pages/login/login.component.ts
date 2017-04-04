@@ -36,7 +36,7 @@ export class Login implements OnInit {
           if (_authenticationResult.Succeeded) {
             this.notificationService.printSuccessMessage('Welcome back ' + this._user.Username + '!');
             localStorage.setItem('user', JSON.stringify(this._user));
-            this.router.navigate(['pages/tables/basictables']);
+            this.router.navigate(['pages/messages/messagelist']);
           }
           else {
             this.notificationService.printErrorMessage(_authenticationResult.Message);

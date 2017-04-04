@@ -39,6 +39,7 @@ export class BaPageTop {
   getUserName(): string {
     if (this.isUserLoggedIn()) {
       var _user = this.membershipService.getLoggedInUser();
+      
       return _user.Username;
     }
     else
