@@ -5,7 +5,7 @@ import {NgaModule} from "../../theme/nga.module";
 
 import {Login} from "./login.component";
 import {routing} from "./login.routing";
-import {DataServiceShare} from "./data.service";
+import {DataShareService} from "../shared/services/dataShare.service";
 import {MembershipService} from "./membership.service";
 import {NotificationService} from "../shared/utils/notification.service";
 import {BaseRequestOptions, Headers, RequestOptions} from "@angular/http";
@@ -23,7 +23,7 @@ import {BaseRequestOptions, Headers, RequestOptions} from "@angular/http";
     Login
   ],
   providers: [
-    DataServiceShare,
+    DataShareService,
     MembershipService,
     NotificationService
   ]

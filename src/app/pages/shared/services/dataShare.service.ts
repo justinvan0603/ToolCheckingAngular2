@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Http, Response, Headers } from '@angular/http';
 import {Body} from "@angular/http/src/body";
 @Injectable()
-export class DataServiceShare {
+export class DataShareService {
 
     public _pageSize: number;
     public _baseUri: string;

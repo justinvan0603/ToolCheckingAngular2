@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import {User} from "./user";
 import {Registration} from "./registration";
-import {DataServiceShare} from "./data.service";
+import {DataShareService} from "../shared/services/dataShare.service";
 
 @Injectable()
 export class MembershipService {
@@ -11,7 +11,7 @@ export class MembershipService {
     private _accountLoginAPI: string = 'http://localhost:9823/api/account/authenticate/';
     private _accountLogoutAPI: string = 'http://localhost:9823/api/account/logout/';
 
-    constructor(public accountService: DataServiceShare) { }
+    constructor(public accountService: DataShareService) { }
 
     register(newUser: Registration) {
 
