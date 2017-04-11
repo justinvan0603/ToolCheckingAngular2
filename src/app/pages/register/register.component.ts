@@ -3,6 +3,10 @@ import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/form
 import {EmailValidator, EqualPasswordsValidator} from '../../theme/validators';
 
 import 'style-loader!./register.scss';
+import {DataShareService} from "../shared/services/dataShare.service";
+import {NotificationService} from "../shared/services/shared/utils/notification.service";
+import {SlimLoadingBarService} from "ng2-slim-loading-bar";
+import {MembershipService} from "../login/membership.service";
 
 @Component({
   selector: 'register',
@@ -10,16 +14,20 @@ import 'style-loader!./register.scss';
 })
 export class Register {
 
-  public form:FormGroup;
-  public name:AbstractControl;
-  public email:AbstractControl;
-  public password:AbstractControl;
-  public repeatPassword:AbstractControl;
-  public passwords:FormGroup;
+  public form: FormGroup;
+  public name: AbstractControl;
+  public email: AbstractControl;
+  public password: AbstractControl;
+  public repeatPassword: AbstractControl;
+  public passwords: FormGroup;
+  private _photosAPI: string = 'http://localhost:9823/api/Account/register';
+  public submitted: boolean = false;
 
-  public submitted:boolean = false;
-
-  constructor(fb:FormBuilder) {
+  constructor(fb: FormBuilder,
+              private dataShareService: DataShareService,
+              private notificationService: NotificationService,
+              private loadingBarService: SlimLoadingBarService,
+              private membershipService:MembershipService,) {
 
     this.form = fb.group({
       'name': ['', Validators.compose([Validators.required, Validators.minLength(4)])],
@@ -37,11 +45,33 @@ export class Register {
     this.repeatPassword = this.passwords.controls['repeatPassword'];
   }
 
-  public onSubmit(values:Object):void {
+  ngOnInit() {
+
+    this.dataShareService.set(this._photosAPI, 12);
+    this.dataShareService.setToken(this.membershipService.getTokenUser());
+
+
+
+  }
+  public onSubmit(values: Object): void {
     this.submitted = true;
     if (this.form.valid) {
-      // your code goes here
-      // console.log(values);
+      this.loadingBarService.start();
+      this.dataShareService.post(values)
+        .subscribe(() => {
+            this.notificationService.printSuccessMessage('Thêm User thành công');
+            this.loadingBarService.complete();
+          },
+          error => {
+            this.loadingBarService.complete();
+            this.notificationService.printErrorMessage('Lỗi- ' + error);
+          });
+    }
+    else {
+      this.loadingBarService.start();
+      this.loadingBarService.complete();
+      this.notificationService.printErrorMessage("Lỗi - Tên miền phải chứa tiền tố 'http://' ");
     }
   }
+
 }

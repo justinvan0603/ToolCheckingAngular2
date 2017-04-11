@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
 
 import { BaMenuService } from '../theme';
-import { PAGES_MENU } from './pages.menu';
 
 @Component({
 //  moduleId: module.id,
@@ -33,12 +32,46 @@ import { PAGES_MENU } from './pages.menu';
     //     </ul>
     //<div class="al-footer-right">Created with <i class="ion-heart"></i></div>
 })
+
+
 export class Pages {
 
+ // private PAGES_MENU2: any;
+  PAGES_MENU2 = [
+    {
+      path: 'pages',
+      children: [
+
+        {
+          path: 'messages',
+          data: {
+            menu: {
+              title: 'Thông báo',
+              icon: 'ion-android-notifications-none',
+              selected: false,
+              expanded: false,
+              order: 500,
+            }
+          },
+          children: [
+            {
+              path: 'messagelist',
+              data: {
+                menu: {
+                  title: 'Danh sách thông báo',
+                }
+              }
+            }
+          ]
+        }]
+    }];
+
+  ngOnInit() {
+    this._menuService.updateMenuByRoutes(<Routes>this.PAGES_MENU2);
+  }
   constructor(private _menuService: BaMenuService,) {
   }
 
-  ngOnInit() {
-    this._menuService.updateMenuByRoutes(<Routes>PAGES_MENU);
-  }
+
+
 }

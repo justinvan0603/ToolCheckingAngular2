@@ -1,5 +1,5 @@
 <button class="btn btn-primary" type="button" *ngIf="messages">
-   <i class="fa fa-calendar" aria-hidden="true"></i> Thông báo  
+   <i class="fa fa-calendar" aria-hidden="true"></i> Thông báo
    <span class="badge">{{totalItems}}</span>
 </button>
 <hr/>
@@ -9,8 +9,8 @@
     <table class="table table-hover">
         <thead>
             <tr>
-               
-                <th>Tên đăng nhập</th>
+
+                <th>Username</th>
                 <th>Tiêu đề</th>
                 <th>Trạng thái</th>
                 <th>Domain</th>
@@ -19,19 +19,34 @@
         </thead>
         <tbody>
             <tr *ngFor="let msg of messages">
-                <td class="text-xs-left"> {{msg.User}}</td>
-                <td class="text-xs-left">{{msg.Title}}</td>
-                <td class="text-xs-left">{{msg.Status}}</td>
-                <td class="text-xs-left">{{msg.Domain}}</td>
+                <td> {{msg.User}}</td>
+                <td>{{msg.Title}}</td>
+                <td>{{msg.Status}}</td>
+                <td>{{msg.Domain}}</td>
                 <td><a class="btn btn-success" (click)="viewMessageDetails(msg)"><i class="fa fa-pencil-square-o" ></i>Chi tiết</a></td>
-        
+
 
             </tr>
         </tbody>
     </table>
 
-    <pagination [boundaryLinks]="true" [totalItems]="totalItems" [itemsPerPage]="itemsPerPage" [(ngModel)]="currentPage" class="pagination-sm"
-        previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" (pageChanged)="pageChanged($event)"></pagination>
+    <!--<pagination [boundaryLinks]="true" [totalItems]="totalItems" [itemsPerPage]="itemsPerPage" [(ngModel)]="currentPage" class="pagination-sm"-->
+        <!--previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" (pageChanged)="pageChanged($event)"></pagination>-->
+  <div class="text-center">
+    <div ng-hide="(!_pagesCount || _pagesCount < 2)" style="display:inline">
+      <ul class="pagination pagination-sm">
+        <li><a *ngIf="_page != 0_" (click)="search(0)"><<</a></li>
+        <li><a *ngIf="_page != 0" (click)="search(_page-1)"><</a></li>
+        <li *ngFor="let n of range()" [ngClass]="{active: n == _page}">
+          <a (click)="search(n)" *ngIf="n != _page">{{n+1}}</a>
+          <span *ngIf="n == _page">{{n+1}}</span>
+        </li>
+        <li><a *ngIf="_page != (_pagesCount - 1)" (click)="search(pagePlus(1))">></a></li>
+        <li><a *ngIf="_page != (_pagesCount - 1)" (click)="search(_pagesCount - 1)">>></a></li>
+      </ul>
+    </div>
+  </div>
+
 </div>
 
 <div bsModal #childModal="bs-modal" class="modal fade popup" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
@@ -45,13 +60,13 @@
             </div>
             <div class="modal-body">
                 <form method="post" #viewMessageForm="ngForm" *ngIf="selectedMessageLoaded" novalidate>
-                                            
+
                 <!--Validate-->
                 <div class="alert alert-danger" [hidden]="viewMessageForm.form.valid">
                         <ul *ngIf="(CONTENTSInput.dirty || CONTENTSInput.touched)  && CONTENTSInput.errors">
                             <li *ngIf="CONTENTSInput.errors.required">Nội dung không được bỏ trống</li>
                             <li *ngIf="CONTENTSInput.errors.pattern">Nội dung phải từ 1-500 ký tự</li>
-                            
+
                         </ul>
                     </div>
 
@@ -65,21 +80,19 @@
     <textarea type="text" class="form-control" readonly>{{selectedMessage.Content}}</textarea>
   </div>
   <button class="btn btn-primary" data-toggle="collapse" data-target="#feedback">Nhập phản hồi</button>
-  
+
                     <div class="collapse form-group " id="feedback">
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="control-label">Nhập phản hồi:</label>
+                                <label class="control-label"><i class="fa fa-user" aria-hidden="true"></i>Nhập phản hồi:</label>
                                 <input type="text" class="form-control" [(ngModel)]="this.feature.Contents" name="CONTENTS" #CONTENTSInput="ngModel"  pattern=".{1,500}" required/>
                             </div>
-                                
+
                         </div>
-                        <label class="control-label">Xác thực:</label>
-                        <re-captcha site_key="6LdYTxsUAAAAAG0lAiX0hqgQu6hVhs6PS6gadku1"></re-captcha>
                         <button  (click)="addFeature(feature)" [disabled]="!viewMessageForm.form.valid" type="button" class="btn btn-primary">Lưu</button>
                     </div>
-                    <hr/>          
-                    
+                    <hr/>
+
                     <!--<button [class.hidden]="!addingUser" [disabled]="!viewMessageForm.form.valid" (click)="addSchedule(selectedSchedules)" type="button" class="btn btn-danger">Add</button>-->
 
                 </form>

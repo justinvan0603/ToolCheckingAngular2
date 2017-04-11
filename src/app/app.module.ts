@@ -46,6 +46,15 @@ export type StoreType = {
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
+class AppBaseRequestOptions extends BaseRequestOptions {
+  headers: Headers = new Headers();
+
+  constructor() {
+    super();
+    this.headers.append('Content-Type', 'application/json');
+    this.body = '';
+  }
+}
 
 @NgModule({
   bootstrap: [App],
@@ -87,6 +96,9 @@ export type StoreType = {
     //   MappingService,
     //  NotificationService,
     //    SlimLoadingBarService
+
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
+    { provide: RequestOptions, useClass: AppBaseRequestOptions }
   ],
 })
 

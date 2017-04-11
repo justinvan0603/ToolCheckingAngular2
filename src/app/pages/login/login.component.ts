@@ -7,6 +7,7 @@ import {NotificationService} from "../shared/utils/notification.service";
 import {Router} from "@angular/router";
 import {MembershipService} from "./membership.service";
 import {OperationResult} from "./operationResult";
+import {OperationTokenResult} from "./operationTokenResult";
 
 @Component({
   selector: 'login',
@@ -24,18 +25,21 @@ export class Login implements OnInit {
   }
 
   login(): void {
-    var _authenticationResult: OperationResult = new OperationResult(false, '');
-
+    var _authenticationResult: OperationTokenResult = new OperationTokenResult(false, '','','');
+   // var token:string;
     this.membershipService.login(this._user)
       .subscribe(res => {
           _authenticationResult.Succeeded = res.Succeeded;
           _authenticationResult.Message = res.Message;
+          _authenticationResult.Access_token=res.access_token;
+          _authenticationResult.Expires_in =res.expires_in;
         },
         error => console.error('Error: ' + error),
         () => {
           if (_authenticationResult.Succeeded) {
             this.notificationService.printSuccessMessage('Welcome back ' + this._user.Username + '!');
             localStorage.setItem('user', JSON.stringify(this._user));
+            localStorage.setItem('access_token', _authenticationResult.Access_token);
             this.router.navigate(['pages/messages/messagelist']);
           }
           else {

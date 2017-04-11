@@ -48,4 +48,14 @@ export class MembershipService {
 
         return _user;
     }
+
+  getTokenUser(): string {
+    var _token: string;
+
+    if (this.isUserAuthenticated()) {
+      _token = localStorage.getItem('access_token');
+    }
+
+    return _token;
+  }
 }

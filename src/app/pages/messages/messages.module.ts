@@ -24,6 +24,8 @@ import { DataService } from "./message.service";
 import { FeatureService } from "./feature.service"
 import { ShareModule } from "../shared/shares.module";
 import {ReCaptchaModule } from 'angular2-recaptcha';
+import {DataShareService} from "../shared/services/dataShare.service";
+import {UtilityService} from "../shared/services/utility.service";
 @NgModule({
   imports: [
     CommonModule,
@@ -47,11 +49,15 @@ import {ReCaptchaModule } from 'angular2-recaptcha';
   providers: [
    // ConfigService,
     DataService,
+
    // ItemsService,
    // MappingService,
    // NotificationService,
    // SlimLoadingBarService,
-    FeatureService
+    FeatureService,
+
+    DataShareService,
+    UtilityService
   ],
  // exports:[DateFormatPipe]
 })

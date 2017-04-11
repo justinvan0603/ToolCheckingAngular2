@@ -2,12 +2,13 @@
 import { Observable } from 'rxjs/Observable';
 import { Http, Response, Headers } from '@angular/http';
 import {Body} from "@angular/http/src/body";
+import {MembershipService} from "../../login/membership.service";
 @Injectable()
 export class DataShareService {
 
     public _pageSize: number;
     public _baseUri: string;
-
+    public _token:string;
     constructor(public http: Http) {
 
     }
@@ -17,16 +18,24 @@ export class DataShareService {
         this._pageSize = pageSize;
     }
 
-    get(page: number) {
+    setToken(token:string):void{
 
-   //   let headers = new Headers();
-  //    headers.append('Content-Type', 'application/json');
-    //  let body = new Body();
+      this._token=token;
+
+    }
+
+    get(page: number) {
+      console.log("Bearer "+this._token);
+     let headers = new Headers();
+     headers.append('Content-Type', 'application/json');
+     headers.append('Authorization','Bearer '+this._token);
 
         var uri = this._baseUri + page.toString() + '/' + this._pageSize.toString();
 
       console.log(uri);
-        return this.http.get(uri)
+        return this.http.get(uri, {
+          headers: headers
+        })
             .map(response => (<Response>response));
     }
 

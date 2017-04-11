@@ -1,8 +1,10 @@
+
+
 export const PAGES_MENU = [
   {
     path: 'pages',
     children: [
-     
+
       {
         path: 'messages',
         data: {
@@ -25,7 +27,7 @@ export const PAGES_MENU = [
           }
         ]
       },
-      
+
       {
         path: 'users',
         data: {
@@ -104,7 +106,7 @@ export const PAGES_MENU = [
           }
         },
 
-   
+
 
         children: [
           {
@@ -154,7 +156,7 @@ export const PAGES_MENU = [
               }
             }
           }
-        
+
         ]
       },
 
