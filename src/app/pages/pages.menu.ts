@@ -40,11 +40,37 @@ export const PAGES_MENU = [
           }
         },
         children: [
+          // {
+          //   path: 'userlist',
+          //   data: {
+          //     menu: {
+          //       title: 'Danh sách User',
+          //     }
+          //   }
+          // }
+          // ,
           {
-            path: 'userlist',
+            path: 'usergroup',
             data: {
               menu: {
-                title: 'Danh sách User',
+                title: 'Nhóm người dùng',
+              }
+            }
+          }
+          ,
+          {
+            path: 'usermanager',
+            data: {
+              menu: {
+                title: 'User',
+              }
+            }
+          } ,
+          {
+            path: 'userrole',
+            data: {
+              menu: {
+                title: 'Role',
               }
             }
           }

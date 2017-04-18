@@ -22,7 +22,13 @@ import { ConfigService } from "../shared/utils/config.service";
 import { Users } from "./users.component";
 import { DataService } from "./user.service";
 import { ShareModule } from "../shared/shares.module";
-
+import {UserManagerService} from "./user-manager.service";
+import {UserManagerComponent} from "./users-manager.component";
+import {UserGroupService} from "./user-group.service";
+import {ApplicationGroupComponent} from "./users-group.component";
+import {ApplicationRoleComponent} from "./users-role.component";
+import {UserRoleService} from "./user-role.service";
+import { ChecklistDirective } from 'ng2-checklist';
 
 @NgModule({
   imports: [
@@ -37,7 +43,11 @@ import { ShareModule } from "../shared/shares.module";
   ],
   declarations: [
     Users,
-    UserListComponent,  
+    UserListComponent,
+    UserManagerComponent,
+    ApplicationGroupComponent,
+    ApplicationRoleComponent
+
    // HighlightDirective,
   //  MobileHideDirective,
   //  SlimLoadingBarComponent
@@ -45,12 +55,16 @@ import { ShareModule } from "../shared/shares.module";
   providers: [
   //  ConfigService,
   DataService,
+    UserManagerService,
+    UserGroupService,
+    UserRoleService
   //  ItemsService,
    // MappingService,
    // NotificationService,
    // SlimLoadingBarService,
 
   ],
+
   //exports:[DateFormatPipe]
 })
 export class UserModule {

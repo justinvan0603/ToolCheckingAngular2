@@ -1,6 +1,7 @@
-export class User {
-  Id: number;
-  Username: string;
+import {ApplicationGroup} from "./applicationGroup";
+export class UserManager {
+  Id: string;
+  UserName: string;
   Fullname: string;
   Password: string;
   Email: string;
@@ -16,12 +17,17 @@ export class User {
   CheckerId: string;
   EditorId: string;
   Apptoken: string;
+
+  // Groups : string;
+  Groups: ApplicationGroup[];
+
+
   Domain: string;
   DomainDesc: string;
 
   constructor() {
-    this.Id = 0;
-    this.Username = '';
+    this.Id = '';
+    this.UserName = '';
     this.Fullname = '';
     this.Password = '';
     this.Email = '';
@@ -39,6 +45,7 @@ export class User {
     this.Apptoken = '';
     this.Domain = '';
     this.DomainDesc = '';
-
+    //   this.Groups='';
+    this.Groups = new Array<ApplicationGroup>();
   }
 }
