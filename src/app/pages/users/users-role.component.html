@@ -11,13 +11,14 @@
         <thead>
             <tr>
 
-                <th>Tên nhóm</th>
+                <th>Tên quyền</th>
+                <!--<th>Tên nhóm</th>-->
                 <th>Thao tác</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let usr of users">
-              <td class="text-xs-left"> {{usr.Id}}</td>
+              <!--<td class="text-xs-left"> {{usr.Id}}</td>-->
                 <td class="text-xs-left"> {{usr.Name}}</td>
                 <td><a class="btn btn-warning" (click)="viewDetails(usr)"><i class="fa fa-pencil-square-o" ></i> Cập nhật</a>
                 <a class="btn btn-danger" (click)="delete(usr)"><i class="fa fa-trash-o" ></i> Xóa</a>
