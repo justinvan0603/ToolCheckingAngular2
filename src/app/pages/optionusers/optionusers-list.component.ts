@@ -4,7 +4,7 @@ import {
     state,
     style,
     animate,
-    transition
+    transition, AfterViewChecked
 } from '@angular/core';
 
 import { ModalDirective } from 'ng2-bootstrap';
@@ -29,6 +29,7 @@ import { OptionUserService } from "./optionusers.service";
 import { DomainUserService } from "./domainuser.service";
 import { ManageUserService } from "../domains/manageuser.service";
 import { ManageUser } from "../domains/manageuser";
+import { NgForm } from "@angular/forms";
 
 
 @Component({
@@ -55,14 +56,15 @@ import { ManageUser } from "../domains/manageuser";
         ])
     ]
 })
-export class OptionUserListComponent {
+export class OptionUserListComponent  implements AfterViewChecked{
     //@ViewChild('childModal') public childModal: ModalDirective;
     userdomains: Array<UserDomain>;
     selecteduserDomain: UserDomain;
     domainid : string;
     apiHost: string;
     currentOptionSearch : OptionSearchObject;
-
+    addOptionForm : NgForm;
+    @ViewChild('addOptionForm') currentForm: NgForm;
     public itemsPerPage: number = 10;
     public totalItems: number = 0;
     public currentPage: number = 1;
@@ -84,7 +86,17 @@ export class OptionUserListComponent {
     backdrop: string | boolean = true;
     onEdit: boolean = false;
    // public addingDomain: boolean = false;
-    
+    formErrors = {
+        'NOTES': ''
+ 
+    };
+    public isValid: boolean = true;
+    validationMessages = {
+    'NOTES': {
+      'required':      'Mô tả không được để trống', 
+      'maxlength':     'Mô tả phải từ 1-500 ký tự',
+        }
+    };
     constructor(
         private dataService: OptionUserService,
         private itemsService: ItemsService,
@@ -105,6 +117,39 @@ export class OptionUserListComponent {
         this.loadOption();
         this.loadManageUsers();
         
+    }
+    ngAfterViewChecked(): void {
+            this.formChanged();
+    }
+    formChanged()
+    {
+         if (this.currentForm === this.addOptionForm) { return; }
+         this.addOptionForm = this.currentForm;
+         if(this.addOptionForm)
+         {
+            this.addOptionForm.valueChanges
+                .subscribe(data => this.onValueChanged(data));
+         }
+    }
+    onValueChanged(data?: any)
+    {
+        if (!this.addOptionForm) { return; }
+        const form = this.addOptionForm.form;
+        this.isValid = true;
+        for (const field in this.formErrors) 
+        {
+            this.formErrors[field] = '';
+            const control = form.get(field);
+            if (control && control.dirty && !control.valid) 
+            {
+                this.isValid = false;
+                const messages = this.validationMessages[field];
+                for (const key in control.errors) 
+                {
+                    this.formErrors[field] += messages[key] + ' ';
+                }
+            }
+        }
     }
     loadManageUsers()
     {
@@ -131,13 +176,26 @@ export class OptionUserListComponent {
     }
     saveOption()
     {
+        if(this.userdomains.length == 0)
+        {
+            this.notificationService.printErrorMessage("Lỗi: Phải có ít nhất một user quản lý");
+            return;
+        }
          let updObject = new UserDomainUpdateObject();
          updObject.DOMAINUSER = this.userdomains;
          updObject.IsEditLink = '0';
          updObject.IsEditUser = '1';
          updObject.OPTION = this.currentOptionSearch;
-         this.domainUserService.updateUserDomain(updObject).subscribe(() => {
-                this.notificationService.printSuccessMessage('User domain đã được cập nhật');
+         this.domainUserService.updateUserDomain(updObject).subscribe(res => {
+             if(res.Succeeded)
+             {
+                 this.notificationService.printSuccessMessage(res.Message);
+             }
+             else
+             {
+                 this.notificationService.printErrorMessage(res.Message);
+             }
+                
                 this.loadingBarService.complete();
             },
             error => {
@@ -168,11 +226,22 @@ export class OptionUserListComponent {
     };
 
     addNewDomainUser(usrdomain: UserDomain) {
+        let duplicateObj  = this.userdomains.find(usr => usr.USER_ID ==this.selectedManageUser.Username);
+        console.log(duplicateObj);
+        if(duplicateObj != null)
+        {
+            this.loadingBarService.start();
+            this.loadingBarService.complete();
+            this.notificationService.printErrorMessage('User đã tồn tại trong danh sách!' );
+            return;
+        }
+        //console.log(usrdomain);
         let newItem = new UserDomain();
-        newItem.DOMAIN_ID = usrdomain.DOMAIN_ID;
-        newItem.NOTES = usrdomain.NOTES;
+        newItem.DOMAIN_ID = this.currentOptionSearch.DOMAIN_ID;
+        newItem.NOTES = this.addUserDomain.NOTES;
         newItem.USER_ID = this.selectedManageUser.Username;
         newItem.USERID = this.selectedManageUser.Id;
+        console.log(newItem);
         this.itemsService.addItemToStart(this.userdomains,newItem);
 
 

@@ -20,7 +20,7 @@ export class DataService {
         this._baseUrl = configService.getApiURI()+ 'Users';
     }
    
-    getUsers(page?: number, itemsPerPage?: number): Observable<PaginatedResult<User[]>> {
+    getUsers(page?: number, itemsPerPage?: number,parentid? : number, parentname?: string): Observable<PaginatedResult<User[]>> {
         var peginatedResult: PaginatedResult<User[]> = new PaginatedResult<User[]>();
 
         let headers = new Headers();
@@ -28,7 +28,7 @@ export class DataService {
             headers.append('Pagination', page + ',' + itemsPerPage);
         }
 
-        return this.http.get(this._baseUrl +'?parentid=1056&parentname=thieu1234', {
+        return this.http.get(this._baseUrl +'?parentid=' + parentid + '&parentname=' +parentname, {
             headers: headers
         })
             .map((res: Response) => {

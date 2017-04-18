@@ -94,84 +94,84 @@ export const PAGES_MENU = [
           }
         ]
       },
-      {
-        path: 'tables',
-        data: {
-          menu: {
-            title: 'Tables',
-            icon: 'ion-grid',
-            selected: false,
-            expanded: false,
-            order: 500,
-          }
-        },
+      // {
+      //   path: 'tables',
+      //   data: {
+      //     menu: {
+      //       title: 'Tables',
+      //       icon: 'ion-grid',
+      //       selected: false,
+      //       expanded: false,
+      //       order: 500,
+      //     }
+      //   },
 
 
 
-        children: [
-          {
-            path: 'basictables',
-            data: {
-              menu: {
-                title: 'Basic Tables',
-              }
-            }
-          },
-          {
-            path: 'smarttables',
-            data: {
-              menu: {
-                title: 'Smart Tables',
-              }
-            }
-          }
-        ]
-      },
+      //   children: [
+      //     {
+      //       path: 'basictables',
+      //       data: {
+      //         menu: {
+      //           title: 'Basic Tables',
+      //         }
+      //       }
+      //     },
+      //     {
+      //       path: 'smarttables',
+      //       data: {
+      //         menu: {
+      //           title: 'Smart Tables',
+      //         }
+      //       }
+      //     }
+      //   ]
+      // },
 
-      {
-        path: '',
-        data: {
-          menu: {
-            title: 'Pages',
-            icon: 'ion-document',
-            selected: false,
-            expanded: false,
-            order: 650,
-          }
-        },
-        children: [
-          {
-            path: ['/login'],
-            data: {
-              menu: {
-                title: 'Login'
-              }
-            }
-          },
-          {
-            path: ['/register'],
-            data: {
-              menu: {
-                title: 'Register'
-              }
-            }
-          }
+    //   {
+    //     path: '',
+    //     data: {
+    //       menu: {
+    //         title: 'Pages',
+    //         icon: 'ion-document',
+    //         selected: false,
+    //         expanded: false,
+    //         order: 650,
+    //       }
+    //     },
+    //     children: [
+    //       {
+    //         path: ['/login'],
+    //         data: {
+    //           menu: {
+    //             title: 'Login'
+    //           }
+    //         }
+    //       },
+    //       {
+    //         path: ['/register'],
+    //         data: {
+    //           menu: {
+    //             title: 'Register'
+    //           }
+    //         }
+    //       }
 
-        ]
-      },
+    //     ]
+    //   },
 
-      {
-        path: '',
-        data: {
-          menu: {
-            title: 'External Link',
-            url: 'http://akveo.com',
-            icon: 'ion-android-exit',
-            order: 800,
-            target: '_blank'
-          }
-        }
-     }
+    //   {
+    //     path: '',
+    //     data: {
+    //       menu: {
+    //         title: 'External Link',
+    //         url: 'http://akveo.com',
+    //         icon: 'ion-android-exit',
+    //         order: 800,
+    //         target: '_blank'
+    //       }
+    //     }
+    //  }
 
 
     ]

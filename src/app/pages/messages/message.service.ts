@@ -13,13 +13,39 @@ import { Message } from "./message";
 export class DataService {
 
     _baseUrl: string = '';
-
+    public _token:string;
+public _pageSize: number;
     constructor(private http: Http,
         private itemsService: ItemsService,
         private configService: ConfigService) {
-        this._baseUrl = configService.getApiURI()+ 'Messages';
+        this._baseUrl = configService.getApiURI()+ 'Messages/';
     }
-   
+
+    setToken(token:string):void{
+
+      this._token=token;
+
+    }
+    set(pageSize?: number): void {
+      
+        this._pageSize = pageSize;
+    }
+
+   getMessagesByUsername(page: number, username: string, searchString? : string)
+    {
+        console.log("Bearer "+this._token);
+     let headers = new Headers();
+     headers.append('Content-Type', 'application/json');
+     headers.append('Authorization','Bearer '+this._token);
+
+        var uri = this._baseUrl + page.toString() + '/' + this._pageSize.toString() + '/' + username + '/' + searchString;
+
+      console.log(uri);
+        return this.http.get(uri, {
+          headers: headers
+        })
+            .map(response => (<Response>response));
+    }
     getMessages(page?: number, itemsPerPage?: number): Observable<PaginatedResult<Message[]>> {
         var peginatedResult: PaginatedResult<Message[]> = new PaginatedResult<Message[]>();
 

@@ -23,7 +23,7 @@ export class FeatureService {
 
 
 
-    createFeedback(feature: Feature): Observable<Feature> {
+    createFeedback(feature: Feature): Observable<any> {
         
         console.log(feature);
         let headers = new Headers();
@@ -32,9 +32,7 @@ export class FeatureService {
         return this.http.post(this._baseUrl, JSON.stringify(feature), {
             headers: headers
         })
-            .map((res: Response) => {
-                return res.json();
-            })
+            .map(res => <any>(<Response>res).json())
             .catch(this.handleError);
     }
 

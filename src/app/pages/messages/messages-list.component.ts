@@ -4,7 +4,7 @@ import {
     state,
     style,
     animate,
-    transition
+    transition, AfterViewChecked
 } from '@angular/core';
 
 import { ModalDirective } from 'ng2-bootstrap';
@@ -25,6 +25,8 @@ import { DataShareService } from "../shared/services/dataShare.service";
 import {Paginated} from "./paginated";
 import {Subscription} from "rxjs";
 import {MembershipService} from "../login/membership.service";
+import { ReCaptchaComponent } from "angular2-recaptcha";
+import { NgForm } from "@angular/forms";
 @Component({
     // moduleId: module.id,
 
@@ -49,12 +51,15 @@ import {MembershipService} from "../login/membership.service";
         ])
     ]
 })
-export class MessageListComponent extends Paginated{
+export class MessageListComponent extends Paginated implements AfterViewChecked {
+    viewMessageForm : NgForm;
+    @ViewChild('viewMessageForm') currentForm: NgForm;
+    @ViewChild(ReCaptchaComponent) captcha: ReCaptchaComponent;
     @ViewChild('childModal') public childModal: ModalDirective;
     messages: Message[];
     selectedMessage: Message;
     apiHost: string;
-
+    public searchString : string;
     public itemsPerPage: number = 10;
     public totalItems: number = 0;
     public currentPage: number = 1;
@@ -75,18 +80,29 @@ export class MessageListComponent extends Paginated{
     backdrop: string | boolean = true;
     onEdit: boolean = false;
     addingUser: boolean = false;
-     private _photosAPI: string = 'http://localhost:9823/api/Messages/';
+     private _messageApiUrl: string = 'http://localhost:9823/api/Messages/';
   private _displayingTotal: number;
-  private sub: Subscription
+  private sub: Subscription;
+  formErrors = {
+    'CONTENTS': ''
+ 
+  };
+  public isValid: boolean = true;
+  validationMessages = {
+    'CONTENTS': {
+      'required':      'Nội dung không được để trống', 
+      'maxlength':     'Nội dung phải từ 1-500 ký tự',
+    }
+  };
     constructor(
      //   private dataService: DataService,
      //   private itemsService: ItemsService,
-      //  private configService: ConfigService,
+        private configService: ConfigService,
         private notificationService: NotificationService,
         private loadingBarService: SlimLoadingBarService,
         private featureService: FeatureService,
         public utilityService: UtilityService,
-        private dataShareService: DataShareService,
+        private dataShareService: DataService,
         private membershipService:MembershipService,
   private route: ActivatedRoute,
   private router: Router
@@ -94,16 +110,16 @@ export class MessageListComponent extends Paginated{
     {
       super(0, 0, 0);
       this.feature = new Feature();
-
+      this._messageApiUrl = configService.getApiURI() + 'Messages/';
     }
 
     ngOnInit() {
        // this.apiHost = this.configService.getApiHost();
       this.sub = this.route.params.subscribe(params => {
-        this.dataShareService.set(this._photosAPI, 12);
+        this.dataShareService.set( 12);
         this.dataShareService.setToken(this.membershipService.getTokenUser());
 
-        this.loadMessages();
+        this.loadMessages('');
 
         //this.cleanFeature();
         //this.feature = new Feature();
@@ -112,9 +128,43 @@ export class MessageListComponent extends Paginated{
 
 
     }
-
-    loadMessages() {
-       this.dataShareService.get(this._page)
+    
+    ngAfterViewChecked(): void {
+            this.formChanged();
+    }
+    formChanged()
+    {
+         if (this.currentForm === this.viewMessageForm) { return; }
+         this.viewMessageForm = this.currentForm;
+         if(this.viewMessageForm)
+         {
+            this.viewMessageForm.valueChanges
+                .subscribe(data => this.onValueChanged(data));
+         }
+    }
+    onValueChanged(data?: any)
+    {
+        if (!this.viewMessageForm) { return; }
+        const form = this.viewMessageForm.form;
+        this.isValid = true;
+        for (const field in this.formErrors) 
+        {
+            this.formErrors[field] = '';
+            const control = form.get(field);
+            if (control && control.dirty && !control.valid) 
+            {
+                this.isValid = false;
+                const messages = this.validationMessages[field];
+                for (const key in control.errors) 
+                {
+                    this.formErrors[field] += messages[key] + ' ';
+                }
+            }
+        }
+    }
+    loadMessages(searchString?:string) {
+        //var _userData = JSON.parse(localStorage.getItem('user'));
+       this.dataShareService.getMessagesByUsername(this._page,'thieu1234',searchString)
             .subscribe(res => {
 
                 var data: any = res.json();
@@ -168,23 +218,52 @@ export class MessageListComponent extends Paginated{
   //Thêm hàm này
   search(i): void {
     super.search(i);
-    this.loadMessages();
+    this.loadMessages('');
   };
+    searchitem(searchstring: string)
+    {
+        if(!searchstring)
+            searchstring = '';
+        this.loadMessages(searchstring);
+    }
 
     addFeature(feature: Feature) {
-        console.log(feature);
+        // console.log(feature);
+        // this.loadingBarService.start();
+        feature.RecordStatus = '1';
+        feature.AuthStatus = 'U';
+        feature.Resource = this.selectedMessage.Id.toString();
+        let captcharesponse = this.captcha.getResponse();
         this.loadingBarService.start();
+        if(captcharesponse == null || captcharesponse === '')
+        {
+            this.loadingBarService.complete();
+            this.notificationService.printErrorMessage('Vui lòng xác thực Captcha!');
+        }
+        else
+        {
         this.featureService.createFeedback(feature)
-            .subscribe(() => {
-                this.notificationService.printSuccessMessage('Thêm feedback thành công');
+            .subscribe(res => {
+                if(res.Succeeded)
+                {
+                    this.notificationService.printSuccessMessage(res.Message);
+                    this.feature =new Feature();
+                    
+                }
+                else
+                {
+                    this.notificationService.printErrorMessage(res.Message);
+                }
+                this.captcha.reset();
                 this.loadingBarService.complete();
-                this.feature =new Feature();
+                
             },
             error => {
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Lỗi- ' + error);
             });
 
+        }
     }
 
 
@@ -192,6 +271,7 @@ export class MessageListComponent extends Paginated{
 
 
     public viewMessageDetails(msg: Message): void {
+        
         this.addingUser = false;
         this.selectedMessage = new Message();
         this.selectedMessage = msg;
@@ -200,11 +280,20 @@ export class MessageListComponent extends Paginated{
         this.selectedMessageLoaded = true;
 
         this.feature.Resource = msg.Id.toString();
+        
         this.childModal.show();
+        let captcharesponse = this.captcha.getResponse();
+        if(!(captcharesponse == null || captcharesponse === ''))
+            this.captcha.reset();
     }
 
 
     public hideChildModal(): void {
+        let captcharesponse = this.captcha.getResponse();
+        if(!(captcharesponse == null || captcharesponse === ''))
+            this.captcha.reset();
         this.childModal.hide();
+        
+        
     }
 }

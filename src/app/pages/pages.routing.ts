@@ -23,7 +23,7 @@ export const routes: Routes = [
     component: Pages,
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
-   
+   { path: 'fileupload', loadChildren: 'app/pages/uploadfile/uploadfile.module#UploadFileModule' },
       { path: 'userprofile', loadChildren: 'app/pages/userprofile/userprofile.module#UserProfileModule' },
       { path: 'users', loadChildren: 'app/pages/users/users.module#UserModule' },
       { path: 'messages', loadChildren: 'app/pages/messages/messages.module#MessageModule' },

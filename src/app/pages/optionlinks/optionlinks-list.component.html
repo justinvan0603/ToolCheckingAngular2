@@ -10,12 +10,14 @@
 <div [@flyInOut]="'in'">
     <div class= col-md-10>
     <form  class="form-inline" method="post" #addOptionForm="ngForm"  novalidate>
-        <div class="alert alert-danger" [hidden]="addOptionForm.form.valid">
-       
-                        <ul *ngIf="LinkInput.dirty && !LinkInput.valid">
-                            <li *ngIf="LinkInput.errors.required">Mô tả không được bỏ trống</li>
-                            <li *ngIf="LinkInput.errors.pattern">Mô tả phải từ 1-500 ký tự</li>
-                            </ul>
+        <div class="alert alert-danger" [hidden]="isValid">
+            <ul *ngIf = "formErrors.Link">
+                <li>{{formErrors.Link}}</li>
+            </ul>
+                        <!--<ul *ngIf="LinkInput.dirty && !LinkInput.valid">
+                            <li *ngIf="LinkInput.errors.required">Link không được bỏ trống</li>
+                            <li *ngIf="LinkInput.errors.pattern">Link phải từ 1-500 ký tự</li>
+                            </ul>-->
     
                     </div>
                     <div class="input-group">
@@ -56,7 +58,7 @@
         previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" (pageChanged)="pageChanged($event)"></pagination>
 
         <div class="row">
-            <div class="col-md-12 col-md-offset-10">
+            <div class="col-md-12 col-md-offset-9">
                 <button (click)="saveOption()" type="button" class="btn btn-info btn-md">Lưu</button>
             </div>
         </div>

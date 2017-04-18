@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
 
 import { BaMenuService } from '../theme';
+import { PAGES_MENU } from "./pages.menu";
 
 @Component({
 //  moduleId: module.id,
@@ -64,10 +65,37 @@ export class Pages {
             }
           ]
         }]
+    },
+    {
+      path: '',
+      children: [
+
+        {
+          path: 'fileupload',
+          data: {
+            menu: {
+              title: 'Upload',
+              icon: 'ion-android-notifications-none',
+              selected: false,
+              expanded: false,
+              order: 500,
+            }
+          },
+          children: [
+            {
+              path: 'fileuploadpage',
+              data: {
+                menu: {
+                  title: 'Upload File',
+                }
+              }
+            }
+          ]
+        }]
     }];
 
   ngOnInit() {
-    this._menuService.updateMenuByRoutes(<Routes>this.PAGES_MENU2);
+    this._menuService.updateMenuByRoutes(<Routes>PAGES_MENU);
   }
   constructor(private _menuService: BaMenuService,) {
   }

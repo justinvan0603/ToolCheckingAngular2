@@ -14,6 +14,7 @@ import { ItemsService } from "../shared/utils/items.service";
 import { ConfigService } from "../shared/utils/config.service";
 import { PaginatedResult, Pagination } from "../shared/interfaces";
 import { OptionLinkUpdateObject } from "./optionupdateobject";
+import { OptionSearchObject } from "./optionsearch";
 
 @Injectable()
 export class OptionService {
@@ -25,7 +26,7 @@ export class OptionService {
         private configService: ConfigService) {
         this._baseUrl = configService.getApiURI()+ 'Options';
     }
-   getOption(domain: string)
+   getOption(domain: string) :Observable<OptionSearchObject>
    {
         let headers = new Headers();
          headers.append('Content-Type', 'application/json');
@@ -35,7 +36,7 @@ export class OptionService {
             })
             .catch(this.handleError);
    }
-   updateOption(option:OptionLinkUpdateObject)
+   updateOption(option:OptionLinkUpdateObject) : Observable<any>
    {
             let headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -43,9 +44,7 @@ export class OptionService {
         return this.http.put(this._baseUrl + '/' + option.OPTION.ID, JSON.stringify(option), {
             headers: headers
         })
-            .map((res: Response) => {
-                return;
-            })
+            .map(res => <any>(<Response>res).json())
             .catch(this.handleError);
    }
     // getOptionLinks(domain: string,page?: number, itemsPerPage?: number): Observable<PaginatedResult<Option[]>> {

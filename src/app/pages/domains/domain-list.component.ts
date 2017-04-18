@@ -4,7 +4,7 @@ import {
     state,
     style,
     animate,
-    transition
+    transition, AfterViewChecked
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalDirective } from 'ng2-bootstrap';
@@ -19,6 +19,7 @@ import { Domain } from "./domain";
 import { DataService } from "./domains.service";
 import { ManageUser } from "./manageuser";
 import { ManageUserService } from "./manageuser.service";
+import { NgForm } from "@angular/forms";
 
 @Component({
     // moduleId: module.id,
@@ -46,7 +47,9 @@ import { ManageUserService } from "./manageuser.service";
     ],
     
 })
-export class DomainListComponent {
+export class DomainListComponent implements AfterViewChecked {
+    viewDomainForm : NgForm;
+    @ViewChild('viewDomainForm') currentForm: NgForm;
     @ViewChild('childModal') public childModal: ModalDirective;
     domains: Domain[];
     selectedDomain: Domain;
@@ -56,7 +59,7 @@ export class DomainListComponent {
     public itemsPerPage: number = 10;
     public totalItems: number = 0;
     public currentPage: number = 1;
-    
+    public searchString : string;
     public addDomain:Domain;
     // Modal properties
     @ViewChild('modal')
@@ -74,6 +77,22 @@ export class DomainListComponent {
     onEdit: boolean = false;
     public addingDomain: boolean = false;
     public static DOMAIN_PREFIX = "http://";
+    formErrors = {
+    'DOMAIN': '',
+    'DESCRIPTION' : ''
+ 
+  };
+  public isValid: boolean = true;
+  validationMessages = {
+    'DOMAIN': {
+      'required':      'Tên miền không được để trống', 
+      'maxlength':     'Tên miền phải từ 1-200 ký tự',
+    },
+    'DESCRIPTION': {
+      'required':      'Mô tả không được để trống', 
+      'maxlength':     'Mô tả phải từ 1-200 ký tự',
+    }
+  };
     constructor(
         private dataService: DataService,
         private itemsService: ItemsService,
@@ -81,30 +100,38 @@ export class DomainListComponent {
         private configService: ConfigService,
         private loadingBarService: SlimLoadingBarService,
         private manageUserService: ManageUserService
-        ) {this.addDomain = new Domain();  }
+        ) {this.addDomain = new Domain(); 
+        this.searchString = ''; }
 
     ngOnInit() {
         this.apiHost = this.configService.getApiHost();
-        this.loadDomains();
+        this.loadDomains('');
         this.loadManageUsers();
         
     }
+    search(searchstring: string)
+    {
+        
+        this.loadDomains(searchstring);
+    }
     loadManageUsers()
     {
-        this.manageUserService.getManageUsers(1056).subscribe((data:ManageUser[]) => {
+        this.manageUserService.getManageUsers(null,'thieu1234').subscribe((data:ManageUser[]) => {
                 this.listManageUser = data;
                 console.log(this.listManageUser);
                 this.loadingBarService.complete();
+                this.selectedManageUser = this.listManageUser[this.listManageUser.length-1];
             },
             error => {
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Có lỗi khi tải .- ' + error);
             });
+            
     }
-    loadDomains() {
+    loadDomains(searchString?:string) {
         this.loadingBarService.start();
 
-        this.dataService.getDomains(this.currentPage, this.itemsPerPage)
+        this.dataService.getDomains(this.currentPage, this.itemsPerPage,searchString)
             .subscribe((res: PaginatedResult<Domain[]>) => {
                 this.domains = res.result;// schedules;
                 this.totalItems = res.pagination.TotalItems;
@@ -122,7 +149,39 @@ export class DomainListComponent {
 
     };
 
-
+ngAfterViewChecked(): void {
+            this.formChanged();
+    }
+    formChanged()
+    {
+         if (this.currentForm === this.viewDomainForm) { return; }
+         this.viewDomainForm = this.currentForm;
+         if(this.viewDomainForm)
+         {
+            this.viewDomainForm.valueChanges
+                .subscribe(data => this.onValueChanged(data));
+         }
+    }
+    onValueChanged(data?: any)
+    {
+        if (!this.viewDomainForm) { return; }
+        const form = this.viewDomainForm.form;
+        this.isValid = true;
+        for (const field in this.formErrors) 
+        {
+            this.formErrors[field] = '';
+            const control = form.get(field);
+            if (control && control.dirty && !control.valid) 
+            {
+                this.isValid = false;
+                const messages = this.validationMessages[field];
+                for (const key in control.errors) 
+                {
+                    this.formErrors[field] += messages[key] + ' ';
+                }
+            }
+        }
+    }
     addNewDomain(domain: Domain) {
         if(domain.DOMAIN.includes(DomainListComponent.DOMAIN_PREFIX))
         {
@@ -130,12 +189,24 @@ export class DomainListComponent {
         this.loadingBarService.start();
         domain.USER_ID = this.selectedManageUser.Id.toString();
         domain.USERNAME = this.selectedManageUser.Username;
+        domain.FULLNAME = this.selectedManageUser.Fullname;
         domain.CREATE_DT = domain.EDIT_DT = domain.APPROVE_DT = null;
         this.dataService.createDomain(domain)
-            .subscribe(() => {
-                this.notificationService.printSuccessMessage('Thêm domain thành công');
-                this.loadingBarService.complete();
+            .subscribe(rs=> {
+                if(rs.Succeeded)
+                {
+                    this.notificationService.printSuccessMessage(rs.Message);
+                     this.domains.push(domain);
                 this.addDomain =new Domain();
+                }
+                else
+                {
+                    this.notificationService.printErrorMessage(rs.Message);
+                }
+                //this.notificationService.printSuccessMessage('Thêm domain thành công');
+                this.loadingBarService.complete();
+                
+               
             },
             error => {
                 this.loadingBarService.complete();
@@ -164,13 +235,23 @@ export class DomainListComponent {
     }
 deleteDomain(domain:Domain)
 {
+    console.log(domain);
     this.notificationService.openConfirmationDialog('Bạn có chắc muốn xóa?',
             () => {
                 this.loadingBarService.start();
                 this.dataService.deleteDomain(domain.ID)
-                    .subscribe(() => {
-                        this.itemsService.removeItemFromArray<Domain>(this.domains, domain);
-                        this.notificationService.printSuccessMessage('Xóa domain thành công');
+                    .subscribe(rs => {
+                        if(rs.Succeeded)
+                        {
+                            this.notificationService.printSuccessMessage(rs.Message);
+                            this.itemsService.removeItemFromArray<Domain>(this.domains, domain);
+                        }
+                        else
+                        {
+                            this.notificationService.printErrorMessage(rs.Message);
+                        }
+                        
+                        //this.notificationService.printSuccessMessage('Xóa domain thành công');
                         this.loadingBarService.complete();
                     },
                     error => {
@@ -188,8 +269,16 @@ editDomain(domain: Domain) {
         this.loadingBarService.start();
         this.onEdit = true;
         this.dataService.updateDomain(this.selectedDomain)
-            .subscribe(() => {
-                this.notificationService.printSuccessMessage('Domain đã được cập nhật');
+            .subscribe(res => {
+                if(res.Succeeded)
+                {
+                    this.notificationService.printSuccessMessage(res.Message);
+                }
+                else
+                {
+                    this.notificationService.printErrorMessage(res.Message);
+                }
+                //this.notificationService.printSuccessMessage('Domain đã được cập nhật');
                 this.loadingBarService.complete();
             },
             error => {

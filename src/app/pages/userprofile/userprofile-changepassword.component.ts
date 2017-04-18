@@ -83,7 +83,7 @@ export class ChangePasswordComponent {
          error => {
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Cập nhật thất bại ' + error);
-            });
+            }
 
         );
     }

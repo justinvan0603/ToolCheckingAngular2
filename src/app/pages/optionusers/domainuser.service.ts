@@ -44,9 +44,7 @@ export class DomainUserService {
         return this.http.put(this._baseUrl + '/' + option.OPTION.ID, JSON.stringify(option), {
             headers: headers
         })
-            .map((res: Response) => {
-                return;
-            })
+            .map(res => <any>(<Response>res).json())
             .catch(this.handleError);
    }
     // getOptionLinks(domain: string,page?: number, itemsPerPage?: number): Observable<PaginatedResult<Option[]>> {

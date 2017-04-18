@@ -20,7 +20,7 @@ export class DataService {
         this._baseUrl = configService.getApiURI()+ 'Domains';
     }
    
-    getDomains(page?: number, itemsPerPage?: number): Observable<PaginatedResult<Domain[]>> {
+    getDomains(page?: number, itemsPerPage?: number, searchString?:string): Observable<PaginatedResult<Domain[]>> {
         var peginatedResult: PaginatedResult<Domain[]> = new PaginatedResult<Domain[]>();
 
         let headers = new Headers();
@@ -28,7 +28,7 @@ export class DataService {
             headers.append('Pagination', page + ',' + itemsPerPage);
         }
 
-        return this.http.get(this._baseUrl +'?userid=1056', {
+        return this.http.get(this._baseUrl +'?userid=thieu1234' + '&searchString=' +searchString, {
             headers: headers
         })
             .map((res: Response) => {
@@ -55,7 +55,7 @@ export class DataService {
     }
 
 
-    updateDomain(domain: Domain): Observable<void> {
+    updateDomain(domain: Domain): Observable<any> {
         console.log(domain);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -63,30 +63,24 @@ export class DataService {
         return this.http.put(this._baseUrl +'/' + domain.ID, JSON.stringify(domain), {
             headers: headers
         })
-            .map((res: Response) => {
-                return;
-            })
+            .map(res => <any>(<Response>res).json())
             .catch(this.handleError);
     }
 
-    createDomain(user: Domain): Observable<Domain> {
+    createDomain(user: Domain): Observable<any> {
         console.log(user);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json,');
         //headers.append('Accept', 'application/json');
         //let data = {'users': user,'domain': user.Domain};
         return this.http.post(this._baseUrl, JSON.stringify(user), {headers: headers})
-            .map((res: Response) => {
-                return res.json();
-            })
+            .map(res => <any>(<Response>res).json())
             .catch(this.handleError);
     }
 
-    deleteDomain(id: number): Observable<void> {
+    deleteDomain(id: number): Observable<any> {
         return this.http.delete(this._baseUrl + '/' + id)
-            .map((res: Response) => {
-                return;
-            })
+            .map(res => <any>(<Response>res).json())
             .catch(this.handleError);
     }
 

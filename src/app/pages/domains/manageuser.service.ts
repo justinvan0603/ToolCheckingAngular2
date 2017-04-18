@@ -46,8 +46,8 @@ export class ManageUserService {
     //         .catch(this.handleError);
     // }
 
-    getManageUsers(parentId: number): Observable<ManageUser[]> {
-        return this.http.get(this._baseUrl + '/GetListByParent?parentid=' + parentId +'&parentname=thieu1234' )
+    getManageUsers(parentId?: number, parentUsername?: string): Observable<ManageUser[]> {
+        return this.http.get(this._baseUrl + '/GetListByParent?parentid=' + parentId +'&parentname=' + parentUsername )
             .map((res: Response) => {
                 return res.json();
             })

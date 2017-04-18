@@ -4,7 +4,7 @@ import {
     state,
     style,
     animate,
-    transition
+    transition, AfterViewChecked
 } from '@angular/core';
 
 import { ModalDirective } from 'ng2-bootstrap';
@@ -23,6 +23,7 @@ import { PaginatedResult } from "../shared/interfaces";
 import { OptionService } from "./option.service";
 import { OptionSearchObject } from "./optionsearch";
 import { OptionLinkUpdateObject } from "./optionupdateobject";
+import { NgForm } from "@angular/forms";
 
 
 
@@ -54,8 +55,12 @@ import { OptionLinkUpdateObject } from "./optionupdateobject";
         ])
     ]
 })
-export class OptionLinkListComponent {
+export class OptionLinkListComponent implements AfterViewChecked {
+        
+
     //@ViewChild('childModal') public childModal: ModalDirective;
+    addOptionForm : NgForm;
+    @ViewChild('addOptionForm') currentForm: NgForm;
     optionlinks: Array<Optionlink>;
     selectedOptions: Optionlink;
     domainid : string;
@@ -82,7 +87,17 @@ export class OptionLinkListComponent {
     backdrop: string | boolean = true;
     onEdit: boolean = false;
     public addingDomain: boolean = false;
-    
+    formErrors = {
+    'Link': ''
+ 
+  };
+  public isValid: boolean = true;
+  validationMessages = {
+    'Link': {
+      'required':      'Link không được để trống', 
+      'maxlength':     'Link phải từ 1-500 ký tự',
+    }
+  };
     constructor(
         private dataService: OptionLinkService,
         private itemsService: ItemsService,
@@ -103,6 +118,39 @@ export class OptionLinkListComponent {
         
         
     }
+    ngAfterViewChecked(): void {
+            this.formChanged();
+    }
+    formChanged()
+    {
+         if (this.currentForm === this.addOptionForm) { return; }
+         this.addOptionForm = this.currentForm;
+         if(this.addOptionForm)
+         {
+            this.addOptionForm.valueChanges
+                .subscribe(data => this.onValueChanged(data));
+         }
+    }
+    onValueChanged(data?: any)
+    {
+        if (!this.addOptionForm) { return; }
+        const form = this.addOptionForm.form;
+        this.isValid = true;
+        for (const field in this.formErrors) 
+        {
+            this.formErrors[field] = '';
+            const control = form.get(field);
+            if (control && control.dirty && !control.valid) 
+            {
+                this.isValid = false;
+                const messages = this.validationMessages[field];
+                for (const key in control.errors) 
+                {
+                    this.formErrors[field] += messages[key] + ' ';
+                }
+            }
+        }
+    }
     loadOption()
     {
         this.optionService.getOption(this.domainid).subscribe((data: OptionSearchObject)=>{
@@ -116,12 +164,24 @@ export class OptionLinkListComponent {
     }
     saveOption()
     {
+         if(this.optionlinks.length  == 0)
+         {
+             this.notificationService.printErrorMessage("Lỗi: Phải có ít nhất 1 link trong danh sách!");
+             return;
+         }
          let updObject = new OptionLinkUpdateObject();
          updObject.DOMAINLINK = this.optionlinks;
          updObject.IsEditLink = '1';
          updObject.OPTION = this.currentOptionSearch;
-         this.optionService.updateOption(updObject).subscribe(() => {
-                this.notificationService.printSuccessMessage('Link đã được cập nhật');
+         this.optionService.updateOption(updObject).subscribe(res => {
+                if(res.Succeeded)
+                {
+                    this.notificationService.printSuccessMessage(res.Message);
+                }
+                else
+                {
+                    this.notificationService.printErrorMessage(res.Message);
+                }
                 this.loadingBarService.complete();
             },
             error => {
@@ -154,6 +214,15 @@ export class OptionLinkListComponent {
     addNewOption(optlink: Optionlink) {
         if(optlink.Link.includes(this.currentOptionSearch.DOMAIN_ID))
         {
+            let opt = this.optionlinks.find(link => link.Link == optlink.Link);
+            console.log(opt);
+            if(opt != null)
+            {
+                this.loadingBarService.start();
+                this.loadingBarService.complete();
+                this.notificationService.printErrorMessage('Link đã tồn tại trong danh sách!' );
+                return;
+            }
             let newItem = new Optionlink();
             newItem.Link = optlink.Link;
             newItem.RecordStatus = '1';

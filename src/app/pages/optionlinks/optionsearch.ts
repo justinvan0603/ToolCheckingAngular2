@@ -15,5 +15,5 @@ export class OptionSearchObject{
 
             USERNAME   :string;
             FULLNAME   :string;
-            PARENT_ID   :string;
+            PARENT_ID   :number;
 }

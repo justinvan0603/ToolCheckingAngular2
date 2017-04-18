@@ -17,6 +17,7 @@ import { Pagination, PaginatedResult } from '../shared/interfaces';
 import { NotificationService } from "../shared/utils/notification.service";
 import { User } from "./user";
 import { DataService } from "./user.service";
+import { NgForm } from "@angular/forms";
 
 @Component({
     // moduleId: module.id,
@@ -43,6 +44,8 @@ import { DataService } from "./user.service";
     ]
 })
 export class UserListComponent {
+    viewUserForm : NgForm;
+    @ViewChild('viewUserForm') currentForm: NgForm;
     @ViewChild('childModal') public childModal: ModalDirective;
     users: User[];
     selectedUser: User;
@@ -68,6 +71,48 @@ export class UserListComponent {
     backdrop: string | boolean = true;
     onEdit: boolean = false;
     public addingUser: boolean = false;
+formErrors = {
+    'EMAIL': '',
+    'PHONE' : '',
+    'Username':'',
+    'FULLNAME' : '',
+    'Password' : '',
+    'DOMAIN' : '',
+    'DOMAINDESC' : ''
+ 
+  };
+  public isValid: boolean = true;
+  validationMessages = {
+    'EMAIL': {
+      'required':      'Email không được để trống', 
+      'pattern':     'Email không hợp lệ',
+    },
+    'PHONE': {
+      'required':      'Điện thoại không được để trống', 
+      'maxlength':     'Điện thoại phải từ 1-20 ký tự',
+    },
+    'Username': {
+      'required':      'Tên đăng nhập không được để trống', 
+      'maxlength':     'Tên đăng nhập phải từ 1-50 ký tự',
+    },
+    'FULLNAME': {
+      'required':      'Họ tên không được để trống', 
+      'maxlength':     'Họ tên phải từ 1-200 ký tự',
+    },
+    'Password': {
+      'required':      'Mật khẩu không được để trống', 
+      'maxlength':     'Mật khẩu phải từ 1-50 ký tự',
+    },
+    'DOMAIN': {
+      'required':      'Tên miền không được để trống', 
+      'maxlength':     'Tên miền phải từ 1-200 ký tự',
+    },
+    'DOMAINDESC': {
+      'required':      'Mô tả không được để trống', 
+      'maxlength':     'Mô tả phải từ 1-500 ký tự',
+    },
+  };
+
     constructor(
         private dataService: DataService,
         private itemsService: ItemsService,
@@ -86,7 +131,7 @@ export class UserListComponent {
     loadUsers() {
         this.loadingBarService.start();
 
-        this.dataService.getUsers(this.currentPage, this.itemsPerPage)
+        this.dataService.getUsers(this.currentPage, this.itemsPerPage,null,'thieu1234')
             .subscribe((res: PaginatedResult<User[]>) => {
                 this.users = res.result;// schedules;
                 this.totalItems = res.pagination.TotalItems;
@@ -104,7 +149,39 @@ export class UserListComponent {
 
     };
 
-
+ngAfterViewChecked(): void {
+            this.formChanged();
+    }
+    formChanged()
+    {
+         if (this.currentForm === this.viewUserForm) { return; }
+         this.viewUserForm = this.currentForm;
+         if(this.viewUserForm)
+         {
+            this.viewUserForm.valueChanges
+                .subscribe(data => this.onValueChanged(data));
+         }
+    }
+    onValueChanged(data?: any)
+    {
+        if (!this.viewUserForm) { return; }
+        const form = this.viewUserForm.form;
+        this.isValid = true;
+        for (const field in this.formErrors) 
+        {
+            this.formErrors[field] = '';
+            const control = form.get(field);
+            if (control && control.dirty && !control.valid) 
+            {
+                this.isValid = false;
+                const messages = this.validationMessages[field];
+                for (const key in control.errors) 
+                {
+                    this.formErrors[field] += messages[key] + ' ';
+                }
+            }
+        }
+    }
     addNewUser(usr: User) {
         
         //console.log(user);
@@ -114,6 +191,7 @@ export class UserListComponent {
             .subscribe(() => {
                 this.notificationService.printSuccessMessage('Thêm tài khoản thành công');
                 this.loadingBarService.complete();
+                this.users.push(this.selectedUser);
                 this.addUser =new User();
             },
             error => {
