@@ -13,7 +13,7 @@ import { UserConfig } from "./messageconfigurations";
 export class DataService {
 
     _baseUrl: string = '';
-
+    public _token:string;
     constructor(private http: Http,
         private itemsService: ItemsService,
         private configService: ConfigService) {
@@ -22,14 +22,21 @@ export class DataService {
    private extractData(res: Response) {
 		return res.json() || { };
 	}
+    setToken(token:string):void{
+
+      this._token=token;
+
+    }
     getUserConfigs(username:string): Observable<UserConfig[]> {
        // var peginatedResult: PaginatedResult<UserConfig[]> = new PaginatedResult<UserConfig[]>();
        // let headers = new Headers();
        // if (page != null && itemsPerPage != null) {
        //     headers.append('Pagination', page + ',' + itemsPerPage);
        // }
-
-        return this.http.get(this._baseUrl+'/' + username)
+       let headers = new Headers();
+     headers.append('Content-Type', 'application/json');
+     headers.append('Authorization','Bearer '+this._token);
+        return this.http.get(this._baseUrl+'/' + username,{headers:headers})
             .map(this.extractData)
             .catch(this.handleError);
     }

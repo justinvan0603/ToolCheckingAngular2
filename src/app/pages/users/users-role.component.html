@@ -1,11 +1,11 @@
-<button class="btn btn-primary" type="button" *ngIf="users">
+<!--<button class="btn btn-primary" type="button" *ngIf="users">
    <i class="fa fa-calendar" aria-hidden="true"></i> Người dùng
    <span class="badge">{{this.totalItems}}</span>
-</button>
+</button>-->
 <hr/>
 
     <button class="btn btn-primary btn-sm" (click)="viewAdd()">
-    <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>Tạo tài khoản</button>
+    <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>Tạo quyền hệ thống</button>
 <div [@flyInOut]="'in'">
     <table class="table table-hover">
         <thead>
@@ -40,8 +40,8 @@
                 <button type="button" class="close" aria-label="Close" (click)="hideChildModal()">
           <span aria-hidden="true">&times;</span>
         </button>
-                <h4 *ngIf="!this.addingUser"> Cập nhật tài khoản: {{selectedApplicationGroup.Name}}</h4>
-                <h4 *ngIf="this.addingUser"> Thêm tài khoản</h4>
+                <h4 *ngIf="!this.addingUser"> Cập nhật quyền: {{selectedApplicationGroup.Name}}</h4>
+                <h4 *ngIf="this.addingUser"> Thêm quyền hệ thống</h4>
             </div>
             <div class="modal-body">
                 <form method="post" #viewUserForm="ngForm" *ngIf="selectedApplicationGroupLoaded" novalidate>
@@ -57,7 +57,7 @@
                     </div>
              <!--End Validate-->
             <div class="form-group">
-                <label ><span style="color:red">*</span> Mô tả:</label>
+                <label ><span style="color:red">*</span> Tên quyền:</label>
                 <input type="text" class="form-control" [(ngModel)]="this.selectedApplicationGroup.Name" name="NAME" #NAMEInput="ngModel" required pattern=".{1,200}"/>
             </div>
                     <hr/>

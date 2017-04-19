@@ -145,7 +145,7 @@ export class DomainListComponent implements AfterViewChecked {
 
     pageChanged(event: any): void {
         this.currentPage = event.page;
-        this.loadDomains();
+        this.loadDomains('');
 
     };
 
@@ -198,6 +198,7 @@ ngAfterViewChecked(): void {
                     this.notificationService.printSuccessMessage(rs.Message);
                      this.domains.push(domain);
                 this.addDomain =new Domain();
+                this.loadDomains('');
                 }
                 else
                 {

@@ -152,9 +152,13 @@ export class ApplicationGroupComponent {
 
     viewAddApplicationGroup() {
         this.onEdit = false;
+
         this.addApplicationGroup = new ApplicationGroup();
         this.selectedApplicationGroup = new ApplicationGroup();
+        
          this.selectedApplicationGroup.Roles = this.applicationRole;
+         //console.log(this.selectedApplicationGroup.Roles);
+        // this.loadRoleByGroup();
         this.addingApplicationGroup = true;
         this.loadingBarService.complete();
         this.selectedApplicationGroupLoaded = true;
@@ -180,7 +184,7 @@ deleteApplicationGroup(usr:ApplicationGroup)
 }
 editApplicationGroup(usr: ApplicationGroup) {
         console.log(usr);
-
+        
         usr.Roles = this.selectedApplicationGroup.Roles;
         this.loadingBarService.start();
         this.onEdit = true;

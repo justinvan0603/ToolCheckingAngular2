@@ -193,6 +193,7 @@ ngAfterViewChecked(): void {
                 this.loadingBarService.complete();
                 this.users.push(this.selectedUser);
                 this.addUser =new User();
+                this.loadUsers();
             },
             error => {
                 this.loadingBarService.complete();

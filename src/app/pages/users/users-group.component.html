@@ -1,11 +1,11 @@
 <button class="btn btn-primary" type="button" *ngIf="users">
-  <i class="fa fa-calendar" aria-hidden="true"></i> Người dùng
+  <i class="fa fa-calendar" aria-hidden="true"></i> Nhóm người dùng
   <span class="badge">{{this.totalItems}}</span>
 </button>
 <hr/>
 
 <button class="btn btn-primary btn-sm" (click)="viewAddApplicationGroup()">
-  <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>Tạo tài khoản
+  <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>Tạo nhóm người dùng
 </button>
 <div [@flyInOut]="'in'">
   <table class="table table-hover">
@@ -67,29 +67,51 @@
 
 
 
-          <div class="form-group" *ngFor="let item of this.selectedApplicationGroup.Roles">
-            <!--<div class="col-sm-2" [class.hidden]="!this.addingUser">-->
-            <!--<label><span style="color:red">*</span> {{item.Name}}</label>-->
-            <!--</div>-->
+          <div class="form-group" >
+
+
+            
+              <div *ngFor="let item of this.selectedApplicationGroup.Roles,let i = index">
+                
+                  <div class="row" *ngIf = "i% 4 == 0">
+
+                    <div class="col-sm-3 text-center" *ngFor = "let x of this.selectedApplicationGroup.Roles, let j = index ">
+                      <label *ngIf="j+i< i+4" >
+                      <input type="checkbox" class="form-control" name="x"
+                     [checked]="x.Check" (change)="x.Check = $event.target.checked">
+                    {{this.selectedApplicationGroup.Roles[i+j]?.Name }} 
+                      </label>
+                    
+                    </div>
+
+                  </div>
+
+                
+
+              </div>
+                <!--<div class="form-group" *ngFor="let item of this.selectedApplicationGroup.Roles">
+
             <div class="col-sm-2">
-              <!--<input type="checkbox" class="form-control input-sm"  >-->
+
               <input type="checkbox" class="form-control" name="item"
                      [checked]="item.Check" (change)="item.Check = $event.target.checked"> {{item.Name}}
 
             </div>
+          </div>-->
+
+                        
           </div>
-
-
           <hr/>
-          <button [class.hidden]="this.addingApplicationGroup" [disabled]="!viewUserForm.form.valid"
+          <div class="form-group">
+          <button  [class.hidden]="this.addingApplicationGroup" [disabled]="!viewUserForm.form.valid"
                   (click)="editApplicationGroup(this.selectedApplicationGroup)" type="button" class="btn btn-warning">
             Cập nhật
           </button>
-          <button [class.hidden]="!this.addingApplicationGroup" [disabled]="!viewUserForm.form.valid"
+          <button  [class.hidden]="!this.addingApplicationGroup" [disabled]="!viewUserForm.form.valid"
                   (click)="addNewApplicationGroup(this.selectedApplicationGroup)" type="button" class="btn btn-success">
             Thêm
           </button>
-
+          </div>
         </form>
       </div>
     </div>

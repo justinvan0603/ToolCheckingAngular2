@@ -62,7 +62,7 @@ export const PAGES_MENU = [
             path: 'usermanager',
             data: {
               menu: {
-                title: 'User',
+                title: 'Danh sách User',
               }
             }
           } ,
@@ -70,7 +70,7 @@ export const PAGES_MENU = [
             path: 'userrole',
             data: {
               menu: {
-                title: 'Role',
+                title: 'Quyền hệ thống',
               }
             }
           }

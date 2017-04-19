@@ -18,7 +18,8 @@ import { NotificationService } from "../shared/utils/notification.service";
 import { UserConfig } from "./messageconfigurations";
 import { DataService } from "./messageconfigurations.service";
 import {Feature} from "./feature"
-import {FeatureService} from "./feature.service"
+import { FeatureService } from "./feature.service"
+import { MembershipService } from "../login/membership.service";
 @Component({
     // moduleId: module.id,
 
@@ -75,10 +76,14 @@ export class MessageConfigurationsListComponent {
         private notificationService: NotificationService,
         private configService: ConfigService,
         private loadingBarService: SlimLoadingBarService,
+        private membershipService:MembershipService,
         ) {  }
 
     ngOnInit() {
         this.apiHost = this.configService.getApiHost();
+        
+        this.dataService.setToken(this.membershipService.getTokenUser());
+        console.log(this.dataService._token);
         this.loadUserConfigs('thieu1234');
         //this.cleanFeature();
         //this.feature = new Feature();
