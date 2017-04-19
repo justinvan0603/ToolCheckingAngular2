@@ -95,7 +95,7 @@ export class ApplicationGroupComponent {
         this.dataService.getApplicationGroups(this.currentPage, this.itemsPerPage)
             .subscribe((res: PaginatedResult<ApplicationGroup[]>) => {
                 this.users = res.result;// schedules;
-                this.totalItems = res.pagination.TotalItems;
+                //this.totalItems = res.pagination.TotalItems;
                 this.loadingBarService.complete();
             },
             error => {
