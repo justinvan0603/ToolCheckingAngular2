@@ -76,12 +76,12 @@ export class ApplicationRoleComponent implements AfterViewChecked {
     public adding: boolean = false;
     formErrors = {
     'NAME': ''
- 
+
   };
   public isValid: boolean = true;
   validationMessages = {
     'NAME': {
-      'required':      'Tên quyền không được để trống', 
+      'required':      'Tên quyền không được để trống',
       'maxlength':     'Tên quyền phải từ 1-200 ký tự',
     },
 
@@ -92,7 +92,12 @@ export class ApplicationRoleComponent implements AfterViewChecked {
         private notificationService: NotificationService,
         private configService: ConfigService,
         private loadingBarService: SlimLoadingBarService,
-        ) {this.addApplicationGroup = new ApplicationRole();  }
+
+        ) {
+      this.addApplicationGroup = new ApplicationRole();
+      dataService.setToken(this.membershipService.getTokenUser());
+
+    }
 
     ngOnInit() {
         this.apiHost = this.configService.getApiHost();
@@ -141,7 +146,7 @@ export class ApplicationRoleComponent implements AfterViewChecked {
                 {
                     this.notificationService.printErrorMessage(res.Message);
                 }
-                
+
             },
             error => {
                 this.loadingBarService.complete();
@@ -203,15 +208,15 @@ formChanged()
         if (!this.viewUserForm) { return; }
         const form = this.viewUserForm.form;
         this.isValid = true;
-        for (const field in this.formErrors) 
+        for (const field in this.formErrors)
         {
             this.formErrors[field] = '';
             const control = form.get(field);
-            if (control && control.dirty && !control.valid) 
+            if (control && control.dirty && !control.valid)
             {
                 this.isValid = false;
                 const messages = this.validationMessages[field];
-                for (const key in control.errors) 
+                for (const key in control.errors)
                 {
                     this.formErrors[field] += messages[key] + ' ';
                 }
@@ -252,7 +257,7 @@ formChanged()
               {
                   this.notificationService.printErrorMessage(res.Message);
               }
-              
+
               this.loadingBarService.complete();
             },
             error => {
@@ -276,7 +281,7 @@ edit(usr: ApplicationRole) {
                 {
                     this.notificationService.printErrorMessage(res.Message);
                 }
-                
+
                 this.loadingBarService.complete();
             },
             error => {

@@ -15,19 +15,23 @@ import {ApplicationGroup} from "./applicationGroup";
 export class UserManagerService {
 
     _baseUrl: string = '';
-
+    _token;
     constructor(private http: Http,
         private itemsService: ItemsService,
         private configService: ConfigService) {
         this._baseUrl = configService.getApiURI()+ 'ApplicationUser';
     }
+    setToken(tokenUser: string) {
+      this._token = tokenUser;
 
+    }
     getUsers(page?: number, itemsPerPage?: number): Observable<PaginatedResult<UserManager[]>> {
         var peginatedResult: PaginatedResult<UserManager[]> = new PaginatedResult<UserManager[]>();
 
         let headers = new Headers();
         if (page != null && itemsPerPage != null) {
             headers.append('Pagination', page + ',' + itemsPerPage);
+            headers.append('Authorization','Bearer '+this._token);
         }
 
         return this.http.get(this._baseUrl, {
@@ -54,6 +58,7 @@ export class UserManagerService {
         let headers = new Headers();
         if (page != null && itemsPerPage != null) {
             headers.append('Pagination', page + ',' + itemsPerPage);
+            headers.append('Authorization','Bearer '+this._token);
         }
 
         return this.http.get(this._baseUrl + '/' + searchstring, {
@@ -83,6 +88,7 @@ export class UserManagerService {
     let headers = new Headers();
     if (page != null && itemsPerPage != null) {
       headers.append('Pagination', page + ',' + itemsPerPage);
+      headers.append('Authorization','Bearer '+this._token);
     }
 
     return this.http.get(this._baseUrl+ '/detail?id=' + id, {
@@ -117,6 +123,7 @@ export class UserManagerService {
 
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
+        headers.append('Authorization','Bearer '+this._token);
 
         return this.http.put(this._baseUrl, JSON.stringify(user), {
             headers: headers
@@ -129,6 +136,7 @@ export class UserManagerService {
         console.log(usr);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
+        headers.append('Authorization','Bearer '+this._token);
 
         return this.http.post(this._baseUrl, JSON.stringify(usr), {
             headers: headers
@@ -138,7 +146,11 @@ export class UserManagerService {
     }
 
     deleteUser(id: string): Observable<any> {
-        return this.http.delete(this._baseUrl +'/?id='+ id)
+      let headers = new Headers();
+      headers.append('Authorization','Bearer '+this._token);
+        return this.http.delete(this._baseUrl +'/?id='+ id, {
+          headers: headers
+        })
             .map(res => <any>(<Response>res).json())
             .catch(this.handleError);
     }
@@ -160,4 +172,6 @@ export class UserManagerService {
 
         return Observable.throw(applicationError || modelStateErrors || 'Server error');
     }
+
+
 }

@@ -24,6 +24,7 @@ import {UserGroupService} from "./user-group.service";
 import { ChecklistDirective } from 'ng2-checklist';
 import { NgForm } from "@angular/forms";
 import {DomainListComponent} from "../domains/domain-list.component";
+import {MembershipService} from "../login/membership.service";
 @Component({
   // moduleId: module.id,
 
@@ -90,9 +91,11 @@ public searchString : string;
               private notificationService: NotificationService,
               private configService: ConfigService,
               private loadingBarService: SlimLoadingBarService,
-              private groupService: UserGroupService
+              private groupService: UserGroupService,
+              private membershipService:MembershipService
   ) {
     this.addUser = new UserManager();
+    dataService.setToken(this.membershipService.getTokenUser());
   }
 
   ngOnInit() {

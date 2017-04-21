@@ -14,6 +14,7 @@ import {ApplicationRole} from "./applicationRole";
 export class UserRoleService {
 
     _baseUrl: string = '';
+    _token;
 
     constructor(private http: Http,
         private itemsService: ItemsService,
@@ -21,12 +22,18 @@ export class UserRoleService {
         this._baseUrl = configService.getApiURI()+ 'ApplicationRole';
     }
 
+  setToken(tokenUser: string) {
+    this._token = tokenUser;
+
+  }
+
   get(page?: number, itemsPerPage?: number): Observable<PaginatedResult<ApplicationRole[]>> {
         var peginatedResult: PaginatedResult<ApplicationRole[]> = new PaginatedResult<ApplicationRole[]>();
 
         let headers = new Headers();
         if (page != null && itemsPerPage != null) {
             headers.append('Pagination', page + ',' + itemsPerPage);
+            headers.append('Authorization','Bearer '+this._token);
         }
 
         return this.http.get(this._baseUrl, {
@@ -52,6 +59,7 @@ export class UserRoleService {
         let headers = new Headers();
         if (page != null && itemsPerPage != null) {
             headers.append('Pagination', page + ',' + itemsPerPage);
+            headers.append('Authorization','Bearer '+this._token);
         }
 
         return this.http.get(this._baseUrl + '/' + searchstring, {
@@ -77,7 +85,7 @@ export class UserRoleService {
 
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
-
+        headers.append('Authorization','Bearer '+this._token);
         return this.http.put(this._baseUrl,JSON.stringify(user), {
             headers: headers
         })
@@ -96,7 +104,7 @@ export class UserRoleService {
         console.log(usr);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
-
+        headers.append('Authorization','Bearer '+this._token);
         return this.http.post(this._baseUrl, JSON.stringify(usr), {
             headers: headers
         })
@@ -105,7 +113,12 @@ export class UserRoleService {
     }
 
     delete(id: string): Observable<any> {
-        return this.http.delete(this._baseUrl +'/?id='+ id)
+      let headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      headers.append('Authorization','Bearer '+this._token);
+        return this.http.delete(this._baseUrl +'/?id='+ id, {
+          headers: headers
+        })
             .map(res => <any>(<Response>res).json())
             .catch(this.handleError);
     }
