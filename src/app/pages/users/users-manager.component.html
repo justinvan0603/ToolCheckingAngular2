@@ -22,9 +22,9 @@
     <tbody>
     <tr *ngFor="let usr of users">
       <td class="text-xs-left">{{usr.UserName}}</td>
-      <td>{{usr.Fullname}}</td>
+      <td>{{usr.FULLNAME}}</td>
       <td>{{usr.Email}}</td>
-      <td class="text-xs-left">{{usr.Phone}}</td>
+      <td class="text-xs-left">{{usr.PHONE}}</td>
       <td><a class="btn btn-warning" (click)="viewUserDetails(usr)"><i class="fa fa-pencil-square-o"></i> Cập nhật</a>
         <a class="btn btn-danger" (click)="deleteUser(usr)"><i class="fa fa-trash-o"></i> Xóa</a>
       </td>
@@ -104,12 +104,12 @@
           <div class="form-group">
             <label><span style="color:red">*</span> Mật khẩu:</label>
             <input type="password" class="form-control" [readonly]="!this.addingUser"
-                   [(ngModel)]="this.selectedUser.Password" name="Password" #PASSWORDInput="ngModel" required
+                   [(ngModel)]="this.selectedUser.PASSWORD" name="Password" #PASSWORDInput="ngModel" required
                    pattern=".{1,50}"/>
           </div>
           <div class="form-group">
             <label><span style="color:red">*</span> Họ tên:</label>
-            <input type="text" class="form-control" [(ngModel)]="this.selectedUser.Fullname" name="FULLNAME"
+            <input type="text" class="form-control" [(ngModel)]="this.selectedUser.FULLNAME" name="FULLNAME"
                    #FULLNAMEInput="ngModel" required pattern=".{1,200}"/>
           </div>
           <div class="form-group">
@@ -119,7 +119,7 @@
           </div>
           <div class="form-group">
             <label><span style="color:red">*</span> Điện thoại:</label>
-            <input type="text" class="form-control" [(ngModel)]="this.selectedUser.Phone" name="PHONE"
+            <input type="text" class="form-control" [(ngModel)]="this.selectedUser.PHONE" name="PHONE"
                    #PHONEInput="ngModel" required pattern=".{1,20}"/>
             <!--<textarea type="text" class="form-control" readonly>{{selectedMessage.Content}}</textarea>-->
           </div>
