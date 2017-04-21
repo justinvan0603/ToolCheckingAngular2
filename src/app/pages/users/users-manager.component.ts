@@ -23,6 +23,7 @@ import {ApplicationGroup} from "./applicationGroup";
 import {UserGroupService} from "./user-group.service";
 import { ChecklistDirective } from 'ng2-checklist';
 import { NgForm } from "@angular/forms";
+import {DomainListComponent} from "../domains/domain-list.component";
 @Component({
   // moduleId: module.id,
 
@@ -74,12 +75,12 @@ public searchString : string;
   public addingUser: boolean = false;
   formErrors = {
     'NAME': ''
- 
+
   };
   public isValid: boolean = true;
   validationMessages = {
     'NAME': {
-      'required':      'Tên quyền không được để trống', 
+      'required':      'Tên quyền không được để trống',
       'maxlength':     'Tên quyền phải từ 1-200 ký tự',
     },
 
@@ -176,15 +177,15 @@ formChanged()
         if (!this.viewUserForm) { return; }
         const form = this.viewUserForm.form;
         this.isValid = true;
-        for (const field in this.formErrors) 
+        for (const field in this.formErrors)
         {
             this.formErrors[field] = '';
             const control = form.get(field);
-            if (control && control.dirty && !control.valid) 
+            if (control && control.dirty && !control.valid)
             {
                 this.isValid = false;
                 const messages = this.validationMessages[field];
-                for (const key in control.errors) 
+                for (const key in control.errors)
                 {
                     this.formErrors[field] += messages[key] + ' ';
                 }
@@ -196,28 +197,35 @@ formChanged()
     //console.log(user);
     // this.selectedUser.Groups = this.selectedUser.Groups.filter(opt => opt.Check);
     // console.log(this.selectedUser);
-    this.loadingBarService.start();
-    this.dataService.createUser(this.selectedUser)
-      .subscribe(res => {
-        if(res.Succeeded)
-        {
-            this.notificationService.printSuccessMessage(res.Message);
-          this.loadingBarService.complete();
-          this.addUser = new UserManager();
-          this.loadUsers();
-        }
-        else
-        {
-          this.notificationService.printErrorMessage(res.Message);
-        }
-          
-        },
-        error => {
-          this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Lỗi- ' + error);
-        });
-    //     this.itemsService.addItemToStart<IScheduleT>(this.schedules, schedule);
-    //this.loadSchedules();
+    if(this.selectedUser.Domain.includes(DomainListComponent.DOMAIN_PREFIX)) {
+      this.loadingBarService.start();
+      this.dataService.createUser(this.selectedUser)
+        .subscribe(res => {
+            if (res.Succeeded) {
+              this.notificationService.printSuccessMessage(res.Message);
+              this.loadingBarService.complete();
+              this.addUser = new UserManager();
+              this.loadUsers();
+            }
+            else {
+              this.notificationService.printErrorMessage(res.Message);
+            }
+
+          },
+          error => {
+            this.loadingBarService.complete();
+            this.notificationService.printErrorMessage('Lỗi- ' + error);
+          });
+      //     this.itemsService.addItemToStart<IScheduleT>(this.schedules, schedule);
+      //this.loadSchedules();
+    }
+  else
+    {
+      this.loadingBarService.start();
+      this.loadingBarService.complete();
+      this.notificationService.printErrorMessage("Lỗi - Tên miền phải chứa tiền tố 'http://' ");
+    }
+
   }
 
   viewAddUser() {
@@ -249,7 +257,7 @@ formChanged()
               {
                 this.notificationService.printErrorMessage(rs.Message);
               }
-              
+
               this.loadingBarService.complete();
             },
             error => {
@@ -274,7 +282,7 @@ formChanged()
           {
             this.notificationService.printErrorMessage(res.Message);
           }
-          
+
           this.loadingBarService.complete();
         },
         error => {
