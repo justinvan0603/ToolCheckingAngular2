@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormGroup, AbstractControl, FormBuilder, Validators} from '@angular/forms';
-
+import { ConfigService } from '../shared/utils/config.service';
 import 'style-loader!./login.scss';
 import {User} from "./user";
 import {NotificationService} from "../shared/utils/notification.service";

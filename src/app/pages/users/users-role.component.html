@@ -7,6 +7,15 @@
     <button class="btn btn-primary btn-sm" (click)="viewAdd()">
     <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>Tạo quyền hệ thống</button>
 <div [@flyInOut]="'in'">
+    <div class="col-md-9">
+    <form class="form-inline" method="post" #userRoleSearchForm="ngForm"  novalidate >
+            <div class="input-group">
+                <label >Tìm kiếm:</label>
+                <input type="text" class="form-control input-sm"  [(ngModel)]="this.searchString" name="SearchString" #SEARCHInput="ngModel"  pattern=".{1,500}"/>
+            <div class="input-group-btn" ><button style="margin-top:15%;"   (click)="search(this.searchString)" type="button" class="btn btn-success btn-sm"><i class="fa fa-search"></i> Tìm</button></div>
+            </div>
+    </form>
+    </div>
     <table class="table table-hover">
         <thead>
             <tr>
@@ -47,12 +56,15 @@
                 <form method="post" #viewUserForm="ngForm" *ngIf="selectedApplicationGroupLoaded" novalidate>
 
                 <!--Validate-->
-                    <div class="alert alert-danger" [hidden]="viewUserForm.form.valid">
-
-                            <ul *ngIf="NAMEInput.dirty && !NAMEInput.valid ">
+                    <div class="alert alert-danger" [hidden]="this.isValid">
+                            <ul *ngIf="formErrors.NAME">
+                            
+                            <li>{{formErrors.NAME}}</li>
+                        </ul>
+                            <!--<ul *ngIf="NAMEInput.dirty && !NAMEInput.valid ">
                                 <li *ngIf="NAMEInput.errors.required">Tên quyền không được bỏ trống</li>
                             <li *ngIf="NAMEInput.errors.pattern">Tên quyền phải từ 1-200 ký tự</li>
-                            </ul>
+                            </ul>-->
 
                     </div>
              <!--End Validate-->

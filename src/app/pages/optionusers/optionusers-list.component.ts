@@ -30,6 +30,7 @@ import { DomainUserService } from "./domainuser.service";
 import { ManageUserService } from "../domains/manageuser.service";
 import { ManageUser } from "../domains/manageuser";
 import { NgForm } from "@angular/forms";
+import { MembershipService } from "../login/membership.service";
 
 
 @Component({
@@ -105,14 +106,16 @@ export class OptionUserListComponent  implements AfterViewChecked{
         private loadingBarService: SlimLoadingBarService,
         private route: ActivatedRoute,
         private domainUserService: DomainUserService,
-        private manageUserService : ManageUserService
+        private manageUserService : ManageUserService,
+        private membershipService:MembershipService
 
         ) {this.addUserDomain = new UserDomain();  }
 
     ngOnInit() {
         this.apiHost = this.configService.getApiHost();
         this.route.params.subscribe(params => {this.domainid=params['domainid']});
-        
+        this.dataService.setToken(this.membershipService.getTokenUser());
+        this.domainUserService.setToken(this.membershipService.getTokenUser());
         this.loadDomainUser();
         this.loadOption();
         this.loadManageUsers();

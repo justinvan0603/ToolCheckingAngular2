@@ -2,16 +2,24 @@
 import { Injectable } from '@angular/core';
 import {User} from "./user";
 import {Registration} from "./registration";
-import {DataShareService} from "../shared/services/dataShare.service";
+import { DataShareService } from "../shared/services/dataShare.service";
+import { ConfigService } from "../shared/utils/config.service";
 
 @Injectable()
 export class MembershipService {
 
-    private _accountRegisterAPI: string = 'http://localhost:9823/api/account/register/';
-    private _accountLoginAPI: string = 'http://localhost:9823/api/account/authenticate/';
-    private _accountLogoutAPI: string = 'http://localhost:9823/api/account/logout/';
+    // private _accountRegisterAPI: string = 'http://localhost:9823/api/account/register/';
+    // private _accountLoginAPI: string = 'http://localhost:9823/api/account/authenticate/';
+    // private _accountLogoutAPI: string = 'http://localhost:9823/api/account/logout/';
 
-    constructor(public accountService: DataShareService) { }
+    private _accountRegisterAPI: string;
+    private _accountLoginAPI: string;
+    private _accountLogoutAPI: string;
+    constructor(public accountService: DataShareService,public configService: ConfigService) { 
+        this._accountRegisterAPI = this.configService.getApiURI()+ 'account/register/';
+        this._accountLoginAPI = this.configService.getApiURI()+ 'account/authenticate/';
+        this._accountLogoutAPI = this.configService.getApiURI()+ 'account/logout/';
+    }
 
     register(newUser: Registration) {
 

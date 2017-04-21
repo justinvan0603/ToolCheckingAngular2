@@ -20,6 +20,7 @@ import { DataService } from "./domains.service";
 import { ManageUser } from "./manageuser";
 import { ManageUserService } from "./manageuser.service";
 import { NgForm } from "@angular/forms";
+import { MembershipService } from "../login/membership.service";
 
 @Component({
     // moduleId: module.id,
@@ -99,14 +100,18 @@ export class DomainListComponent implements AfterViewChecked {
         private notificationService: NotificationService,
         private configService: ConfigService,
         private loadingBarService: SlimLoadingBarService,
-        private manageUserService: ManageUserService
+        private manageUserService: ManageUserService,
+        private membershipService:MembershipService
         ) {this.addDomain = new Domain(); 
         this.searchString = ''; }
 
     ngOnInit() {
         this.apiHost = this.configService.getApiHost();
+         this.dataService.setToken(this.membershipService.getTokenUser());
         this.loadDomains('');
         this.loadManageUsers();
+       
+        //console.log(this.dataService._token);
         
     }
     search(searchstring: string)

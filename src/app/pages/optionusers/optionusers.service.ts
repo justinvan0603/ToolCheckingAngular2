@@ -18,13 +18,17 @@ import { PaginatedResult, Pagination } from "../shared/interfaces";
 export class OptionUserService {
 
     _baseUrl: string = '';
-
+    public _token : string;
     constructor(private http: Http,
         private itemsService: ItemsService,
         private configService: ConfigService) {
         this._baseUrl = configService.getApiURI()+ 'OptionUser';
     }
-   
+   setToken(token:string):void{
+
+      this._token=token;
+
+    }
     getOptionUsers(domain: string,page?: number, itemsPerPage?: number): Observable<PaginatedResult<UserDomain[]>> {
         var peginatedResult: PaginatedResult<Array<UserDomain>> = new PaginatedResult<UserDomain[]>();
 
@@ -32,7 +36,7 @@ export class OptionUserService {
         if (page != null && itemsPerPage != null) {
             headers.append('Pagination', page + ',' + itemsPerPage);
         }
-
+        headers.append('Authorization','Bearer '+this._token);
         return this.http.get(this._baseUrl +'?domain=' +domain, {
             headers: headers
         })

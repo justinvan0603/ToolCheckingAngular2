@@ -8,7 +8,9 @@ import {routing} from "./login.routing";
 import {DataShareService} from "../shared/services/dataShare.service";
 import {MembershipService} from "./membership.service";
 import {NotificationService} from "../shared/utils/notification.service";
-import {BaseRequestOptions, Headers, RequestOptions} from "@angular/http";
+import { BaseRequestOptions, Headers, RequestOptions } from "@angular/http";
+import { ConfigService } from "../shared/utils/config.service";
+
 
 
 @NgModule({
@@ -25,7 +27,8 @@ import {BaseRequestOptions, Headers, RequestOptions} from "@angular/http";
   providers: [
     DataShareService,
     MembershipService,
-    NotificationService
+    NotificationService,
+    ConfigService
   ]
 })
 export class LoginModule {

@@ -20,7 +20,31 @@ export class UserGroupService {
         private configService: ConfigService) {
         this._baseUrl = configService.getApiURI()+ 'ApplicationGroup';
     }
+getApplicationGroupsSearch(page?: number, itemsPerPage?: number, searchString?: string): Observable<PaginatedResult<ApplicationGroup[]>> {
+        var peginatedResult: PaginatedResult<ApplicationGroup[]> = new PaginatedResult<ApplicationGroup[]>();
 
+        let headers = new Headers();
+        if (page != null && itemsPerPage != null) {
+            headers.append('Pagination', page + ',' + itemsPerPage);
+        }
+
+        return this.http.get(this._baseUrl + '/' + searchString, {
+            headers: headers
+        })
+            .map((res: Response) => {
+                console.log(res.headers.keys());
+                peginatedResult.result = res.json();
+
+                if (res.headers.get("Pagination") != null) {
+                    //var pagination = JSON.parse(res.headers.get("Pagination"));
+                    var paginationHeader: Pagination = this.itemsService.getSerialized<Pagination>(JSON.parse(res.headers.get("Pagination")));
+                    console.log(paginationHeader);
+                    peginatedResult.pagination = paginationHeader;
+                }
+                return peginatedResult;
+            })
+            .catch(this.handleError);
+    }
   getApplicationGroups(page?: number, itemsPerPage?: number): Observable<PaginatedResult<ApplicationGroup[]>> {
         var peginatedResult: PaginatedResult<ApplicationGroup[]> = new PaginatedResult<ApplicationGroup[]>();
 
@@ -85,7 +109,7 @@ export class UserGroupService {
     }
 
 
-    updateApplicationGroup(user: ApplicationGroup): Observable<void> {
+    updateApplicationGroup(user: ApplicationGroup): Observable<any> {
 
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -93,13 +117,11 @@ export class UserGroupService {
         return this.http.put(this._baseUrl +'/'+ user.ID, JSON.stringify(user), {
             headers: headers
         })
-            .map((res: Response) => {
-                return;
-            })
+            .map(res => <any>(<Response>res).json())
             .catch(this.handleError);
     }
 
-    createApplicationGroup(usr: ApplicationGroup): Observable<ApplicationGroup> {
+    createApplicationGroup(usr: ApplicationGroup): Observable<any> {
         console.log(usr);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -107,17 +129,13 @@ export class UserGroupService {
         return this.http.post(this._baseUrl, JSON.stringify(usr), {
             headers: headers
         })
-            .map((res: Response) => {
-                return res.json();
-            })
+            .map(res => <any>(<Response>res).json())
             .catch(this.handleError);
     }
 
-    deleteApplicationGroup(id: number): Observable<void> {
+    deleteApplicationGroup(id: number): Observable<any> {
         return this.http.delete(this._baseUrl +'/'+ id)
-            .map((res: Response) => {
-                return;
-            })
+            .map(res => <any>(<Response>res).json())
             .catch(this.handleError);
     }
 

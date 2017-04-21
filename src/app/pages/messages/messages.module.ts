@@ -26,6 +26,7 @@ import { ShareModule } from "../shared/shares.module";
 import {ReCaptchaModule } from 'angular2-recaptcha';
 import {DataShareService} from "../shared/services/dataShare.service";
 import {UtilityService} from "../shared/services/utility.service";
+
 @NgModule({
   imports: [
     CommonModule,
@@ -41,6 +42,7 @@ import {UtilityService} from "../shared/services/utility.service";
   declarations: [
     Messages,
     MessageListComponent,
+
     // DateFormatPipe,
    // HighlightDirective,
    // MobileHideDirective,

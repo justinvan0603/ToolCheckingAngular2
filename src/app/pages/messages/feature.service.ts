@@ -13,7 +13,7 @@ import { Feature } from "./feature";
 export class FeatureService {
 
     _baseUrl: string = '';
-
+public _token:string;
     constructor(private http: Http,
         private itemsService: ItemsService,
         private configService: ConfigService) {
@@ -21,14 +21,18 @@ export class FeatureService {
     }
    
 
+setToken(token:string):void{
 
+      this._token=token;
+
+    }
 
     createFeedback(feature: Feature): Observable<any> {
         
         console.log(feature);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
-
+        headers.append('Authorization','Bearer '+this._token);
         return this.http.post(this._baseUrl, JSON.stringify(feature), {
             headers: headers
         })

@@ -9,24 +9,33 @@ import { ItemsService } from "../shared/utils/items.service";
 import { PaginatedResult, Pagination } from "../shared/interfaces";
 import { Domain } from "./domain";
 
+
 @Injectable()
 export class DataService {
 
     _baseUrl: string = '';
-
+    public _token:string;
     constructor(private http: Http,
         private itemsService: ItemsService,
-        private configService: ConfigService) {
+        private configService: ConfigService
+        ) {
         this._baseUrl = configService.getApiURI()+ 'Domains';
+        this._token = '';
     }
-   
+    setToken(token:string):void{
+        
+      this._token=token;
+
+    }
     getDomains(page?: number, itemsPerPage?: number, searchString?:string): Observable<PaginatedResult<Domain[]>> {
         var peginatedResult: PaginatedResult<Domain[]> = new PaginatedResult<Domain[]>();
-
+        console.log('t-' +this._token);
         let headers = new Headers();
         if (page != null && itemsPerPage != null) {
             headers.append('Pagination', page + ',' + itemsPerPage);
         }
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization','Bearer '+this._token);
 
         return this.http.get(this._baseUrl +'?userid=thieu1234' + '&searchString=' +searchString, {
             headers: headers

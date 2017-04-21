@@ -33,13 +33,38 @@ export class UserRoleService {
             headers: headers
         })
             .map((res: Response) => {
-                console.log(res.headers.keys());
+                //console.log(res.headers.keys());
                 peginatedResult.result = res.json();
 
                 if (res.headers.get("Pagination") != null) {
                     //var pagination = JSON.parse(res.headers.get("Pagination"));
                     var paginationHeader: Pagination = this.itemsService.getSerialized<Pagination>(JSON.parse(res.headers.get("Pagination")));
-                    console.log(paginationHeader);
+                    //console.log(paginationHeader);
+                    peginatedResult.pagination = paginationHeader;
+                }
+                return peginatedResult;
+            })
+            .catch(this.handleError);
+    }
+    getWithSearch(page?: number, itemsPerPage?: number,searchstring?:string): Observable<PaginatedResult<ApplicationRole[]>> {
+        var peginatedResult: PaginatedResult<ApplicationRole[]> = new PaginatedResult<ApplicationRole[]>();
+
+        let headers = new Headers();
+        if (page != null && itemsPerPage != null) {
+            headers.append('Pagination', page + ',' + itemsPerPage);
+        }
+
+        return this.http.get(this._baseUrl + '/' + searchstring, {
+            headers: headers
+        })
+            .map((res: Response) => {
+                //console.log(res.headers.keys());
+                peginatedResult.result = res.json();
+
+                if (res.headers.get("Pagination") != null) {
+                    //var pagination = JSON.parse(res.headers.get("Pagination"));
+                    var paginationHeader: Pagination = this.itemsService.getSerialized<Pagination>(JSON.parse(res.headers.get("Pagination")));
+                    //console.log(paginationHeader);
                     peginatedResult.pagination = paginationHeader;
                 }
                 return peginatedResult;
@@ -48,8 +73,7 @@ export class UserRoleService {
     }
 
 
-
-    update(user: ApplicationRole): Observable<void> {
+    update(user: ApplicationRole): Observable<any> {
 
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -57,9 +81,7 @@ export class UserRoleService {
         return this.http.put(this._baseUrl,JSON.stringify(user), {
             headers: headers
         })
-            .map((res: Response) => {
-                return;
-            })
+            .map(res => <any>(<Response>res).json())
             .catch(this.handleError);
         // return this.http.put(this._baseUrl +'/'+ user.ID, JSON.stringify(user), {
         //     headers: headers
@@ -70,7 +92,7 @@ export class UserRoleService {
         //     .catch(this.handleError);
     }
 
-    create(usr: ApplicationRole): Observable<ApplicationRole> {
+    create(usr: ApplicationRole): Observable<any> {
         console.log(usr);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -78,17 +100,13 @@ export class UserRoleService {
         return this.http.post(this._baseUrl, JSON.stringify(usr), {
             headers: headers
         })
-            .map((res: Response) => {
-                return res.json();
-            })
+            .map(res => <any>(<Response>res).json())
             .catch(this.handleError);
     }
 
-    delete(id: string): Observable<void> {
+    delete(id: string): Observable<any> {
         return this.http.delete(this._baseUrl +'/?id='+ id)
-            .map((res: Response) => {
-                return;
-            })
+            .map(res => <any>(<Response>res).json())
             .catch(this.handleError);
     }
 

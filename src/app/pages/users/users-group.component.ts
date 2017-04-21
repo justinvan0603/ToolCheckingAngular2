@@ -4,7 +4,7 @@ import {
     state,
     style,
     animate,
-    transition
+    transition, AfterViewChecked
 } from '@angular/core';
 
 import { ModalDirective } from 'ng2-bootstrap';
@@ -19,7 +19,8 @@ import { DataService } from "./user.service";
 import {ApplicationGroup} from "./applicationGroup";
 import {UserGroupService} from "./user-group.service";
 import {ApplicationRole} from "./applicationRole";
-import {UserRoleService} from "./user-role.service";
+import { UserRoleService } from "./user-role.service";
+import { NgForm } from "@angular/forms";
 
 @Component({
     // moduleId: module.id,
@@ -45,12 +46,16 @@ import {UserRoleService} from "./user-role.service";
         ])
     ]
 })
-export class ApplicationGroupComponent {
+export class ApplicationGroupComponent implements AfterViewChecked {
+        
+
+    viewUserForm : NgForm;
+    @ViewChild('viewUserForm') currentForm: NgForm;
     @ViewChild('childModal') public childModal: ModalDirective;
     users: ApplicationGroup[];
     selectedApplicationGroup: ApplicationGroup;
     apiHost: string;
-
+    public searchString : string;
     public itemsPerPage: number = 10;
     public totalItems: number = 0;
     public currentPage: number = 1;
@@ -72,6 +77,18 @@ export class ApplicationGroupComponent {
     backdrop: string | boolean = true;
     onEdit: boolean = false;
     public addingApplicationGroup: boolean = false;
+    formErrors = {
+    'NAME': ''
+ 
+  };
+  public isValid: boolean = true;
+  validationMessages = {
+    'NAME': {
+      'required':      'Tên nhóm không được để trống', 
+      'maxlength':     'Tên nhóm phải từ 1-200 ký tự',
+    },
+
+  };
     constructor(
         private dataService: UserGroupService,
         private itemsService: ItemsService,
@@ -103,7 +120,27 @@ export class ApplicationGroupComponent {
                 this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
             });
     }
+    loadApplicationGroupsWithSearch(searchString? : string) {
+        this.loadingBarService.start();
 
+        this.dataService.getApplicationGroupsSearch(this.currentPage, this.itemsPerPage,searchString)
+            .subscribe((res: PaginatedResult<ApplicationGroup[]>) => {
+                this.users = res.result;// schedules;
+                //this.totalItems = res.pagination.TotalItems;
+                this.loadingBarService.complete();
+            },
+            error => {
+                this.loadingBarService.complete();
+                this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+            });
+    }
+    search(searchstring: string)
+    {
+        if(!searchstring)
+            searchstring = '';
+        this.loadApplicationGroupsWithSearch(searchstring);
+        //this.loadDomains(searchstring);
+    }
   loadRoleByGroup() {
     this.loadingBarService.start();
 
@@ -119,6 +156,41 @@ export class ApplicationGroupComponent {
           this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
         });
   }
+
+ngAfterViewChecked(): void {
+            this.formChanged();
+        }
+
+formChanged()
+    {
+         if (this.currentForm === this.viewUserForm) { return; }
+         this.viewUserForm = this.currentForm;
+         if(this.viewUserForm)
+         {
+            this.viewUserForm.valueChanges
+                .subscribe(data => this.onValueChanged(data));
+         }
+    }
+    onValueChanged(data?: any)
+    {
+        if (!this.viewUserForm) { return; }
+        const form = this.viewUserForm.form;
+        this.isValid = true;
+        for (const field in this.formErrors) 
+        {
+            this.formErrors[field] = '';
+            const control = form.get(field);
+            if (control && control.dirty && !control.valid) 
+            {
+                this.isValid = false;
+                const messages = this.validationMessages[field];
+                for (const key in control.errors) 
+                {
+                    this.formErrors[field] += messages[key] + ' ';
+                }
+            }
+        }
+    }
 
 
 
@@ -189,8 +261,16 @@ editApplicationGroup(usr: ApplicationGroup) {
         this.loadingBarService.start();
         this.onEdit = true;
         this.dataService.updateApplicationGroup(usr)
-            .subscribe(() => {
-                this.notificationService.printSuccessMessage('ApplicationGroup đã được cập nhật');
+            .subscribe(res => {
+                if(res.Succeeded)
+                {
+                     this.notificationService.printSuccessMessage(res.Message);
+                }
+                else
+                {
+                    this.notificationService.printErrorMessage(res.Message);
+                }
+               
                 this.loadingBarService.complete();
             },
             error => {

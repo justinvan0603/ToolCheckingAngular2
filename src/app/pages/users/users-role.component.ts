@@ -4,7 +4,7 @@ import {
     state,
     style,
     animate,
-    transition
+    transition, AfterViewChecked
 } from '@angular/core';
 
 import { ModalDirective } from 'ng2-bootstrap';
@@ -19,7 +19,8 @@ import { DataService } from "./user.service";
 import {ApplicationGroup} from "./applicationGroup";
 import {UserGroupService} from "./user-group.service";
 import {UserRoleService} from "./user-role.service";
-import {ApplicationRole} from "./applicationRole";
+import { ApplicationRole } from "./applicationRole";
+import { NgForm } from "@angular/forms";
 
 @Component({
     // moduleId: module.id,
@@ -45,12 +46,14 @@ import {ApplicationRole} from "./applicationRole";
         ])
     ]
 })
-export class ApplicationRoleComponent {
+export class ApplicationRoleComponent implements AfterViewChecked {
+    viewUserForm : NgForm;
+    @ViewChild('viewUserForm') currentForm: NgForm;
     @ViewChild('childModal') public childModal: ModalDirective;
     users: ApplicationRole[];
     selectedApplicationGroup: ApplicationRole;
     apiHost: string;
-
+    public searchString : string;
     public itemsPerPage: number = 10;
     public totalItems: number = 0;
     public currentPage: number = 1;
@@ -71,6 +74,18 @@ export class ApplicationRoleComponent {
     backdrop: string | boolean = true;
     onEdit: boolean = false;
     public adding: boolean = false;
+    formErrors = {
+    'NAME': ''
+ 
+  };
+  public isValid: boolean = true;
+  validationMessages = {
+    'NAME': {
+      'required':      'Tên quyền không được để trống', 
+      'maxlength':     'Tên quyền phải từ 1-200 ký tự',
+    },
+
+  };
     constructor(
         private dataService: UserRoleService,
         private itemsService: ItemsService,
@@ -111,14 +126,22 @@ export class ApplicationRoleComponent {
     addNew(usr: ApplicationGroup) {
 
         //console.log(user);
-        console.log(this.selectedApplicationGroup);
+        //console.log(this.selectedApplicationGroup);
         this.loadingBarService.start();
         this.dataService.create(this.selectedApplicationGroup)
-            .subscribe(() => {
-                this.notificationService.printSuccessMessage('Thêm tài khoản thành công');
-                this.loadingBarService.complete();
-                this.addApplicationGroup =new ApplicationRole();
-                this.loadRoles();
+            .subscribe(res => {
+                if(res.Succeeded)
+                {
+                    this.notificationService.printSuccessMessage(res.Message);
+                    this.loadingBarService.complete();
+                    this.addApplicationGroup =new ApplicationRole();
+                    this.loadRoles();
+                }
+                else
+                {
+                    this.notificationService.printErrorMessage(res.Message);
+                }
+                
             },
             error => {
                 this.loadingBarService.complete();
@@ -138,7 +161,63 @@ export class ApplicationRoleComponent {
         this.childModal.show();
 
     }
+loadRolesWithSearch(searchstring?:string) {
+        this.loadingBarService.start();
 
+        this.dataService.getWithSearch(this.currentPage, this.itemsPerPage,searchstring)
+            .subscribe((res: PaginatedResult<ApplicationRole[]>) => {
+                this.users = res.result;// schedules;
+              //  this.totalItems = res.pagination.TotalItems;
+                this.loadingBarService.complete();
+            },
+            error => {
+                this.loadingBarService.complete();
+                this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+            });
+    }
+search(searchstring: string)
+    {
+        //console.log(searchstring);
+        if(!searchstring)
+            searchstring = '';
+        this.loadRolesWithSearch(searchstring);
+        //this.loadDomains(searchstring);
+    }
+
+ngAfterViewChecked(): void {
+            this.formChanged();
+        }
+
+formChanged()
+    {
+         if (this.currentForm === this.viewUserForm) { return; }
+         this.viewUserForm = this.currentForm;
+         if(this.viewUserForm)
+         {
+            this.viewUserForm.valueChanges
+                .subscribe(data => this.onValueChanged(data));
+         }
+    }
+    onValueChanged(data?: any)
+    {
+        if (!this.viewUserForm) { return; }
+        const form = this.viewUserForm.form;
+        this.isValid = true;
+        for (const field in this.formErrors) 
+        {
+            this.formErrors[field] = '';
+            const control = form.get(field);
+            if (control && control.dirty && !control.valid) 
+            {
+                this.isValid = false;
+                const messages = this.validationMessages[field];
+                for (const key in control.errors) 
+                {
+                    this.formErrors[field] += messages[key] + ' ';
+                }
+            }
+        }
+    }
   // delete(id:string) {
   //     console.log("u"+id);
   //   this.notificationService.openConfirmationDialog('Bạn có chắc muốn xóa?',
@@ -158,14 +237,22 @@ export class ApplicationRoleComponent {
   // }
 
   delete(usr: ApplicationRole) {
-    console.log("u"+usr);
+    //console.log("u"+usr);
     this.notificationService.openConfirmationDialog('Bạn có chắc muốn xóa?',
       () => {
         this.loadingBarService.start();
         this.dataService.delete(usr.Id)
-          .subscribe(() => {
-              this.itemsService.removeItemFromArray<ApplicationRole>(this.users, usr);
-              this.notificationService.printSuccessMessage(usr.Name + ' has been deleted.');
+          .subscribe(res => {
+              if(res.Succeeded)
+              {
+                this.itemsService.removeItemFromArray<ApplicationRole>(this.users, usr);
+                this.notificationService.printSuccessMessage(res.Message);
+              }
+              else
+              {
+                  this.notificationService.printErrorMessage(res.Message);
+              }
+              
               this.loadingBarService.complete();
             },
             error => {
@@ -176,12 +263,20 @@ export class ApplicationRoleComponent {
   }
 
 edit(usr: ApplicationRole) {
-        console.log(usr);
+        //console.log(usr);
         this.loadingBarService.start();
         this.onEdit = true;
         this.dataService.update(usr)
-            .subscribe(() => {
-                this.notificationService.printSuccessMessage('ApplicationGroup đã được cập nhật');
+            .subscribe(res => {
+                if(res.Succeeded)
+                {
+                    this.notificationService.printSuccessMessage(res.Message);
+                }
+                else
+                {
+                    this.notificationService.printErrorMessage(res.Message);
+                }
+                
                 this.loadingBarService.complete();
             },
             error => {
@@ -192,7 +287,7 @@ edit(usr: ApplicationRole) {
     }
 
     public viewDetails(usr: ApplicationRole): void {
-      console.log(usr);
+      //console.log(usr);
         this.adding = false;
         this.selectedApplicationGroup = new ApplicationRole();
         this.selectedApplicationGroup = usr;

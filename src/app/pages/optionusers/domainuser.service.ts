@@ -20,17 +20,23 @@ import { UserDomainUpdateObject } from "./userdomainupdateobject";
 export class DomainUserService {
 
     _baseUrl: string = '';
-
+    public _token : string;
     constructor(private http: Http,
         private itemsService: ItemsService,
         private configService: ConfigService) {
         this._baseUrl = configService.getApiURI()+ 'Options';
     }
+    setToken(token:string):void{
+
+      this._token=token;
+
+    }
    getOption(domain: string)
    {
         let headers = new Headers();
          headers.append('Content-Type', 'application/json');
-         return this.http.get(this._baseUrl + '?domain=' + domain)
+         headers.append('Authorization','Bearer '+this._token);
+         return this.http.get(this._baseUrl + '?domain=' + domain,{headers: headers})
             .map((res: Response) => {
                 return res.json();
             })
@@ -40,7 +46,7 @@ export class DomainUserService {
    {
             let headers = new Headers();
         headers.append('Content-Type', 'application/json');
-
+        headers.append('Authorization','Bearer '+this._token);
         return this.http.put(this._baseUrl + '/' + option.OPTION.ID, JSON.stringify(option), {
             headers: headers
         })

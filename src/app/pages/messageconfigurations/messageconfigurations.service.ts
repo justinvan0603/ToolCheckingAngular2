@@ -18,6 +18,7 @@ export class DataService {
         private itemsService: ItemsService,
         private configService: ConfigService) {
         this._baseUrl = configService.getApiURI()+ 'UserConfigs';
+        this._token = '';
     }
    private extractData(res: Response) {
 		return res.json() || { };
@@ -36,6 +37,7 @@ export class DataService {
        let headers = new Headers();
      headers.append('Content-Type', 'application/json');
      headers.append('Authorization','Bearer '+this._token);
+     console.log('t-' + this._token);
         return this.http.get(this._baseUrl+'/' + username,{headers:headers})
             .map(this.extractData)
             .catch(this.handleError);
@@ -53,7 +55,7 @@ export class DataService {
     updateUserConfigs(username:string,userconfig: UserConfig[]): Observable<void> {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
-
+        headers.append('Authorization','Bearer '+this._token);
         return this.http.put(this._baseUrl + '/'+username, JSON.stringify(userconfig), {
             headers: headers
         })

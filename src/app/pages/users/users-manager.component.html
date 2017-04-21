@@ -1,13 +1,22 @@
-<button class="btn btn-primary" type="button" *ngIf="users">
+<!--<button class="btn btn-primary" type="button" *ngIf="users">
   <i class="fa fa-calendar" aria-hidden="true"></i> Người dùng
   <span class="badge">{{this.totalItems}}</span>
-</button>
+</button>-->
 <hr/>
 
 <button class="btn btn-primary btn-sm" (click)="viewAddUser()">
   <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>Tạo tài khoản
 </button>
 <div [@flyInOut]="'in'">
+  <div class="col-md-9">
+    <form class="form-inline" method="post" #userGroupSearchForm="ngForm"  novalidate >
+            <div class="input-group">
+                <label >Tìm kiếm:</label>
+                <input type="text" class="form-control input-sm"  [(ngModel)]="this.searchString" name="SearchString" #SEARCHInput="ngModel"  pattern=".{1,500}"/>
+            <div class="input-group-btn" ><button style="margin-top:15%;"   (click)="search(this.searchString)" type="button" class="btn btn-success btn-sm"><i class="fa fa-search"></i> Tìm</button></div>
+            </div>
+    </form>
+    </div>
   <table class="table table-hover">
     <thead>
     <tr>
@@ -53,9 +62,36 @@
       </div>
       <div class="modal-body">
         <form method="post" #viewUserForm="ngForm" *ngIf="selectedUserLoaded" novalidate>
+          <div class="alert alert-danger" [hidden]="isValid">
+                        <ul *ngIf="formErrors.EMAIL">
+                            <li>{{formErrors.EMAIL}}</li>
+                            
+                        </ul>
+                        <ul *ngIf="formErrors.PHONE">
+                           <li>{{formErrors.PHONE}}</li>
+                            </ul>
 
+                            <ul *ngIf="formErrors.Username">
+                                <li>{{formErrors.Username}}</li>
+                            </ul>
+                            <ul *ngIf="formErrors.FULLNAME ">
+                                <li>{{formErrors.FULLNAME}}</li>
+                            </ul>
+
+                            <ul *ngIf="formErrors.Password ">
+                                    <li>{{formErrors.Password}}</li>
+                            </ul>
+                            
+                            <ul *ngIf="formErrors.DOMAIN ">
+                                    <li>{{formErrors.DOMAIN}}</li>
+                            </ul>
+                            <ul *ngIf="formErrors.DOMAINDESC ">
+                                    <li>{{formErrors.DOMAINDESC}}</li>
+                            </ul>
+                            
+                    </div>
           <!--Validate-->
-          <div class="alert alert-danger" [hidden]="viewUserForm.form.valid">
+          <!--<div class="alert alert-danger" [hidden]="viewUserForm.form.valid">
             <ul *ngIf="EMAILInput.dirty && !EMAILInput.valid ">
               <li *ngIf="EMAILInput.errors.required">Email không được bỏ trống</li>
               <li *ngIf="EMAILInput.errors.pattern">Email không hợp lệ</li>
@@ -89,7 +125,7 @@
               <li *ngIf="DOMAINDESCInput.errors.required">Mô tả không được bỏ trống</li>
             </ul>
 
-          </div>
+          </div>-->
           <!--End Validate-->
           <div class="form-group">
             <label><span style="color:red">*</span> UserName:</label>

@@ -4,7 +4,7 @@ import {
   state,
   style,
   animate,
-  transition
+  transition, AfterViewChecked
 } from '@angular/core';
 
 import {ModalDirective} from 'ng2-bootstrap';
@@ -22,6 +22,7 @@ import {UserManager} from "./user-manager";
 import {ApplicationGroup} from "./applicationGroup";
 import {UserGroupService} from "./user-group.service";
 import { ChecklistDirective } from 'ng2-checklist';
+import { NgForm } from "@angular/forms";
 @Component({
   // moduleId: module.id,
 
@@ -46,14 +47,15 @@ import { ChecklistDirective } from 'ng2-checklist';
     ])
   ]
 })
-export class UserManagerComponent {
-
+export class UserManagerComponent implements AfterViewChecked {
+viewUserForm : NgForm;
+    @ViewChild('viewUserForm') currentForm: NgForm;
   @ViewChild('childModal') public childModal: ModalDirective;
   users: UserManager[];
   applicationgroups: ApplicationGroup[];
   selectedUser: UserManager;
   apiHost: string;
-
+public searchString : string;
   public itemsPerPage: number = 10;
   public totalItems: number = 0;
   public currentPage: number = 1;
@@ -70,6 +72,18 @@ export class UserManagerComponent {
   animation: boolean = true;
   onEdit: boolean = false;
   public addingUser: boolean = false;
+  formErrors = {
+    'NAME': ''
+ 
+  };
+  public isValid: boolean = true;
+  validationMessages = {
+    'NAME': {
+      'required':      'Tên quyền không được để trống', 
+      'maxlength':     'Tên quyền phải từ 1-200 ký tự',
+    },
+
+  };
   constructor(private dataService: UserManagerService,
               private itemsService: ItemsService,
               private notificationService: NotificationService,
@@ -93,7 +107,7 @@ export class UserManagerComponent {
     this.dataService.getUsers(this.currentPage, this.itemsPerPage)
       .subscribe((res: PaginatedResult<UserManager[]>) => {
           this.users = res.result;// schedules;
-          this.totalItems = res.pagination.TotalItems;
+         // this.totalItems = res.pagination.TotalItems;
           this.loadingBarService.complete();
         },
         error => {
@@ -115,14 +129,68 @@ export class UserManagerComponent {
           this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
         });
   }
+  loadUsersWithSearch(searchstring?:string) {
+    this.loadingBarService.start();
 
+    this.dataService.getUsersWithSearch(this.currentPage, this.itemsPerPage,searchstring)
+      .subscribe((res: PaginatedResult<UserManager[]>) => {
+          this.users = res.result;// schedules;
+          //this.totalItems = res.pagination.TotalItems;
+          this.loadingBarService.complete();
+        },
+        error => {
+          this.loadingBarService.complete();
+          this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+        });
+  }
+search(searchstring: string)
+    {
+        //console.log(searchstring);
+        if(!searchstring)
+            searchstring = '';
+        this.loadUsersWithSearch(searchstring);
+        //this.loadDomains(searchstring);
+    }
   pageChanged(event: any): void {
     this.currentPage = event.page;
     this.loadUsers();
 
   };
 
+ngAfterViewChecked(): void {
+            this.formChanged();
+        }
 
+formChanged()
+    {
+         if (this.currentForm === this.viewUserForm) { return; }
+         this.viewUserForm = this.currentForm;
+         if(this.viewUserForm)
+         {
+            this.viewUserForm.valueChanges
+                .subscribe(data => this.onValueChanged(data));
+         }
+    }
+    onValueChanged(data?: any)
+    {
+        if (!this.viewUserForm) { return; }
+        const form = this.viewUserForm.form;
+        this.isValid = true;
+        for (const field in this.formErrors) 
+        {
+            this.formErrors[field] = '';
+            const control = form.get(field);
+            if (control && control.dirty && !control.valid) 
+            {
+                this.isValid = false;
+                const messages = this.validationMessages[field];
+                for (const key in control.errors) 
+                {
+                    this.formErrors[field] += messages[key] + ' ';
+                }
+            }
+        }
+    }
   addNewUser(usr: UserManager) {
 
     //console.log(user);
@@ -130,11 +198,19 @@ export class UserManagerComponent {
     // console.log(this.selectedUser);
     this.loadingBarService.start();
     this.dataService.createUser(this.selectedUser)
-      .subscribe(() => {
-          this.notificationService.printSuccessMessage('Thêm tài khoản thành công');
+      .subscribe(res => {
+        if(res.Succeeded)
+        {
+            this.notificationService.printSuccessMessage(res.Message);
           this.loadingBarService.complete();
           this.addUser = new UserManager();
           this.loadUsers();
+        }
+        else
+        {
+          this.notificationService.printErrorMessage(res.Message);
+        }
+          
         },
         error => {
           this.loadingBarService.complete();
@@ -163,9 +239,17 @@ export class UserManagerComponent {
       () => {
         this.loadingBarService.start();
         this.dataService.deleteUser(usr.Id)
-          .subscribe(() => {
-              this.itemsService.removeItemFromArray<UserManager>(this.users, usr);
-              this.notificationService.printSuccessMessage(usr.UserName + ' đã được xóa.');
+          .subscribe(rs => {
+              if(rs.Succeeded)
+              {
+                  this.itemsService.removeItemFromArray<UserManager>(this.users, usr);
+                  this.notificationService.printSuccessMessage(rs.Message);
+              }
+              else
+              {
+                this.notificationService.printErrorMessage(rs.Message);
+              }
+              
               this.loadingBarService.complete();
             },
             error => {
@@ -181,8 +265,16 @@ export class UserManagerComponent {
     this.loadingBarService.start();
     this.onEdit = true;
     this.dataService.updateUser(usr)
-      .subscribe(() => {
-          this.notificationService.printSuccessMessage('User đã được cập nhật');
+      .subscribe(res => {
+          if(res.Succeeded)
+          {
+              this.notificationService.printSuccessMessage(res.Message);
+          }
+          else
+          {
+            this.notificationService.printErrorMessage(res.Message);
+          }
+          
           this.loadingBarService.complete();
         },
         error => {

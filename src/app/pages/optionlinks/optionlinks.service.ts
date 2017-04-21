@@ -18,13 +18,17 @@ import { PaginatedResult, Pagination } from "../shared/interfaces";
 export class OptionLinkService {
 
     _baseUrl: string = '';
-
+public _token : string;
     constructor(private http: Http,
         private itemsService: ItemsService,
         private configService: ConfigService) {
         this._baseUrl = configService.getApiURI()+ 'OptionLinks';
     }
-   
+   setToken(token:string):void{
+
+      this._token=token;
+
+    }
     getOptionLinks(domain: string,page?: number, itemsPerPage?: number): Observable<PaginatedResult<Optionlink[]>> {
         var peginatedResult: PaginatedResult<Array<Optionlink>> = new PaginatedResult<Optionlink[]>();
 
@@ -32,7 +36,8 @@ export class OptionLinkService {
         if (page != null && itemsPerPage != null) {
             headers.append('Pagination', page + ',' + itemsPerPage);
         }
-
+        console.log(this._token);
+        headers.append('Authorization','Bearer '+this._token);
         return this.http.get(this._baseUrl +'?domain=' +domain, {
             headers: headers
         })

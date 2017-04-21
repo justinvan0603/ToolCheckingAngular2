@@ -24,6 +24,7 @@ import { OptionService } from "./option.service";
 import { OptionSearchObject } from "./optionsearch";
 import { OptionLinkUpdateObject } from "./optionupdateobject";
 import { NgForm } from "@angular/forms";
+import { MembershipService } from "../login/membership.service";
 
 
 
@@ -105,14 +106,16 @@ export class OptionLinkListComponent implements AfterViewChecked {
         private configService: ConfigService,
         private loadingBarService: SlimLoadingBarService,
         private route: ActivatedRoute,
-        private optionService: OptionService
+        private optionService: OptionService,
+        private membershipService:MembershipService
 
         ) {this.addOptionLink = new Optionlink();  }
 
     ngOnInit() {
         this.apiHost = this.configService.getApiHost();
         this.route.params.subscribe(params => {this.domainid=params['domainid']});
-        
+        this.optionService.setToken(this.membershipService.getTokenUser());
+        this.dataService.setToken(this.membershipService.getTokenUser());
         this.loadOptionlinks();
         this.loadOption();
         

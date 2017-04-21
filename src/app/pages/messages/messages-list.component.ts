@@ -80,7 +80,7 @@ export class MessageListComponent extends Paginated implements AfterViewChecked 
     backdrop: string | boolean = true;
     onEdit: boolean = false;
     addingUser: boolean = false;
-     private _messageApiUrl: string = 'http://localhost:9823/api/Messages/';
+     //private _messageApiUrl: string = 'http://localhost:9823/api/Messages/';
   private _displayingTotal: number;
   private sub: Subscription;
   formErrors = {
@@ -110,7 +110,7 @@ export class MessageListComponent extends Paginated implements AfterViewChecked 
     {
       super(0, 0, 0);
       this.feature = new Feature();
-      this._messageApiUrl = configService.getApiURI() + 'Messages/';
+      //this._messageApiUrl = configService.getApiURI() + 'Messages/';
     }
 
     ngOnInit() {
@@ -118,7 +118,7 @@ export class MessageListComponent extends Paginated implements AfterViewChecked 
       this.sub = this.route.params.subscribe(params => {
         this.dataShareService.set( 12);
         this.dataShareService.setToken(this.membershipService.getTokenUser());
-
+        this.featureService.setToken(this.membershipService.getTokenUser());
         this.loadMessages('');
 
         //this.cleanFeature();
