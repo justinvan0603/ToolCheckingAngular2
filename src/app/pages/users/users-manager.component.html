@@ -90,42 +90,7 @@
                             </ul>
                             
                     </div>
-          <!--Validate-->
-          <!--<div class="alert alert-danger" [hidden]="viewUserForm.form.valid">
-            <ul *ngIf="EMAILInput.dirty && !EMAILInput.valid ">
-              <li *ngIf="EMAILInput.errors.required">Email không được bỏ trống</li>
-              <li *ngIf="EMAILInput.errors.pattern">Email không hợp lệ</li>
-
-            </ul>
-            <ul *ngIf="PHONEInput.dirty && !PHONEInput.valid">
-              <li *ngIf="PHONEInput.errors.required">Điện thoại không được bỏ trống</li>
-              <li *ngIf="PHONEInput.errors.pattern">Số điện thoại phải từ 1-20 ký tự</li>
-            </ul>
-
-            <ul *ngIf="USERNAMEInput.dirty && !USERNAMEInput.valid ">
-              <li *ngIf="USERNAMEInput.errors.required">Username không được bỏ trống</li>
-              <li *ngIf="USERNAMEInput.errors.pattern">Username phải từ 1-50 ký tự</li>
-            </ul>
-            <ul *ngIf="FULLNAMEInput.dirty && !FULLNAMEInput.valid ">
-              <li *ngIf="FULLNAMEInput.errors.required">Họ tên không được bỏ trống</li>
-              <li *ngIf="FULLNAMEInput.errors.pattern">Họ tên phải từ 1-200 ký tự</li>
-            </ul>
-
-            <ul *ngIf="PASSWORDInput.dirty && !PASSWORDInput.valid ">
-              <li *ngIf="PASSWORDInput.errors.pattern">Password phải từ 1-50 ký tự</li>
-              <li *ngIf="PASSWORDInput.errors.required">Password không được bỏ trống</li>
-            </ul>
-
-            <ul *ngIf="DOMAINInput.dirty && !DOMAINInput.valid ">
-              <li *ngIf="DOMAINInput.errors.pattern">Domain phải từ 1-200 ký tự</li>
-              <li *ngIf="DOMAINInput.errors.required">Domain không được bỏ trống</li>
-            </ul>
-            <ul *ngIf="DOMAINDESCInput.dirty && !DOMAINDESCInput.valid ">
-              <li *ngIf="DOMAINDESCInput.errors.pattern">Mô tả phải từ 1-500</li>
-              <li *ngIf="DOMAINDESCInput.errors.required">Mô tả không được bỏ trống</li>
-            </ul>
-
-          </div>-->
+   
           <!--End Validate-->
           <div class="form-group">
             <label><span style="color:red">*</span> UserName:</label>
@@ -166,7 +131,7 @@
 
           </div>
           <div class="form-group" [class.hidden]="!this.addingUser">
-            <label><span style="color:red">*</span> Mô tả:</label>
+            <label><span style="color:red">*</span> Mô tả domain:</label>
             <input type="text" class="form-control" [(ngModel)]="this.selectedUser.DomainDesc" name="DOMAINDESC"
                    #DOMAINDESCInput="ngModel" required pattern=".{1,500}"/>
 

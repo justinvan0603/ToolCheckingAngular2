@@ -21,7 +21,7 @@
                 <label class="control-label col-md-2" >Người quản lý:</label>
                 <div class="col-md-10">
                 <select ngControl="ManageUserInput" name="ManageUser" [(ngModel)]="selectedManageUser" #ManageUserInput="ngModel" [ngModelOptions]="{standalone: true}" class="form-control form-control-sm" required>
-                    <option *ngFor="let usr of listManageUser" [ngValue]="usr" >{{usr.Username}}</option>
+                    <option *ngFor="let usr of listManageUser" [ngValue]="usr" >{{usr.UserName}}</option>
                 </select>
                 </div>
                 </div>

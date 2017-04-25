@@ -18,6 +18,7 @@ import { NotificationService } from "../shared/utils/notification.service";
 import { User } from "./user";
 import { DataService } from "./user.service";
 import { NgForm } from "@angular/forms";
+import { UtilityService } from "../shared/services/utility.service";
 
 @Component({
     // moduleId: module.id,
@@ -118,6 +119,7 @@ formErrors = {
         private itemsService: ItemsService,
         private notificationService: NotificationService,
         private configService: ConfigService,
+        public utilityService: UtilityService,
         private loadingBarService: SlimLoadingBarService,
         ) {this.addUser = new User();  }
 
@@ -185,7 +187,7 @@ ngAfterViewChecked(): void {
     addNewUser(usr: User) {
         
         //console.log(user);
-        console.log(this.selectedUser);
+        //console.log(this.selectedUser);
         this.loadingBarService.start();
         this.dataService.createUser(this.selectedUser)
             .subscribe(() => {
@@ -196,6 +198,11 @@ ngAfterViewChecked(): void {
                 this.loadUsers();
             },
             error => {
+                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Lỗi- ' + error);
             });
@@ -231,7 +238,7 @@ deleteUser(usr:User)
             });
 }
 editUser(usr: User) {
-        console.log(usr);
+        //console.log(usr);
         this.loadingBarService.start();
         this.onEdit = true;
         this.dataService.updateUser(usr)

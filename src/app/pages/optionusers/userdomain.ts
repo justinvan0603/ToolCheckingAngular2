@@ -16,7 +16,7 @@ export class UserDomain
           DOMAIN_ID :string;
           NOTES :string;
           FULLNAME :string;
-          USERID :number;
+          USERID :string;
           PARENT_ID :number;
           constructor()
           {
@@ -25,7 +25,7 @@ export class UserDomain
               this.DOMAIN_ID = '';
               this.NOTES = '';
               this.FULLNAME = '';
-              this.USERID = 0;
+              this.USERID = '';
               this.PARENT_ID =  0;
           }
 }

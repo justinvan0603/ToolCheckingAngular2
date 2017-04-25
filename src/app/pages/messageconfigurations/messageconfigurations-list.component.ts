@@ -20,6 +20,7 @@ import { DataService } from "./messageconfigurations.service";
 import {Feature} from "./feature"
 import { FeatureService } from "./feature.service"
 import { MembershipService } from "../login/membership.service";
+import { UtilityService } from "../shared/services/utility.service";
 @Component({
     // moduleId: module.id,
 
@@ -75,6 +76,7 @@ export class MessageConfigurationsListComponent {
         private itemsService: ItemsService,
         private notificationService: NotificationService,
         private configService: ConfigService,
+        public utilityService: UtilityService,
         private loadingBarService: SlimLoadingBarService,
         private membershipService:MembershipService,
         ) {  }
@@ -83,19 +85,21 @@ export class MessageConfigurationsListComponent {
         this.apiHost = this.configService.getApiHost();
         
         this.dataService.setToken(this.membershipService.getTokenUser());
-        console.log(this.dataService._token);
-        this.loadUserConfigs('thieu1234');
+        //console.log(this.dataService._token);
+        var _user = this.membershipService.getLoggedInUser();
+
+        this.loadUserConfigs(_user.Username);
         //this.cleanFeature();
         //this.feature = new Feature();
         
     }
     saveConfig(){
-        console.log(this.userconfigs);
+        //console.log(this.userconfigs);
         for(let item of this.userconfigs)
         {
             item.CONF_VALUE = item.CONF_VALUE
         }
-        this.dataService.updateUserConfigs('thieu1234',this.userconfigs).subscribe(() => {
+        this.dataService.updateUserConfigs('hieupt',this.userconfigs).subscribe(() => {
                 this.notificationService.printSuccessMessage('Cập nhật thành công');
                 this.loadingBarService.complete();
                
@@ -111,18 +115,24 @@ export class MessageConfigurationsListComponent {
         this.dataService.getUserConfigs(username)
             .subscribe((data:UserConfig[]) => {
                 this.userconfigs = data;
-                console.log(this.userconfigs);
+                //console.log(this.userconfigs);
                 this.loadingBarService.complete();
             },
             error => {
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Có lỗi khi tải tham số.- ' + error);
+                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
             });
     }
 
     pageChanged(event: any): void {
         ///this.currentPage = event.page;
-        this.loadUserConfigs('thieu1234');
+        var _user = this.membershipService.getLoggedInUser();
+        this.loadUserConfigs(_user.Username);
 
     };
 

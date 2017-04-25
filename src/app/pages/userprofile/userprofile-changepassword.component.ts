@@ -21,6 +21,7 @@ import {Router} from "@angular/router";
 import { ReCaptchaComponent } from "angular2-recaptcha";
 import { DataService } from "./userprofile.service";
 import { User } from "../users/user";
+import { UtilityService } from "../shared/services/utility.service";
 @Component({
     // moduleId: module.id,
 
@@ -55,6 +56,7 @@ export class ChangePasswordComponent {
         private dataService: DataService,
         private itemsService: ItemsService,
         private notificationService: NotificationService,
+        public utilityService: UtilityService,
         private configService: ConfigService,
         private loadingBarService: SlimLoadingBarService,
         public router: Router
@@ -81,6 +83,11 @@ export class ChangePasswordComponent {
                 }
         },
          error => {
+             if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Cập nhật thất bại ' + error);
             }

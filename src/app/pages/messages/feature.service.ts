@@ -29,7 +29,7 @@ setToken(token:string):void{
 
     createFeedback(feature: Feature): Observable<any> {
         
-        console.log(feature);
+        //console.log(feature);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization','Bearer '+this._token);
@@ -46,7 +46,7 @@ setToken(token:string):void{
         var modelStateErrors: string = '';
 
         if (!serverError.type) {
-            console.log(serverError);
+          //  console.log(serverError);
             for (var key in serverError) {
                 if (serverError[key])
                     modelStateErrors += serverError[key] + '\n';

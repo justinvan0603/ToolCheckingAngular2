@@ -25,6 +25,7 @@ import { OptionSearchObject } from "./optionsearch";
 import { OptionLinkUpdateObject } from "./optionupdateobject";
 import { NgForm } from "@angular/forms";
 import { MembershipService } from "../login/membership.service";
+import { UtilityService } from "../shared/services/utility.service";
 
 
 
@@ -106,6 +107,7 @@ export class OptionLinkListComponent implements AfterViewChecked {
         private configService: ConfigService,
         private loadingBarService: SlimLoadingBarService,
         private route: ActivatedRoute,
+        public utilityService: UtilityService,
         private optionService: OptionService,
         private membershipService:MembershipService
 
@@ -162,6 +164,11 @@ export class OptionLinkListComponent implements AfterViewChecked {
         error => {
                  this.loadingBarService.complete();
                this.notificationService.printErrorMessage('Có lỗi khi tải .- ' + error);
+               if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                 }
         );
     }
@@ -188,6 +195,11 @@ export class OptionLinkListComponent implements AfterViewChecked {
                 this.loadingBarService.complete();
             },
             error => {
+                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Cập nhật thất bại ' + error);
             });
@@ -203,6 +215,11 @@ export class OptionLinkListComponent implements AfterViewChecked {
                 this.loadingBarService.complete();
             },
             error => {
+                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
             });
@@ -218,7 +235,7 @@ export class OptionLinkListComponent implements AfterViewChecked {
         if(optlink.Link.includes(this.currentOptionSearch.DOMAIN_ID))
         {
             let opt = this.optionlinks.find(link => link.Link == optlink.Link);
-            console.log(opt);
+            //console.log(opt);
             if(opt != null)
             {
                 this.loadingBarService.start();

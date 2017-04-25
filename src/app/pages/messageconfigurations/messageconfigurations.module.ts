@@ -23,6 +23,7 @@ import { MessageConfigurations } from "./messageconfigurations.component";
 import { DataService } from "./messageconfigurations.service";
 
 import { ShareModule } from "../shared/shares.module";
+import { UtilityService } from "../shared/services/utility.service";
 
 @NgModule({
   imports: [
@@ -45,7 +46,8 @@ import { ShareModule } from "../shared/shares.module";
   ],
   providers: [
    // ConfigService,
-    DataService
+    DataService,
+    UtilityService,
    // ItemsService,
    // MappingService,
    // NotificationService,

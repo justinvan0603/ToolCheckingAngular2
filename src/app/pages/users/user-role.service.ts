@@ -101,7 +101,7 @@ export class UserRoleService {
     }
 
     create(usr: ApplicationRole): Observable<any> {
-        console.log(usr);
+        //console.log(usr);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization','Bearer '+this._token);
@@ -129,7 +129,7 @@ export class UserRoleService {
         var modelStateErrors: string = '';
 
         if (!serverError.type) {
-            console.log(serverError);
+            //console.log(serverError);
             for (var key in serverError) {
                 if (serverError[key])
                     modelStateErrors += serverError[key] + '\n';

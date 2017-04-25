@@ -39,7 +39,7 @@ export class UserManagerService {
         })
             .map((res: Response) => {
             //    console.log(res.headers.keys());
-              console.log("ga"+res);
+              //console.log("ga"+res);
                 peginatedResult.result = res.json();
 
                 if (res.headers.get("Pagination") != null) {
@@ -133,7 +133,7 @@ export class UserManagerService {
     }
 
     createUser(usr: UserManager): Observable<any> {
-        console.log(usr);
+        //console.log(usr);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization','Bearer '+this._token);
@@ -161,7 +161,7 @@ export class UserManagerService {
         var modelStateErrors: string = '';
 
         if (!serverError.type) {
-            console.log(serverError);
+           // console.log(serverError);
             for (var key in serverError) {
                 if (serverError[key])
                     modelStateErrors += serverError[key] + '\n';

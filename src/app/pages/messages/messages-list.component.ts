@@ -163,8 +163,8 @@ export class MessageListComponent extends Paginated implements AfterViewChecked 
         }
     }
     loadMessages(searchString?:string) {
-        //var _userData = JSON.parse(localStorage.getItem('user'));
-       this.dataShareService.getMessagesByUsername(this._page,'thieu1234',searchString)
+        var _userData = this.membershipService.getLoggedInUser(); 
+       this.dataShareService.getMessagesByUsername(this._page,_userData.Username,searchString)
             .subscribe(res => {
 
                 var data: any = res.json();
@@ -183,11 +183,10 @@ export class MessageListComponent extends Paginated implements AfterViewChecked 
                     this.utilityService.navigateToSignIn();
 
                 }
-              console.error('Error: ' + error)
+              //console.error('Error: ' + error)
 
 
-            },
-            () => console.log(this.messages));
+            });
 
     }
       // this.dataService.getMessages(this.currentPage, this.itemsPerPage)

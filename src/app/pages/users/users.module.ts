@@ -29,6 +29,7 @@ import {ApplicationGroupComponent} from "./users-group.component";
 import {ApplicationRoleComponent} from "./users-role.component";
 import {UserRoleService} from "./user-role.service";
 import { ChecklistDirective } from 'ng2-checklist';
+import { UtilityService } from "../shared/services/utility.service";
 
 @NgModule({
   imports: [
@@ -57,7 +58,8 @@ import { ChecklistDirective } from 'ng2-checklist';
   DataService,
     UserManagerService,
     UserGroupService,
-    UserRoleService
+    UserRoleService,
+    UtilityService,
   //  ItemsService,
    // MappingService,
    // NotificationService,

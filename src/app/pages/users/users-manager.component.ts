@@ -24,7 +24,8 @@ import {UserGroupService} from "./user-group.service";
 import { ChecklistDirective } from 'ng2-checklist';
 import { NgForm } from "@angular/forms";
 import {DomainListComponent} from "../domains/domain-list.component";
-import {MembershipService} from "../login/membership.service";
+import { MembershipService } from "../login/membership.service";
+import { UtilityService } from "../shared/services/utility.service";
 @Component({
   // moduleId: module.id,
 
@@ -75,21 +76,53 @@ public searchString : string;
   onEdit: boolean = false;
   public addingUser: boolean = false;
   formErrors = {
-    'NAME': ''
+    'FULLNAME': '',
+    'EMAIL' : '',
+    'PHONE' : '',
+    'Username' : '',
+    'Password' : '',
+    'DOMAIN' : '',
+    'DOMAINDESC' : ''
+
 
   };
   public isValid: boolean = true;
   validationMessages = {
-    'NAME': {
-      'required':      'Tên quyền không được để trống',
-      'maxlength':     'Tên quyền phải từ 1-200 ký tự',
+    'FULLNAME': {
+      'required':      'Họ tên không được để trống',
+      'maxlength':     'Họ tên phải từ 1-200 ký tự',
     },
-
+    'EMAIL' : {
+      'required' : 'Email không được để trống',
+      'pattern' : 'Email không hợp lệ'
+    },
+    'PHONE' : {
+      'required' : 'Số điện thoại không được để trống',
+      'maxlength' : 'Số điện thoại phải từ 1-20 ký tự'
+    },
+    'Username' : {
+      'required' : 'Tên đăng nhập không được để trống',
+      'maxlength' : 'Tên đăng nhập phải từ 1-20 ký tự'
+    },
+    'Password' : {
+      'required' : 'Mật khẩu không được để trống',
+      'maxlength' : 'Mật khẩu nhập phải từ 1-50 ký tự'
+    },
+    'DOMAIN' : {
+      'required' : 'Domain không được để trống',
+      'maxlength' : 'Domain nhập phải từ 1-200 ký tự'
+    },
+    'DOMAINDESC' : {
+      'required' : 'Mô tả không được để trống',
+      'maxlength' : 'Mô tả nhập phải từ 1-200 ký tự'
+    },
+    
   };
   constructor(private dataService: UserManagerService,
               private itemsService: ItemsService,
               private notificationService: NotificationService,
               private configService: ConfigService,
+              public utilityService: UtilityService,
               private loadingBarService: SlimLoadingBarService,
               private groupService: UserGroupService,
               private membershipService:MembershipService
@@ -115,6 +148,11 @@ public searchString : string;
           this.loadingBarService.complete();
         },
         error => {
+          if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
           this.loadingBarService.complete();
           this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
         });
@@ -129,6 +167,11 @@ public searchString : string;
           this.loadingBarService.complete();
         },
         error => {
+          if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
           this.loadingBarService.complete();
           this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
         });
@@ -143,6 +186,11 @@ public searchString : string;
           this.loadingBarService.complete();
         },
         error => {
+          if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
           this.loadingBarService.complete();
           this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
         });
@@ -216,6 +264,11 @@ formChanged()
 
           },
           error => {
+            if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
             this.loadingBarService.complete();
             this.notificationService.printErrorMessage('Lỗi- ' + error);
           });
@@ -264,6 +317,11 @@ formChanged()
               this.loadingBarService.complete();
             },
             error => {
+              if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
               this.loadingBarService.complete();
               this.notificationService.printErrorMessage('Lỗi ' + usr.UserName + ' ' + error);
             });
@@ -271,7 +329,7 @@ formChanged()
   }
 
   editUser(usr: UserManager) {
-    console.log(usr);
+    //console.log(usr);
    // usr.Groups = usr.Groups.filter(x=>x.Check);
     this.loadingBarService.start();
     this.onEdit = true;
@@ -289,6 +347,11 @@ formChanged()
           this.loadingBarService.complete();
         },
         error => {
+          if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
           this.loadingBarService.complete();
           this.notificationService.printErrorMessage('Cập nhật thất bại ' + error);
         });
@@ -320,6 +383,11 @@ formChanged()
           this.childModal.show();
         },
         error => {
+          if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
           this.loadingBarService.complete();
           this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
         });

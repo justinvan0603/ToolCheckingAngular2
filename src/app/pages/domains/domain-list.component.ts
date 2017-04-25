@@ -21,6 +21,7 @@ import { ManageUser } from "./manageuser";
 import { ManageUserService } from "./manageuser.service";
 import { NgForm } from "@angular/forms";
 import { MembershipService } from "../login/membership.service";
+import { UtilityService } from "../shared/services/utility.service";
 
 @Component({
     // moduleId: module.id,
@@ -99,6 +100,7 @@ export class DomainListComponent implements AfterViewChecked {
         private itemsService: ItemsService,
         private notificationService: NotificationService,
         private configService: ConfigService,
+        public utilityService: UtilityService,
         private loadingBarService: SlimLoadingBarService,
         private manageUserService: ManageUserService,
         private membershipService:MembershipService
@@ -121,13 +123,21 @@ export class DomainListComponent implements AfterViewChecked {
     }
     loadManageUsers()
     {
-        this.manageUserService.getManageUsers(null,'thieu1234').subscribe((data:ManageUser[]) => {
+        var _user = this.membershipService.getLoggedInUser();
+        //console.log(_user);
+        this.manageUserService.getManageUsers(null,_user.Username).subscribe((data:ManageUser[]) => {
                 this.listManageUser = data;
-                console.log(this.listManageUser);
+                //console.log(data);
+                //console.log(this.listManageUser);
                 this.loadingBarService.complete();
                 this.selectedManageUser = this.listManageUser[this.listManageUser.length-1];
             },
             error => {
+                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Có lỗi khi tải .- ' + error);
             });
@@ -135,8 +145,8 @@ export class DomainListComponent implements AfterViewChecked {
     }
     loadDomains(searchString?:string) {
         this.loadingBarService.start();
-
-        this.dataService.getDomains(this.currentPage, this.itemsPerPage,searchString)
+        
+        this.dataService.getDomains(this.currentPage, this.itemsPerPage,searchString,'hieupt')
             .subscribe((res: PaginatedResult<Domain[]>) => {
                 this.domains = res.result;// schedules;
                 this.totalItems = res.pagination.TotalItems;
@@ -190,11 +200,11 @@ ngAfterViewChecked(): void {
     addNewDomain(domain: Domain) {
         if(domain.DOMAIN.includes(DomainListComponent.DOMAIN_PREFIX))
         {
-        console.log(domain);
+        //console.log(domain);
         this.loadingBarService.start();
         domain.USER_ID = this.selectedManageUser.Id.toString();
-        domain.USERNAME = this.selectedManageUser.Username;
-        domain.FULLNAME = this.selectedManageUser.Fullname;
+        domain.USERNAME = this.selectedManageUser.UserName;
+        domain.FULLNAME = this.selectedManageUser.FULLNAME;
         domain.CREATE_DT = domain.EDIT_DT = domain.APPROVE_DT = null;
         this.dataService.createDomain(domain)
             .subscribe(rs=> {
@@ -215,6 +225,11 @@ ngAfterViewChecked(): void {
                
             },
             error => {
+                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Lỗi- ' + error);
             });
@@ -241,7 +256,7 @@ ngAfterViewChecked(): void {
     }
 deleteDomain(domain:Domain)
 {
-    console.log(domain);
+    //console.log(domain);
     this.notificationService.openConfirmationDialog('Bạn có chắc muốn xóa?',
             () => {
                 this.loadingBarService.start();
@@ -261,6 +276,11 @@ deleteDomain(domain:Domain)
                         this.loadingBarService.complete();
                     },
                     error => {
+                        if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                         this.loadingBarService.complete();
                         this.notificationService.printErrorMessage('Lỗi ' + ' ' + error);
                     });
@@ -269,9 +289,9 @@ deleteDomain(domain:Domain)
 editDomain(domain: Domain) {
         //console.log(domain);
         if(domain.DOMAIN.includes(DomainListComponent.DOMAIN_PREFIX)){
-        console.log(this.selectedManageUser);
+        //console.log(this.selectedManageUser);
         this.selectedDomain.USER_ID =this.selectedManageUser.Id.toString();
-        this.selectedDomain.USERNAME = this.selectedManageUser.Username;
+        this.selectedDomain.USERNAME = this.selectedManageUser.UserName;
         this.loadingBarService.start();
         this.onEdit = true;
         this.dataService.updateDomain(this.selectedDomain)
@@ -288,6 +308,11 @@ editDomain(domain: Domain) {
                 this.loadingBarService.complete();
             },
             error => {
+                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Cập nhật thất bại ' + error);
             });
@@ -313,7 +338,7 @@ editDomain(domain: Domain) {
         //this.selectedDomain.MAKER_ID = '';
         //this.selectedDomain.FULLNAME = '';
         console.log(this.selectedDomain);
-        this.selectedManageUser = this.listManageUser.find(val => val.Username == domain.USERNAME);
+        this.selectedManageUser = this.listManageUser.find(val => val.UserName == domain.USERNAME);
         //alert(this.addingUser);
         this.loadingBarService.complete();
         this.selectedDomainLoaded = true;

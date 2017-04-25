@@ -27,6 +27,7 @@ import { OptionLinks } from "./optionlinks.component";
 import { OptionLinkListComponent } from "./optionlinks-list.component";
 import { OptionLinkService } from "./optionlinks.service";
 import { OptionService } from "./option.service";
+import { UtilityService } from "../shared/services/utility.service";
 
 
 
@@ -51,7 +52,8 @@ import { OptionService } from "./option.service";
   providers: [
   
  OptionLinkService,
- OptionService
+ OptionService,
+ UtilityService,
 
   ],
   //exports:[DateFormatPipe]

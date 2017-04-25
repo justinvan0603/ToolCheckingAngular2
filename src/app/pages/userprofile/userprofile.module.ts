@@ -28,6 +28,7 @@ import { UserProfile } from "./userprofile.component";
 import { UserProfileDetailComponent } from "./userprofile-detail.component";
 import { DataService } from "./userprofile.service";
 import { ChangePasswordComponent } from "./userprofile-changepassword.component";
+import { UtilityService } from "../shared/services/utility.service";
 
 @NgModule({
   imports: [
@@ -50,6 +51,7 @@ import { ChangePasswordComponent } from "./userprofile-changepassword.component"
   providers: [
 
     DataService,
+     UtilityService,
 
   ],
  // exports:[DateFormatPipe]

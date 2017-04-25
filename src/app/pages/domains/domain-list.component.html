@@ -32,7 +32,7 @@
                 <td class="text-xs-left">{{item.DESCRIPTION}}</td>
                 <td class="text-xs-left">{{item.USERNAME}}</td>
                 <td class="text-xs-left">{{item.FULLNAME}}</td>
-                <td><a class="btn btn-warning" (click)="viewDomainDetails(item)"><i class="fa fa-pencil-square-o" ></i>Cập nhật</a>
+                <!--<td><a class="btn btn-warning" (click)="viewDomainDetails(item)"><i class="fa fa-pencil-square-o" ></i>Cập nhật</a>-->
                 <a class="btn btn-success" [routerLink]="['/pages/optionlinks/optionlinklist',item.DOMAIN]"><i class="fa fa-link" ></i> Link</a>
                 <a class="btn btn-success" [routerLink]="['/pages/optionusers/optionuserlist',item.DOMAIN]"><i class="fa fa-users" ></i> User</a>
                 <a class="btn btn-danger" (click)="deleteDomain(item)"><i class="fa fa-trash-o" ></i>Xóa</a>
@@ -90,7 +90,7 @@
              <div class="form-group">
                 <label >Người quản lý:</label>
                 <select ngControl="ManageUserInput" name="ManageUser" [(ngModel)]="selectedManageUser" #ManageUserInput="ngModel" [ngModelOptions]="{standalone: true}" class="form-control form-control-sm" required>
-                    <option *ngFor="let usr of listManageUser" [ngValue]="usr" [selected]="this.selectedDomain.USERNAME === usr.Username">{{usr.Username}}</option>
+                    <option *ngFor="let usr of listManageUser" [ngValue]="usr" [selected]="this.selectedDomain.USERNAME === usr.UserName">{{usr.UserName}}</option>
                 </select>
             </div>
             

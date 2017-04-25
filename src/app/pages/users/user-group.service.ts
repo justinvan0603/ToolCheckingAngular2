@@ -32,13 +32,13 @@ getApplicationGroupsSearch(page?: number, itemsPerPage?: number, searchString?: 
             headers: headers
         })
             .map((res: Response) => {
-                console.log(res.headers.keys());
+               // console.log(res.headers.keys());
                 peginatedResult.result = res.json();
 
                 if (res.headers.get("Pagination") != null) {
                     //var pagination = JSON.parse(res.headers.get("Pagination"));
                     var paginationHeader: Pagination = this.itemsService.getSerialized<Pagination>(JSON.parse(res.headers.get("Pagination")));
-                    console.log(paginationHeader);
+                    //console.log(paginationHeader);
                     peginatedResult.pagination = paginationHeader;
                 }
                 return peginatedResult;
@@ -57,13 +57,13 @@ getApplicationGroupsSearch(page?: number, itemsPerPage?: number, searchString?: 
             headers: headers
         })
             .map((res: Response) => {
-                console.log(res.headers.keys());
+              //  console.log(res.headers.keys());
                 peginatedResult.result = res.json();
 
                 if (res.headers.get("Pagination") != null) {
                     //var pagination = JSON.parse(res.headers.get("Pagination"));
                     var paginationHeader: Pagination = this.itemsService.getSerialized<Pagination>(JSON.parse(res.headers.get("Pagination")));
-                    console.log(paginationHeader);
+                    //console.log(paginationHeader);
                     peginatedResult.pagination = paginationHeader;
                 }
                 return peginatedResult;
@@ -122,7 +122,7 @@ getApplicationGroupsSearch(page?: number, itemsPerPage?: number, searchString?: 
     }
 
     createApplicationGroup(usr: ApplicationGroup): Observable<any> {
-        console.log(usr);
+        //console.log(usr);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
@@ -145,7 +145,7 @@ getApplicationGroupsSearch(page?: number, itemsPerPage?: number, searchString?: 
         var modelStateErrors: string = '';
 
         if (!serverError.type) {
-            console.log(serverError);
+            //console.log(serverError);
             for (var key in serverError) {
                 if (serverError[key])
                     modelStateErrors += serverError[key] + '\n';

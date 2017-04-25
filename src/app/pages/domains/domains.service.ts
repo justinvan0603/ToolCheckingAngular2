@@ -27,9 +27,9 @@ export class DataService {
       this._token=token;
 
     }
-    getDomains(page?: number, itemsPerPage?: number, searchString?:string): Observable<PaginatedResult<Domain[]>> {
+    getDomains(page?: number, itemsPerPage?: number, searchString?:string, username? :string): Observable<PaginatedResult<Domain[]>> {
         var peginatedResult: PaginatedResult<Domain[]> = new PaginatedResult<Domain[]>();
-        console.log('t-' +this._token);
+        //console.log('t-' +this._token);
         let headers = new Headers();
         if (page != null && itemsPerPage != null) {
             headers.append('Pagination', page + ',' + itemsPerPage);
@@ -37,17 +37,17 @@ export class DataService {
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization','Bearer '+this._token);
 
-        return this.http.get(this._baseUrl +'?userid=thieu1234' + '&searchString=' +searchString, {
+        return this.http.get(this._baseUrl +'?userid='+ username + '&searchString=' +searchString, {
             headers: headers
         })
             .map((res: Response) => {
-                console.log(res.headers.keys());
+               // console.log(res.headers.keys());
                 peginatedResult.result = res.json();
 
                 if (res.headers.get("Pagination") != null) {
                     //var pagination = JSON.parse(res.headers.get("Pagination"));
                     var paginationHeader: Pagination = this.itemsService.getSerialized<Pagination>(JSON.parse(res.headers.get("Pagination")));
-                    console.log(paginationHeader);
+                   // console.log(paginationHeader);
                     peginatedResult.pagination = paginationHeader;
                 }
                 return peginatedResult;
@@ -65,7 +65,7 @@ export class DataService {
 
 
     updateDomain(domain: Domain): Observable<any> {
-        console.log(domain);
+       // console.log(domain);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
@@ -77,7 +77,7 @@ export class DataService {
     }
 
     createDomain(user: Domain): Observable<any> {
-        console.log(user);
+       // console.log(user);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json,');
         //headers.append('Accept', 'application/json');
@@ -99,7 +99,7 @@ export class DataService {
         var modelStateErrors: string = '';
 
         if (!serverError.type) {
-            console.log(serverError);
+          //  console.log(serverError);
             for (var key in serverError) {
                 if (serverError[key])
                     modelStateErrors += serverError[key] + '\n';

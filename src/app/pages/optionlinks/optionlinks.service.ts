@@ -36,19 +36,19 @@ public _token : string;
         if (page != null && itemsPerPage != null) {
             headers.append('Pagination', page + ',' + itemsPerPage);
         }
-        console.log(this._token);
+      //  console.log(this._token);
         headers.append('Authorization','Bearer '+this._token);
         return this.http.get(this._baseUrl +'?domain=' +domain, {
             headers: headers
         })
             .map((res: Response) => {
-                console.log(res.headers.keys());
+              //  console.log(res.headers.keys());
                 peginatedResult.result = res.json();
 
                 if (res.headers.get("Pagination") != null) {
                     //var pagination = JSON.parse(res.headers.get("Pagination"));
                     var paginationHeader: Pagination = this.itemsService.getSerialized<Pagination>(JSON.parse(res.headers.get("Pagination")));
-                    console.log(paginationHeader);
+                 //   console.log(paginationHeader);
                     peginatedResult.pagination = paginationHeader;
                 }
                 return peginatedResult;
@@ -106,7 +106,7 @@ public _token : string;
         var modelStateErrors: string = '';
 
         if (!serverError.type) {
-            console.log(serverError);
+          //  console.log(serverError);
             for (var key in serverError) {
                 if (serverError[key])
                     modelStateErrors += serverError[key] + '\n';

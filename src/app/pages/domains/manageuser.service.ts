@@ -63,7 +63,7 @@ export class ManageUserService {
         var modelStateErrors: string = '';
 
         if (!serverError.type) {
-            console.log(serverError);
+            //console.log(serverError);
             for (var key in serverError) {
                 if (serverError[key])
                     modelStateErrors += serverError[key] + '\n';

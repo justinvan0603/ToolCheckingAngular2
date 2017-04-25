@@ -21,6 +21,7 @@ import { NotificationService } from "../shared/utils/notification.service";
 import { ReCaptchaComponent } from "angular2-recaptcha";
 import { DataService } from "./userprofile.service";
 import { User } from "../users/user";
+import { UtilityService } from "../shared/services/utility.service";
 @Component({
     // moduleId: module.id,
 
@@ -54,6 +55,7 @@ export class UserProfileDetailComponent {
         private itemsService: ItemsService,
         private notificationService: NotificationService,
         private configService: ConfigService,
+        public utilityService: UtilityService,
         private loadingBarService: SlimLoadingBarService,
         ) { 
             this.currentUser = new User();
@@ -71,6 +73,11 @@ export class UserProfileDetailComponent {
                 this.currentUser = data;
             },
             error => {
+                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Lỗi- ' + error);
             });

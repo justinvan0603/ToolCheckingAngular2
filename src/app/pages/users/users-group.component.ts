@@ -21,6 +21,7 @@ import {UserGroupService} from "./user-group.service";
 import {ApplicationRole} from "./applicationRole";
 import { UserRoleService } from "./user-role.service";
 import { NgForm } from "@angular/forms";
+import { UtilityService } from "../shared/services/utility.service";
 
 @Component({
     // moduleId: module.id,
@@ -94,6 +95,7 @@ export class ApplicationGroupComponent implements AfterViewChecked {
         private itemsService: ItemsService,
         private notificationService: NotificationService,
         private configService: ConfigService,
+        public utilityService: UtilityService,
         private loadingBarService: SlimLoadingBarService,
         private roleService: UserRoleService
         ) {this.addApplicationGroup = new ApplicationGroup();  }
@@ -116,6 +118,11 @@ export class ApplicationGroupComponent implements AfterViewChecked {
                 this.loadingBarService.complete();
             },
             error => {
+                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
             });
@@ -130,6 +137,11 @@ export class ApplicationGroupComponent implements AfterViewChecked {
                 this.loadingBarService.complete();
             },
             error => {
+                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
             });
@@ -204,7 +216,7 @@ formChanged()
     addNewApplicationGroup(usr: ApplicationGroup) {
       this.loadingBarService.start();
         this.selectedApplicationGroup.Roles = this.applicationRole;
-        console.log(this.selectedApplicationGroup);
+        //console.log(this.selectedApplicationGroup);
 
         this.dataService.createApplicationGroup(this.selectedApplicationGroup)
             .subscribe(() => {
@@ -215,6 +227,11 @@ formChanged()
 
             },
             error => {
+                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Lỗi- ' + error);
             });
@@ -249,13 +266,18 @@ deleteApplicationGroup(usr:ApplicationGroup)
                         this.loadingBarService.complete();
                     },
                     error => {
+                        if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                         this.loadingBarService.complete();
                         this.notificationService.printErrorMessage('Lỗi ' + usr.Name + ' ' + error);
                     });
             });
 }
 editApplicationGroup(usr: ApplicationGroup) {
-        console.log(usr);
+      //  console.log(usr);
         
         usr.Roles = this.selectedApplicationGroup.Roles;
         this.loadingBarService.start();
@@ -274,6 +296,11 @@ editApplicationGroup(usr: ApplicationGroup) {
                 this.loadingBarService.complete();
             },
             error => {
+                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Cập nhật thất bại ' + error);
             });
@@ -298,6 +325,11 @@ editApplicationGroup(usr: ApplicationGroup) {
             this.childModal.show();
           },
           error => {
+              if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
             this.loadingBarService.complete();
             this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
           });

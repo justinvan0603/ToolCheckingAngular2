@@ -33,14 +33,14 @@ public _pageSize: number;
 
    getMessagesByUsername(page: number, username: string, searchString? : string)
     {
-        console.log("Bearer "+this._token);
+        //console.log("Bearer "+this._token);
      let headers = new Headers();
      headers.append('Content-Type', 'application/json');
      headers.append('Authorization','Bearer '+this._token);
 
         var uri = this._baseUrl + page.toString() + '/' + this._pageSize.toString() + '/' + username + '/' + searchString;
 
-      console.log(uri);
+      //console.log(uri);
         return this.http.get(uri, {
           headers: headers
         })
@@ -58,13 +58,13 @@ public _pageSize: number;
             headers: headers
         })
             .map((res: Response) => {
-                console.log(res.headers.keys());
+               // console.log(res.headers.keys());
                 peginatedResult.result = res.json();
 
                 if (res.headers.get("Pagination") != null) {
                     //var pagination = JSON.parse(res.headers.get("Pagination"));
                     var paginationHeader: Pagination = this.itemsService.getSerialized<Pagination>(JSON.parse(res.headers.get("Pagination")));
-                    console.log(paginationHeader);
+                    //console.log(paginationHeader);
                     peginatedResult.pagination = paginationHeader;
                 }
                 return peginatedResult;
@@ -123,7 +123,7 @@ public _pageSize: number;
         var modelStateErrors: string = '';
 
         if (!serverError.type) {
-            console.log(serverError);
+            //console.log(serverError);
             for (var key in serverError) {
                 if (serverError[key])
                     modelStateErrors += serverError[key] + '\n';

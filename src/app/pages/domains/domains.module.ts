@@ -23,6 +23,7 @@ import { Domains } from "./domains.component";
 import { DataService } from "./domains.service";
 import { ShareModule } from "../shared/shares.module";
 import { ManageUserService } from "./manageuser.service";
+import { UtilityService } from "../shared/services/utility.service";
 // import { OptionLinkModule } from "./option-link/option-link.module";
 //import { OptionLinkComponent } from "./option-link/option-link.component";
 
@@ -49,6 +50,7 @@ import { ManageUserService } from "./manageuser.service";
   
   DataService,
   ManageUserService,
+  UtilityService,
  
 
   ],

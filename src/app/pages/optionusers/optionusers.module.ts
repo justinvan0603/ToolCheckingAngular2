@@ -27,6 +27,7 @@ import { OptionUserListComponent } from "./optionusers-list.component";
 import { OptionUserService } from "./optionusers.service";
 import { DomainUserService } from "./domainuser.service";
 import { ManageUserService } from "../domains/manageuser.service";
+import { UtilityService } from "../shared/services/utility.service";
 
 //import { OptionLinks } from "./optionlinks.component";
 //import { OptionLinkListComponent } from "./optionlinks-list.component";
@@ -58,7 +59,8 @@ import { ManageUserService } from "../domains/manageuser.service";
   
  OptionUserService,
  DomainUserService,
- ManageUserService
+ ManageUserService,
+ UtilityService,
 
   ],
   //exports:[DateFormatPipe]

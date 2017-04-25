@@ -37,7 +37,7 @@ export class DataService {
        let headers = new Headers();
      headers.append('Content-Type', 'application/json');
      headers.append('Authorization','Bearer '+this._token);
-     console.log('t-' + this._token);
+    // console.log('t-' + this._token);
         return this.http.get(this._baseUrl+'/' + username,{headers:headers})
             .map(this.extractData)
             .catch(this.handleError);
@@ -93,7 +93,7 @@ export class DataService {
         var modelStateErrors: string = '';
 
         if (!serverError.type) {
-            console.log(serverError);
+           // console.log(serverError);
             for (var key in serverError) {
                 if (serverError[key])
                     modelStateErrors += serverError[key] + '\n';

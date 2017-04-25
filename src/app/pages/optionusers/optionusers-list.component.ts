@@ -31,6 +31,7 @@ import { ManageUserService } from "../domains/manageuser.service";
 import { ManageUser } from "../domains/manageuser";
 import { NgForm } from "@angular/forms";
 import { MembershipService } from "../login/membership.service";
+import { UtilityService } from "../shared/services/utility.service";
 
 
 @Component({
@@ -103,6 +104,7 @@ export class OptionUserListComponent  implements AfterViewChecked{
         private itemsService: ItemsService,
         private notificationService: NotificationService,
         private configService: ConfigService,
+        public utilityService: UtilityService,
         private loadingBarService: SlimLoadingBarService,
         private route: ActivatedRoute,
         private domainUserService: DomainUserService,
@@ -156,12 +158,18 @@ export class OptionUserListComponent  implements AfterViewChecked{
     }
     loadManageUsers()
     {
-        this.manageUserService.getManageUsers(1056).subscribe((data:ManageUser[]) => {
+        var _user = this.membershipService.getLoggedInUser();
+        this.manageUserService.getManageUsers(null,_user.Username).subscribe((data:ManageUser[]) => {
                 this.listManageUser = data;
-                console.log(this.listManageUser);
+                //console.log(this.listManageUser);
                 this.loadingBarService.complete();
             },
             error => {
+                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Có lỗi khi tải .- ' + error);
             });
@@ -202,6 +210,11 @@ export class OptionUserListComponent  implements AfterViewChecked{
                 this.loadingBarService.complete();
             },
             error => {
+                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Cập nhật thất bại ' + error);
             });
@@ -217,6 +230,11 @@ export class OptionUserListComponent  implements AfterViewChecked{
                 this.loadingBarService.complete();
             },
             error => {
+                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                    this.utilityService.navigateToSignIn();
+
+                }
                 this.loadingBarService.complete();
                 this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
             });
@@ -229,8 +247,8 @@ export class OptionUserListComponent  implements AfterViewChecked{
     };
 
     addNewDomainUser(usrdomain: UserDomain) {
-        let duplicateObj  = this.userdomains.find(usr => usr.USER_ID ==this.selectedManageUser.Username);
-        console.log(duplicateObj);
+        let duplicateObj  = this.userdomains.find(usr => usr.USER_ID ==this.selectedManageUser.UserName);
+        //console.log(duplicateObj);
         if(duplicateObj != null)
         {
             this.loadingBarService.start();
@@ -242,9 +260,9 @@ export class OptionUserListComponent  implements AfterViewChecked{
         let newItem = new UserDomain();
         newItem.DOMAIN_ID = this.currentOptionSearch.DOMAIN_ID;
         newItem.NOTES = this.addUserDomain.NOTES;
-        newItem.USER_ID = this.selectedManageUser.Username;
+        newItem.USER_ID = this.selectedManageUser.UserName;
         newItem.USERID = this.selectedManageUser.Id;
-        console.log(newItem);
+        //console.log(newItem);
         this.itemsService.addItemToStart(this.userdomains,newItem);
 
 
