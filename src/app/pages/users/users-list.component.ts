@@ -222,20 +222,20 @@ ngAfterViewChecked(): void {
     }
 deleteUser(usr:User)
 {
-    this.notificationService.openConfirmationDialog('Bạn có chắc muốn xóa?',
-            () => {
-                this.loadingBarService.start();
-                this.dataService.deleteUser(usr.Id)
-                    .subscribe(() => {
-                        this.itemsService.removeItemFromArray<User>(this.users, usr);
-                        this.notificationService.printSuccessMessage(usr.Username + ' has been deleted.');
-                        this.loadingBarService.complete();
-                    },
-                    error => {
-                        this.loadingBarService.complete();
-                        this.notificationService.printErrorMessage('Lỗi ' + usr.Username + ' ' + error);
-                    });
-            });
+    // this.notificationService.openConfirmationDialog('Bạn có chắc muốn xóa?',
+    //         () => {
+    //             this.loadingBarService.start();
+    //             this.dataService.deleteUser(usr.Id)
+    //                 .subscribe(() => {
+    //                     this.itemsService.removeItemFromArray<User>(this.users, usr);
+    //                     this.notificationService.printSuccessMessage(usr.Username + ' has been deleted.');
+    //                     this.loadingBarService.complete();
+    //                 },
+    //                 error => {
+    //                     this.loadingBarService.complete();
+    //                     this.notificationService.printErrorMessage('Lỗi ' + usr.Username + ' ' + error);
+    //                 });
+    //         });
 }
 editUser(usr: User) {
         //console.log(usr);

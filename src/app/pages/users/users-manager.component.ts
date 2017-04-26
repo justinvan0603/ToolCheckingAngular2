@@ -248,7 +248,7 @@ formChanged()
     //console.log(user);
     // this.selectedUser.Groups = this.selectedUser.Groups.filter(opt => opt.Check);
     // console.log(this.selectedUser);
-    if(this.selectedUser.Domain.includes(DomainListComponent.DOMAIN_PREFIX)) {
+    if(this.selectedUser.Domain.includes(DomainListComponent.DOMAIN_PREFIX) || this.selectedUser.Domain.includes(DomainListComponent.DOMAIN_PREFIX_HTTPS)) {
       this.loadingBarService.start();
       this.dataService.createUser(this.selectedUser)
         .subscribe(res => {

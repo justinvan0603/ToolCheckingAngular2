@@ -47,7 +47,7 @@
 <div bsModal #childModal="bs-modal" class="modal fade popup" tabindex="-1" role="dialog"
      aria-labelledby="mySmallModalLabel">
   <div class="modal-dialog modal-lg" *ngIf="selectedApplicationGroupLoaded">
-    <div class="modal-content" style="background-color:darkcyan;">
+    <div class="modal-content" style="background-color:whitesmoke;">
       <div class="modal-header">
         <button type="button" class="close" aria-label="Close" (click)="hideChildModal()">
           <span aria-hidden="true">&times;</span>
@@ -80,7 +80,7 @@
 
 
           <div class="form-group" >
-
+                  <label><span style="color:red">*</span> Quyền hệ thống:</label>
 
             
               <div *ngFor="let item of this.selectedApplicationGroup.Roles,let i = index">

@@ -4,7 +4,7 @@ import {
     state,
     style,
     animate,
-    transition
+    transition, AfterViewChecked
 } from '@angular/core';
 
 import { ModalDirective } from 'ng2-bootstrap';
@@ -22,6 +22,7 @@ import { ReCaptchaComponent } from "angular2-recaptcha";
 import { DataService } from "./userprofile.service";
 import { User } from "../users/user";
 import { UtilityService } from "../shared/services/utility.service";
+import { NgForm } from "@angular/forms";
 @Component({
     // moduleId: module.id,
 
@@ -46,12 +47,31 @@ import { UtilityService } from "../shared/services/utility.service";
         ])
     ]
 })
-export class ChangePasswordComponent {
+export class ChangePasswordComponent implements AfterViewChecked {
+    changePasswordForm : NgForm;
+    @ViewChild('changePasswordForm') currentForm: NgForm;
     //@ViewChild(ReCaptchaComponent) captcha: ReCaptchaComponent;
     public currentUser : User;
     public currentPassword :string;
     public newPassword : string;
     apiHost: string;
+
+    formErrors = {
+    'CurrentPassword': '',
+    'Password' : ''
+ 
+  };
+  public isValid: boolean = true;
+  validationMessages = {
+    'CurrentPassword': {
+      'required':      'Mật khẩu hiện tại không được để trống', 
+      'maxlength':     'Mật khẩu hiện tại phải từ 1-50 ký tự',
+    },
+    'Password': {
+      'required':      'Mật khẩu mới không được để trống', 
+      'maxlength':     'Mật khẩu mới phải từ 1-50 ký tự',
+    }
+  };
     constructor(
         private dataService: DataService,
         private itemsService: ItemsService,
@@ -70,16 +90,17 @@ export class ChangePasswordComponent {
         var _userData = JSON.parse(localStorage.getItem('user'));
          let username : string ;
         username = _userData.Username;
-        this.dataService.changePassword(username,this.currentPassword,this.newPassword).subscribe( (res : number) =>
+        this.dataService.changePassword(username,this.currentPassword,this.newPassword).subscribe( res =>
         {
-                if(res == -1)
+                if(res.Succeeded)
                 {
-                    this.notificationService.printErrorMessage('Mật khẩu không trùng khớp!');
+                    this.notificationService.printSuccessMessage(res.Message);
+                    this.router.navigate(['/login']);
+                   
                 }
                 else
                 {
-                    this.notificationService.printSuccessMessage('Đổi mật khẩu thành công!');
-                    this.router.navigate(['/login']);
+                     this.notificationService.printErrorMessage('Lỗi - ' + res.Message);
                 }
         },
          error => {
@@ -114,7 +135,39 @@ export class ChangePasswordComponent {
         
     }
 
-
+ngAfterViewChecked(): void {
+            this.formChanged();
+    }
+    formChanged()
+    {
+         if (this.currentForm === this.changePasswordForm) { return; }
+         this.changePasswordForm = this.currentForm;
+         if(this.changePasswordForm)
+         {
+            this.changePasswordForm.valueChanges
+                .subscribe(data => this.onValueChanged(data));
+         }
+    }
+    onValueChanged(data?: any)
+    {
+        if (!this.changePasswordForm) { return; }
+        const form = this.changePasswordForm.form;
+        this.isValid = true;
+        for (const field in this.formErrors) 
+        {
+            this.formErrors[field] = '';
+            const control = form.get(field);
+            if (control && control.dirty && !control.valid) 
+            {
+                this.isValid = false;
+                const messages = this.validationMessages[field];
+                for (const key in control.errors) 
+                {
+                    this.formErrors[field] += messages[key] + ' ';
+                }
+            }
+        }
+    }
 
    
 

@@ -52,7 +52,7 @@
 <div bsModal #childModal="bs-modal" class="modal fade popup" tabindex="-1" role="dialog"
      aria-labelledby="mySmallModalLabel">
   <div class="modal-dialog modal-lg" *ngIf="selectedUserLoaded">
-    <div class="modal-content" style="background-color:darkcyan;">
+    <div class="modal-content" style="background-color:whitesmoke;">
       <div class="modal-header">
         <button type="button" class="close" aria-label="Close" (click)="hideChildModal()">
           <span aria-hidden="true">&times;</span>
@@ -93,8 +93,8 @@
    
           <!--End Validate-->
           <div class="form-group">
-            <label><span style="color:red">*</span> UserName:</label>
-            <input type="text" class="form-control" [readonly]="!this.addingUser"
+            <label><span style="color:red">*</span> Username:</label>
+            <input type="text" class="form-control form-control-sm input-sm" [readonly]="!this.addingUser"
                    [(ngModel)]="this.selectedUser.UserName" name="Username" #USERNAMEInput="ngModel" required
                    pattern=".{1,50}"/>
           </div>
@@ -104,50 +104,73 @@
           <!--</div>-->
           <div class="form-group">
             <label><span style="color:red">*</span> Mật khẩu:</label>
-            <input type="password" class="form-control" [readonly]="!this.addingUser"
+            <input type="password" class="form-control form-control-sm input-sm" [readonly]="!this.addingUser"
                    [(ngModel)]="this.selectedUser.PASSWORD" name="Password" #PASSWORDInput="ngModel" required
                    pattern=".{1,50}"/>
           </div>
           <div class="form-group">
             <label><span style="color:red">*</span> Họ tên:</label>
-            <input type="text" class="form-control" [(ngModel)]="this.selectedUser.FULLNAME" name="FULLNAME"
+            <input type="text" class="form-control form-control-sm input-sm" [(ngModel)]="this.selectedUser.FULLNAME" name="FULLNAME"
                    #FULLNAMEInput="ngModel" required pattern=".{1,200}"/>
           </div>
           <div class="form-group">
             <label><span style="color:red">*</span> Email:</label>
-            <input type="text" class="form-control" [(ngModel)]="this.selectedUser.Email" name="EMAIL"
+            <input type="text" class="form-control form-control-sm input-sm" [(ngModel)]="this.selectedUser.Email" name="EMAIL"
                    #EMAILInput="ngModel" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"/>
           </div>
           <div class="form-group">
             <label><span style="color:red">*</span> Điện thoại:</label>
-            <input type="text" class="form-control" [(ngModel)]="this.selectedUser.PHONE" name="PHONE"
+            <input type="text" class="form-control form-control-sm input-sm" [(ngModel)]="this.selectedUser.PHONE" name="PHONE"
                    #PHONEInput="ngModel" required pattern=".{1,20}"/>
             <!--<textarea type="text" class="form-control" readonly>{{selectedMessage.Content}}</textarea>-->
           </div>
           <div class="form-group" [class.hidden]="!this.addingUser">
             <label><span style="color:red">*</span> Domain:</label>
-            <input type="text" class="form-control" [(ngModel)]="this.selectedUser.Domain" name="DOMAIN"
+            <input type="text" class="form-control form-control-sm input-sm" [(ngModel)]="this.selectedUser.Domain" name="DOMAIN"
                    #DOMAINInput="ngModel" required pattern=".{1,200}"/>
 
           </div>
           <div class="form-group" [class.hidden]="!this.addingUser">
             <label><span style="color:red">*</span> Mô tả domain:</label>
-            <input type="text" class="form-control" [(ngModel)]="this.selectedUser.DomainDesc" name="DOMAINDESC"
+            <input type="text" class="form-control form-control-sm input-sm" [(ngModel)]="this.selectedUser.DomainDesc" name="DOMAINDESC"
                    #DOMAINDESCInput="ngModel" required pattern=".{1,500}"/>
 
           </div>
+          <div class="form-group" >
+                  <label><span style="color:red">*</span> Quyền hệ thống:</label>
 
-          <div class="form-group" *ngFor="let item of this.selectedUser.Groups">
-            <!--<div class="col-sm-2" [class.hidden]="!this.addingUser">-->
-              <!--<label><span style="color:red">*</span> {{item.Name}}</label>-->
-            <!--</div>-->
+            
+              <div *ngFor="let item of this.selectedUser.Groups,let i = index">
+                
+                  <div class="row" *ngIf = "i% 4 == 0">
+
+                    <div class="col-sm-3 text-center" *ngFor = "let x of this.selectedUser.Groups, let j = index ">
+                      <label *ngIf="j+i< i+4" >
+                      <input type="checkbox" class="form-control" name="role"
+                     [checked]="this.selectedUser.Groups[i+j]?.Check" (change)="this.selectedUser.Groups[i+j].Check = $event.target.checked">
+                    {{this.selectedUser.Groups[i+j]?.Name }} 
+                      </label>
+                    
+                    </div>
+
+                  </div>
+
+                
+
+              </div>
+
+                        
+          </div>
+
+          <!--<div class="form-group" *ngFor="let item of this.selectedUser.Groups">
+
             <div class="col-sm-2">
-              <!--<input type="checkbox" class="form-control input-sm"  >-->
+        
               <input type="checkbox" class="form-control" name="item"
                      [checked]="item.Check" (change)="item.Check = $event.target.checked"> {{item.Name}}
 
             </div>
-          </div>
+          </div>-->
 
           <hr/>
           <button [class.hidden]="this.addingUser"

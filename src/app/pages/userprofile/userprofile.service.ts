@@ -8,17 +8,19 @@ import { ConfigService } from "../shared/utils/config.service";
 import { ItemsService } from "../shared/utils/items.service";
 import { PaginatedResult, Pagination } from "../shared/interfaces";
 import { User } from "../users/user";
+import { ChangePasswordObject } from "./changepasswordobject";
 
 
 @Injectable()
 export class DataService {
 
     _baseUrl: string = '';
-
+    _changePasswordUrl : string = '';
     constructor(private http: Http,
         private itemsService: ItemsService,
         private configService: ConfigService) {
         this._baseUrl = configService.getApiURI()+ 'Users';
+        this._changePasswordUrl = configService.getApiURI() + 'Account/'
     }
 
     getUser(userid: number, username:string): Observable<User> {
@@ -28,17 +30,18 @@ export class DataService {
             })
             .catch(this.handleError);
     }
-changePassword(username: string, currentpassword :string, newpassword : string): Observable<number>
+changePassword(username: string, currentpassword :string, newpassword : string): Observable<any>
     {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
-
-        return this.http.put(this._baseUrl +'/ChangePassword?username='+ username + '&currentpassword=' + currentpassword + '&newpassword=' + newpassword, {
+        var changepass = new ChangePasswordObject();
+        changepass.UserName = username;
+        changepass.OldPassword = currentpassword;
+        changepass.NewPassword = newpassword;
+        return this.http.put(this._changePasswordUrl +'/changePassword',JSON.stringify(changepass), {
             headers: headers
         })
-            .map((res: Response) => {
-                return;
-            })
+            .map(res => <any>(<Response>res).json())
             .catch(this.handleError);
     }
 

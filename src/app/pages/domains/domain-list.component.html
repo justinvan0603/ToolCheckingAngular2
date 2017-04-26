@@ -32,7 +32,7 @@
                 <td class="text-xs-left">{{item.DESCRIPTION}}</td>
                 <td class="text-xs-left">{{item.USERNAME}}</td>
                 <td class="text-xs-left">{{item.FULLNAME}}</td>
-                <!--<td><a class="btn btn-warning" (click)="viewDomainDetails(item)"><i class="fa fa-pencil-square-o" ></i>Cập nhật</a>-->
+               <td> <!--<a class="btn btn-warning" (click)="viewDomainDetails(item)"><i class="fa fa-pencil-square-o" ></i>Cập nhật</a>-->
                 <a class="btn btn-success" [routerLink]="['/pages/optionlinks/optionlinklist',item.DOMAIN]"><i class="fa fa-link" ></i> Link</a>
                 <a class="btn btn-success" [routerLink]="['/pages/optionusers/optionuserlist',item.DOMAIN]"><i class="fa fa-users" ></i> User</a>
                 <a class="btn btn-danger" (click)="deleteDomain(item)"><i class="fa fa-trash-o" ></i>Xóa</a>
@@ -49,7 +49,7 @@
 
 <div bsModal #childModal="bs-modal" class="modal fade popup" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
     <div class="modal-dialog modal-lg" *ngIf="selectedDomainLoaded">
-        <div class="modal-content" style="background-color:darkcyan;">
+        <div class="modal-content" style="background-color:whitesmoke;">
             <div class="modal-header">
                 <button type="button" class="close" aria-label="Close" (click)="hideChildModal()">
           <span aria-hidden="true">&times;</span>

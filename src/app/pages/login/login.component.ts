@@ -34,10 +34,11 @@ export class Login implements OnInit {
           _authenticationResult.Access_token=res.access_token;
           _authenticationResult.Expires_in =res.expires_in;
         },
-        error => //console.error('Error: ' + error),
+        error => console.error('Error: ' + error),
         () => {
           if (_authenticationResult.Succeeded) {
-            this.notificationService.printSuccessMessage('Welcome back ' + this._user.Username + '!');
+            this.notificationService.printSuccessMessage('Xin chào, ' + this._user.Username + '!');
+            console.log( _authenticationResult.Access_token);
             localStorage.setItem('user', JSON.stringify(this._user));
             localStorage.setItem('access_token', _authenticationResult.Access_token);
             this.router.navigate(['pages/messages/messagelist']);

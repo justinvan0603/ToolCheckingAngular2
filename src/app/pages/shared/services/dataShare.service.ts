@@ -25,28 +25,28 @@ export class DataShareService {
     }
     getMessagesByUsername(page: number, username: string)
     {
-        console.log("Bearer "+this._token);
+     //   console.log("Bearer "+this._token);
      let headers = new Headers();
      headers.append('Content-Type', 'application/json');
      headers.append('Authorization','Bearer '+this._token);
 
         var uri = this._baseUri + page.toString() + '/' + this._pageSize.toString() + '/' + username;
 
-      console.log(uri);
+    //  console.log(uri);
         return this.http.get(uri, {
           headers: headers
         })
             .map(response => (<Response>response));
     }
     get(page: number) {
-      console.log("Bearer "+this._token);
+      //console.log("Bearer "+this._token);
      let headers = new Headers();
      headers.append('Content-Type', 'application/json');
      headers.append('Authorization','Bearer '+this._token);
 
         var uri = this._baseUri + page.toString() + '/' + this._pageSize.toString();
 
-      console.log(uri);
+     // console.log(uri);
         return this.http.get(uri, {
           headers: headers
         })
@@ -54,7 +54,7 @@ export class DataShareService {
     }
 
     post(data?: any, mapJson: boolean = true) {
-      console.log(data);
+     // console.log(data);
       let headers = new Headers();
       headers.append('Content-Type', 'application/json');
         if (mapJson)

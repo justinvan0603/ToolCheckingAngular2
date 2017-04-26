@@ -79,6 +79,7 @@ export class DomainListComponent implements AfterViewChecked {
     onEdit: boolean = false;
     public addingDomain: boolean = false;
     public static DOMAIN_PREFIX = "http://";
+    public static DOMAIN_PREFIX_HTTPS = "https://";
     formErrors = {
     'DOMAIN': '',
     'DESCRIPTION' : ''
@@ -145,8 +146,8 @@ export class DomainListComponent implements AfterViewChecked {
     }
     loadDomains(searchString?:string) {
         this.loadingBarService.start();
-        
-        this.dataService.getDomains(this.currentPage, this.itemsPerPage,searchString,'hieupt')
+        var _user = this.membershipService.getLoggedInUser();
+        this.dataService.getDomains(this.currentPage, this.itemsPerPage,searchString,_user.Username)
             .subscribe((res: PaginatedResult<Domain[]>) => {
                 this.domains = res.result;// schedules;
                 this.totalItems = res.pagination.TotalItems;
@@ -198,7 +199,7 @@ ngAfterViewChecked(): void {
         }
     }
     addNewDomain(domain: Domain) {
-        if(domain.DOMAIN.includes(DomainListComponent.DOMAIN_PREFIX))
+        if(domain.DOMAIN.includes(DomainListComponent.DOMAIN_PREFIX) || domain.DOMAIN.includes(DomainListComponent.DOMAIN_PREFIX_HTTPS))
         {
         //console.log(domain);
         this.loadingBarService.start();
