@@ -39,7 +39,7 @@ export class BaPageTop {
   getUserName(): string {
     if (this.isUserLoggedIn()) {
       var _user = this.membershipService.getLoggedInUser();
-      
+
       return _user.Username;
     }
     else
@@ -50,6 +50,7 @@ export class BaPageTop {
     this.membershipService.logout()
       .subscribe(res => {
           localStorage.removeItem('user');
+          localStorage.removeItem('access_token');
         },
         error => console.error('Error: ' + error),
         () => { });

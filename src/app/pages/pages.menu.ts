@@ -4,7 +4,6 @@ export const PAGES_MENU = [
   {
     path: 'pages',
     children: [
-
       {
         path: 'messages',
         data: {
@@ -154,37 +153,29 @@ export const PAGES_MENU = [
       //   ]
       // },
 
-    //   {
-    //     path: '',
-    //     data: {
-    //       menu: {
-    //         title: 'Pages',
-    //         icon: 'ion-document',
-    //         selected: false,
-    //         expanded: false,
-    //         order: 650,
-    //       }
-    //     },
-    //     children: [
-    //       {
-    //         path: ['/login'],
-    //         data: {
-    //           menu: {
-    //             title: 'Login'
-    //           }
-    //         }
-    //       },
-    //       {
-    //         path: ['/register'],
-    //         data: {
-    //           menu: {
-    //             title: 'Register'
-    //           }
-    //         }
-    //       }
+      {
+        path: '',
+        data: {
+          menu: {
+            title: 'Menu',
+            icon: 'ion-document',
+            selected: false,
+            expanded: false,
+            order: 650,
+          }
+        },
+        children: [
+          {
+            path: ['menu'],
+            data: {
+              menu: {
+                title: 'Menu'
+              }
+            }
+          }
 
-    //     ]
-    //   },
+        ]
+      },
 
     //   {
     //     path: '',

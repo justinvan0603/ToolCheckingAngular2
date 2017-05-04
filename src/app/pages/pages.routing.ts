@@ -14,16 +14,18 @@ export const routes: Routes = [
     path: 'login',
     loadChildren: 'app/pages/login/login.module#LoginModule'
   },
-  {
-    path: 'register',
-    loadChildren: 'app/pages/register/register.module#RegisterModule'
-  },
+
+  // {
+  //   path: 'register',
+  //   loadChildren: 'app/pages/register/register.module#RegisterModule'
+  // },
   {
     path: 'pages',
     component: Pages,
     children: [
+
       { path: '', redirectTo: 'login', pathMatch: 'full' },
-   { path: 'fileupload', loadChildren: 'app/pages/uploadfile/uploadfile.module#UploadFileModule' },
+       { path: 'fileupload', loadChildren: 'app/pages/uploadfile/uploadfile.module#UploadFileModule' },
       { path: 'userprofile', loadChildren: 'app/pages/userprofile/userprofile.module#UserProfileModule' },
       { path: 'users', loadChildren: 'app/pages/users/users.module#UserModule' },
       { path: 'messages', loadChildren: 'app/pages/messages/messages.module#MessageModule' },
@@ -33,7 +35,8 @@ export const routes: Routes = [
       { path: 'optionusers', loadChildren: 'app/pages/optionusers/optionusers.module#OptionUserModule' },
 
       { path: 'tables', loadChildren: 'app/pages/tables/tables.module#TablesModule' },
-       { path: 'schedules', loadChildren: 'app/pages/schedules/schedules.module#SchedulesModule' }
+       { path: 'schedules', loadChildren: 'app/pages/schedules/schedules.module#SchedulesModule' },
+       { path: 'menu', loadChildren: 'app/pages/menu/menu.module#MenuModule' }
 
     ]
   }

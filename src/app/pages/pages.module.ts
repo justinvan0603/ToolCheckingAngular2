@@ -3,12 +3,20 @@ import { CommonModule }  from '@angular/common';
 import { routing }       from './pages.routing';
 import { NgaModule } from '../theme/nga.module';
 import { Pages } from './pages.component';
-import { ConfigService } from "./shared/utils/config.service";
+import {PageMenuService} from "./pages.menu.service";
+import {ShareModule} from "./shared/shares.module";
+import {ConfigService} from "./shared/services/shared/utils/config.service";
+import {ItemsService} from "./shared/services/shared/utils/items.service";
 
 @NgModule({
-  imports: [CommonModule, NgaModule, routing],
+  imports: [CommonModule, NgaModule, routing,ShareModule],
   declarations: [Pages],
-  providers:[ConfigService]
+  providers: [
+    // ConfigService,
+    PageMenuService,
+    ConfigService,
+    ItemsService,
+  ]
 
 })
 

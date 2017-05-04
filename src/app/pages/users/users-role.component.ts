@@ -25,8 +25,6 @@ import { MembershipService } from "../login/membership.service";
 import { UtilityService } from "../shared/services/utility.service";
 
 @Component({
-    // moduleId: module.id,
-
     selector: 'users',
     templateUrl: 'users-role.component.html',
     animations: [
@@ -59,35 +57,28 @@ export class ApplicationRoleComponent implements AfterViewChecked {
     public itemsPerPage: number = 10;
     public totalItems: number = 0;
     public currentPage: number = 1;
-
     public addApplicationGroup:ApplicationRole;
-    // Modal properties
     @ViewChild('modal')
     modal: any;
     items: string[] = ['item1', 'item2', 'item3'];
     selected: string;
     output: string;
-    selectedApplicationGroupId: number;
     selectedApplicationGroupLoaded: boolean = false;
     index: number = 0;
-    backdropOptions = [true, false, 'static'];
     animation: boolean = true;
-    keyboard: boolean = true;
-    backdrop: string | boolean = true;
     onEdit: boolean = false;
     public adding: boolean = false;
     formErrors = {
     'NAME': ''
-
-  };
-  public isValid: boolean = true;
-  validationMessages = {
+    };
+    public isValid: boolean = true;
+    validationMessages = {
     'NAME': {
       'required':      'Tên quyền không được để trống',
       'maxlength':     'Tên quyền phải từ 1-200 ký tự',
     },
 
-  };
+    };
     constructor(
         private dataService: UserRoleService,
         private itemsService: ItemsService,
@@ -106,8 +97,6 @@ export class ApplicationRoleComponent implements AfterViewChecked {
     ngOnInit() {
         this.apiHost = this.configService.getApiHost();
         this.loadRoles();
-
-
     }
 
     loadRoles() {
@@ -180,7 +169,7 @@ export class ApplicationRoleComponent implements AfterViewChecked {
         this.childModal.show();
 
     }
-loadRolesWithSearch(searchstring?:string) {
+    loadRolesWithSearch(searchstring?:string) {
         this.loadingBarService.start();
 
         this.dataService.getWithSearch(this.currentPage, this.itemsPerPage,searchstring)
@@ -199,7 +188,7 @@ loadRolesWithSearch(searchstring?:string) {
                 this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
             });
     }
-search(searchstring: string)
+    search(searchstring: string)
     {
         //console.log(searchstring);
         if(!searchstring)
@@ -208,11 +197,11 @@ search(searchstring: string)
         //this.loadDomains(searchstring);
     }
 
-ngAfterViewChecked(): void {
-            this.formChanged();
-        }
+    ngAfterViewChecked(): void {
+        this.formChanged();
+    }
 
-formChanged()
+    formChanged()
     {
          if (this.currentForm === this.viewUserForm) { return; }
          this.viewUserForm = this.currentForm;
@@ -242,23 +231,6 @@ formChanged()
             }
         }
     }
-  // delete(id:string) {
-  //     console.log("u"+id);
-  //   this.notificationService.openConfirmationDialog('Bạn có chắc muốn xóa?',
-  //     () => {
-  //       this.loadingBarService.start();
-  //       this.dataService.delete(id)
-  //         .subscribe(() => {
-  //             this.itemsService.removeItemFromArray<ApplicationRole>(this.users, id);
-  //             this.notificationService.printSuccessMessage("usr.Name" + ' has been deleted.');
-  //             this.loadingBarService.complete();
-  //           },
-  //           error => {
-  //             this.loadingBarService.complete();
-  //             this.notificationService.printErrorMessage('Lỗi ' +"usr.Name" + ' ' + error);
-  //           });
-  //     });
-  // }
 
   delete(usr: ApplicationRole) {
     //console.log("u"+usr);
@@ -291,7 +263,7 @@ formChanged()
       });
   }
 
-edit(usr: ApplicationRole) {
+    edit(usr: ApplicationRole) {
         //console.log(usr);
         this.loadingBarService.start();
         this.onEdit = true;

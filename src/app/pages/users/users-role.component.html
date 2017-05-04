@@ -49,8 +49,8 @@
                 <button type="button" class="close" aria-label="Close" (click)="hideChildModal()">
           <span aria-hidden="true">&times;</span>
         </button>
-                <h4 *ngIf="!this.addingUser"> Cập nhật quyền: {{selectedApplicationGroup.Name}}</h4>
-                <h4 *ngIf="this.addingUser"> Thêm quyền hệ thống</h4>
+                <h4 *ngIf="!this.adding"> Cập nhật quyền: {{selectedApplicationGroup.Name}}</h4>
+                <h4 *ngIf="this.adding"> Thêm quyền hệ thống</h4>
             </div>
             <div class="modal-body">
                 <form method="post" #viewUserForm="ngForm" *ngIf="selectedApplicationGroupLoaded" novalidate>
@@ -58,7 +58,7 @@
                 <!--Validate-->
                     <div class="alert alert-danger" [hidden]="this.isValid">
                             <ul *ngIf="formErrors.NAME">
-                            
+
                             <li>{{formErrors.NAME}}</li>
                         </ul>
                             <!--<ul *ngIf="NAMEInput.dirty && !NAMEInput.valid ">
