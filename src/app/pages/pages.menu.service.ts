@@ -60,7 +60,7 @@ export class PageMenuService {
 
     var uri = this._baseUrl;
 
-    console.log(uri);
+  //  console.log(uri);
     return this.http.get(uri, {
       headers: headers
     })

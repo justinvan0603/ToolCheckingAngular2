@@ -124,6 +124,7 @@ export class Menu implements AfterViewChecked {
     this.roleService.get(this.currentPage, this.itemsPerPage)
       .subscribe((res: PaginatedResult<ApplicationRole[]>) => {
           this.roles = res.result;// schedules;
+          this.roles.concat()
           //  this.totalItems = res.pagination.TotalItems;
           this.loadingBarService.complete();
         },

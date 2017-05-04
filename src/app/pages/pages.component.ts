@@ -56,7 +56,7 @@ export class Pages {
     //var _userData = JSON.parse(localStorage.getItem('user'));
     this.dataService.getMenu()
       .subscribe(res => {
-          console.log("res"+res.json());
+       //   console.log("res"+res.json());
           var data: any = res.json();
           this.PAGES_MENU2 =data;
 

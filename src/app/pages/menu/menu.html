@@ -95,7 +95,7 @@
           <div class="form-group">
             <label >Quyền:</label>
             <select ngControl="RoleInput" name="Role" [(ngModel)]="selectedRole" #RoleInput="ngModel" [ngModelOptions]="{standalone: true}" class="form-control form-control-sm">
-              <option *ngFor="let usr of roles" [ngValue]="usr" [selected]="this.selectedApplicationGroup.RoleName === usr.Name">{{usr.Name}}</option>
+              <option *ngFor="let role of roles" [ngValue]="role" [selected]="this.selectedApplicationGroup.RoleName === role.Name">{{role.Name}}</option>
             </select>
           </div>
 
@@ -103,7 +103,7 @@
           <div class="form-group">
             <label >Menu cha:</label>
             <select ngControl="MenuParrentInput" name="MenuParrent" [(ngModel)]="selectedMenuParrent" #MenuParrentInput="ngModel" [ngModelOptions]="{standalone: true}" class="form-control form-control-sm">
-              <option *ngFor="let usr of menus" [ngValue]="usr" [selected]="this.selectedApplicationGroup.MenuParent === usr.MenuId">{{usr.MenuName+' - '+usr.MenuId}}</option>
+              <option *ngFor="let menu of menus" [ngValue]="menu" [selected]="this.selectedApplicationGroup.MenuParent === menu.MenuId">{{menu.MenuName+' - '+menu.MenuId}}</option>
             </select>
           </div>
 
