@@ -1,5 +1,5 @@
 <!--<button class="btn btn-primary" type="button" *ngIf="users">
-   <i class="fa fa-calendar" aria-hidden="true"></i> Người dùng  
+   <i class="fa fa-calendar" aria-hidden="true"></i> Người dùng
    <span class="badge">{{this.totalItems}}</span>
 </button>-->
 <hr/>
@@ -10,7 +10,7 @@
     <table class="table table-hover">
         <thead>
             <tr>
-               
+
                 <th>Tên đăng nhập</th>
                 <th>Họ tên</th>
                 <th>Email</th>
@@ -27,7 +27,7 @@
                 <td><a class="btn btn-warning" (click)="viewUserDetails(usr)"><i class="fa fa-pencil-square-o" ></i> Cập nhật</a>
                 <a class="btn btn-danger" (click)="deleteUser(usr)"><i class="fa fa-trash-o" ></i> Xóa</a>
                 </td>
-        
+
 
             </tr>
         </tbody>
@@ -49,12 +49,12 @@
             </div>
             <div class="modal-body">
                 <form method="post" #viewUserForm="ngForm" *ngIf="selectedUserLoaded" novalidate>
-                                            
+
                 <!--Validate-->
                     <div class="alert alert-danger" [hidden]="isValid">
                         <ul *ngIf="formErrors.EMAIL">
                             <li>{{formErrors.EMAIL}}</li>
-                            
+
                         </ul>
                         <ul *ngIf="formErrors.PHONE">
                            <li>{{formErrors.PHONE}}</li>
@@ -70,14 +70,14 @@
                             <ul *ngIf="formErrors.Password ">
                                     <li>{{formErrors.Password}}</li>
                             </ul>
-                            
+
                             <ul *ngIf="formErrors.DOMAIN ">
                                     <li>{{formErrors.DOMAIN}}</li>
                             </ul>
                             <ul *ngIf="formErrors.DOMAINDESC ">
                                     <li>{{formErrors.DOMAINDESC}}</li>
                             </ul>
-                            
+
                     </div>
              <!--End Validate-->
              <div class="form-group">
@@ -104,14 +104,14 @@
             <div class="form-group" [class.hidden]="!this.addingUser">
                 <label ><span style="color:red">*</span> Domain:</label>
                 <input type="text" class="form-control" [(ngModel)]="this.selectedUser.Domain" name="DOMAIN" #DOMAINInput="ngModel" required pattern=".{1,200}"/>
-     
+
             </div>
             <div class="form-group" [class.hidden]="!this.addingUser">
                 <label ><span style="color:red">*</span> Mô tả:</label>
                 <input type="text" class="form-control" [(ngModel)]="this.selectedUser.DomainDesc" name="DOMAINDESC" #DOMAINDESCInput="ngModel" required pattern=".{1,500}"/>
-     
+
             </div>
-                    <hr/>          
+                    <hr/>
                     <button [class.hidden]="this.addingUser" [disabled]="!viewUserForm.form.valid &&(!DOMAINInput.valid && this.addingUser) &&(!DOMAINDESCInput.valid && this.addingUser)" (click)="editUser(this.selectedUser)" type="button" class="btn btn-warning">Cập nhật</button>
                     <button [class.hidden]="!this.addingUser" [disabled]="!viewUserForm.form.valid" (click)="addNewUser(this.selectedUser)" type="button" class="btn btn-success">Thêm</button>
 

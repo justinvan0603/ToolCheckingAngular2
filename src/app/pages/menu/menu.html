@@ -84,17 +84,17 @@
 
           <div class="form-group">
             <label ><span style="color:red">*</span> Menu Link:</label>
-            <input type="text" class="form-control" [(ngModel)]="this.selectedApplicationGroup.MenuLink" name="MENULINK" #NAMEInput="ngModel" required pattern=".{1,200}"/>
+            <input type="text" class="form-control" [(ngModel)]="this.selectedApplicationGroup.MenuLink" name="MENULINK" #NAMEInput="ngModel"/>
           </div>
 
           <div class="form-group">
             <label ><span style="color:red">*</span> Menu icon:</label>
-            <input type="text" class="form-control" [(ngModel)]="this.selectedApplicationGroup.Icon" name="ICON" #NAMEInput="ngModel" required pattern=".{1,200}"/>
+            <input type="text" class="form-control" [(ngModel)]="this.selectedApplicationGroup.Icon" name="ICON" #NAMEInput="ngModel" />
           </div>
 
           <div class="form-group">
             <label >Quyền:</label>
-            <select ngControl="ManageUserInput" name="ManageUser" [(ngModel)]="selectedRole" #ManageUserInput="ngModel" [ngModelOptions]="{standalone: true}" class="form-control form-control-sm" required>
+            <select ngControl="RoleInput" name="Role" [(ngModel)]="selectedRole" #RoleInput="ngModel" [ngModelOptions]="{standalone: true}" class="form-control form-control-sm">
               <option *ngFor="let usr of roles" [ngValue]="usr" [selected]="this.selectedApplicationGroup.RoleName === usr.Name">{{usr.Name}}</option>
             </select>
           </div>
@@ -102,7 +102,7 @@
 
           <div class="form-group">
             <label >Menu cha:</label>
-            <select ngControl="ManageUserInput" name="ManageUser" [(ngModel)]="selectedMenuParrent" #ManageUserInput="ngModel" [ngModelOptions]="{standalone: true}" class="form-control form-control-sm" required>
+            <select ngControl="MenuParrentInput" name="MenuParrent" [(ngModel)]="selectedMenuParrent" #MenuParrentInput="ngModel" [ngModelOptions]="{standalone: true}" class="form-control form-control-sm">
               <option *ngFor="let usr of menus" [ngValue]="usr" [selected]="this.selectedApplicationGroup.MenuParent === usr.MenuId">{{usr.MenuName+' - '+usr.MenuId}}</option>
             </select>
           </div>

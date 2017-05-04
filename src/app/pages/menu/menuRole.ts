@@ -13,7 +13,7 @@ export class MenuRole {
     this.MenuNameEl='';
     this.MenuParent=null;
     this.MenuLink ='';
-    this.RoleName='';
+    this.RoleName=null;
     this.Icon = '';
 
   }

@@ -116,7 +116,7 @@ public searchString : string;
       'required' : 'Mô tả không được để trống',
       'maxlength' : 'Mô tả nhập phải từ 1-200 ký tự'
     },
-    
+
   };
   constructor(private dataService: UserManagerService,
               private itemsService: ItemsService,
@@ -129,6 +129,7 @@ public searchString : string;
   ) {
     this.addUser = new UserManager();
     dataService.setToken(this.membershipService.getTokenUser());
+    groupService.setToken(this.membershipService.getTokenUser());
   }
 
   ngOnInit() {
@@ -148,13 +149,13 @@ public searchString : string;
           this.loadingBarService.complete();
         },
         error => {
-          if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+          if (error.status == 401 || error.status == 302 ||error.status==0) {
 
                     this.utilityService.navigateToSignIn();
 
                 }
           this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+          this.notificationService.printErrorMessage('Có lỗi khi tải danh sách, hãy thử đăng nhập lại  ' + error);
         });
   }
   loadGroups() {
@@ -167,13 +168,13 @@ public searchString : string;
           this.loadingBarService.complete();
         },
         error => {
-          if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+          if (error.status == 401 || error.status == 302 ||error.status==0 ) {
 
                     this.utilityService.navigateToSignIn();
 
                 }
           this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+          this.notificationService.printErrorMessage('Có lỗi khi tải danh sách, hãy thử đăng nhập lại ' + error);
         });
   }
   loadUsersWithSearch(searchstring?:string) {
@@ -186,13 +187,13 @@ public searchString : string;
           this.loadingBarService.complete();
         },
         error => {
-          if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+          if (error.status == 401 || error.status == 302 ||error.status==0) {
 
                     this.utilityService.navigateToSignIn();
 
                 }
           this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+          this.notificationService.printErrorMessage('Có lỗi khi tải danh sách, hãy thử đăng nhập lại ' + error);
         });
   }
 search(searchstring: string)
@@ -244,10 +245,6 @@ formChanged()
         }
     }
   addNewUser(usr: UserManager) {
-
-    //console.log(user);
-    // this.selectedUser.Groups = this.selectedUser.Groups.filter(opt => opt.Check);
-    // console.log(this.selectedUser);
     if(this.selectedUser.Domain.includes(DomainListComponent.DOMAIN_PREFIX) || this.selectedUser.Domain.includes(DomainListComponent.DOMAIN_PREFIX_HTTPS)) {
       this.loadingBarService.start();
       this.dataService.createUser(this.selectedUser)
@@ -264,13 +261,13 @@ formChanged()
 
           },
           error => {
-            if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+            if (error.status == 401 || error.status == 302 ||error.status==0 ) {
 
                     this.utilityService.navigateToSignIn();
 
                 }
             this.loadingBarService.complete();
-            this.notificationService.printErrorMessage('Lỗi- ' + error);
+            this.notificationService.printErrorMessage('Thêm người dùng thất bại, hãy thử đăng nhập lại' + error);
           });
       //     this.itemsService.addItemToStart<IScheduleT>(this.schedules, schedule);
       //this.loadSchedules();
@@ -317,13 +314,13 @@ formChanged()
               this.loadingBarService.complete();
             },
             error => {
-              if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+              if (error.status == 401 || error.status == 302 ||error.status==0) {
 
                     this.utilityService.navigateToSignIn();
 
                 }
               this.loadingBarService.complete();
-              this.notificationService.printErrorMessage('Lỗi ' + usr.UserName + ' ' + error);
+              this.notificationService.printErrorMessage('Xóa người dùng thất bại, hãy thử đăng nhập lại ' + error);
             });
       });
   }
@@ -347,13 +344,13 @@ formChanged()
           this.loadingBarService.complete();
         },
         error => {
-          if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+          if (error.status == 401 || error.status == 302 ||error.status==0) {
 
                     this.utilityService.navigateToSignIn();
 
                 }
           this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Cập nhật thất bại ' + error);
+          this.notificationService.printErrorMessage('Cập nhật người dùng thất bại, hãy thử đăng nhập lại ' + error);
         });
 
   }
@@ -383,13 +380,13 @@ formChanged()
           this.childModal.show();
         },
         error => {
-          if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+          if (error.status == 401 || error.status == 302 ||error.status==0) {
 
                     this.utilityService.navigateToSignIn();
 
                 }
           this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+          this.notificationService.printErrorMessage('Có lỗi khi xem chi tiết, hãy thử đăng nhập lại ' + error);
         });
 
 

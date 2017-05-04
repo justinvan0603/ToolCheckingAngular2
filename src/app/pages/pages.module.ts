@@ -7,6 +7,8 @@ import {PageMenuService} from "./pages.menu.service";
 import {ShareModule} from "./shared/shares.module";
 import {ConfigService} from "./shared/services/shared/utils/config.service";
 import {ItemsService} from "./shared/services/shared/utils/items.service";
+import {UtilityService} from "./shared/services/utility.service";
+import {NotificationService} from "./shared/utils/notification.service";
 
 @NgModule({
   imports: [CommonModule, NgaModule, routing,ShareModule],
@@ -16,6 +18,8 @@ import {ItemsService} from "./shared/services/shared/utils/items.service";
     PageMenuService,
     ConfigService,
     ItemsService,
+    UtilityService,
+    NotificationService
   ]
 
 })

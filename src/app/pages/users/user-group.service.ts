@@ -14,18 +14,24 @@ import {ApplicationRole} from "./applicationRole";
 export class UserGroupService {
 
     _baseUrl: string = '';
-
+    _token;
     constructor(private http: Http,
         private itemsService: ItemsService,
         private configService: ConfigService) {
         this._baseUrl = configService.getApiURI()+ 'ApplicationGroup';
     }
-getApplicationGroupsSearch(page?: number, itemsPerPage?: number, searchString?: string): Observable<PaginatedResult<ApplicationGroup[]>> {
+
+    setToken(tokenUser: string) {
+      this._token = tokenUser;
+    }
+
+    getApplicationGroupsSearch(page?: number, itemsPerPage?: number, searchString?: string): Observable<PaginatedResult<ApplicationGroup[]>> {
         var peginatedResult: PaginatedResult<ApplicationGroup[]> = new PaginatedResult<ApplicationGroup[]>();
 
         let headers = new Headers();
         if (page != null && itemsPerPage != null) {
             headers.append('Pagination', page + ',' + itemsPerPage);
+            headers.append('Authorization','Bearer '+this._token);
         }
 
         return this.http.get(this._baseUrl + '/' + searchString, {
@@ -51,6 +57,7 @@ getApplicationGroupsSearch(page?: number, itemsPerPage?: number, searchString?: 
         let headers = new Headers();
         if (page != null && itemsPerPage != null) {
             headers.append('Pagination', page + ',' + itemsPerPage);
+          headers.append('Authorization','Bearer '+this._token);
         }
 
         return this.http.get(this._baseUrl, {
@@ -79,6 +86,7 @@ getApplicationGroupsSearch(page?: number, itemsPerPage?: number, searchString?: 
     let headers = new Headers();
     if (page != null && itemsPerPage != null) {
       headers.append('Pagination', page + ',' + itemsPerPage);
+      headers.append('Authorization','Bearer '+this._token);
     }
 
     return this.http.get(this._baseUrl+ '/detail?id=' + id, {
@@ -113,6 +121,7 @@ getApplicationGroupsSearch(page?: number, itemsPerPage?: number, searchString?: 
 
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
+        headers.append('Authorization','Bearer '+this._token);
 
         return this.http.put(this._baseUrl +'/'+ user.ID, JSON.stringify(user), {
             headers: headers
@@ -125,6 +134,7 @@ getApplicationGroupsSearch(page?: number, itemsPerPage?: number, searchString?: 
         //console.log(usr);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
+        headers.append('Authorization','Bearer '+this._token);
 
         return this.http.post(this._baseUrl, JSON.stringify(usr), {
             headers: headers
@@ -134,7 +144,12 @@ getApplicationGroupsSearch(page?: number, itemsPerPage?: number, searchString?: 
     }
 
     deleteApplicationGroup(id: number): Observable<any> {
-        return this.http.delete(this._baseUrl +'/'+ id)
+      let headers = new Headers();
+      headers.append('Authorization','Bearer '+this._token);
+
+        return this.http.delete(this._baseUrl +'/'+ id, {
+          headers: headers
+        })
             .map(res => <any>(<Response>res).json())
             .catch(this.handleError);
     }
@@ -163,6 +178,7 @@ getApplicationGroupsSearch(page?: number, itemsPerPage?: number, searchString?: 
     let headers = new Headers();
     if (page != null && itemsPerPage != null) {
       headers.append('Pagination', page + ',' + itemsPerPage);
+      headers.append('Authorization','Bearer '+this._token);
     }
 
     return this.http.get(this._baseUrl+'/detail/'+ id, {

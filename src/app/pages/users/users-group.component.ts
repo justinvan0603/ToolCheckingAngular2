@@ -22,6 +22,7 @@ import {ApplicationRole} from "./applicationRole";
 import { UserRoleService } from "./user-role.service";
 import { NgForm } from "@angular/forms";
 import { UtilityService } from "../shared/services/utility.service";
+import {MembershipService} from "../login/membership.service";
 
 @Component({
     // moduleId: module.id,
@@ -48,7 +49,7 @@ import { UtilityService } from "../shared/services/utility.service";
     ]
 })
 export class ApplicationGroupComponent implements AfterViewChecked {
-        
+
 
     viewUserForm : NgForm;
     @ViewChild('viewUserForm') currentForm: NgForm;
@@ -69,23 +70,19 @@ export class ApplicationGroupComponent implements AfterViewChecked {
     items: string[] = ['item1', 'item2', 'item3'];
     selected: string;
     output: string;
-    selectedApplicationGroupId: number;
     selectedApplicationGroupLoaded: boolean = false;
     index: number = 0;
-    backdropOptions = [true, false, 'static'];
     animation: boolean = true;
-    keyboard: boolean = true;
-    backdrop: string | boolean = true;
     onEdit: boolean = false;
     public addingApplicationGroup: boolean = false;
     formErrors = {
     'NAME': ''
- 
+
   };
   public isValid: boolean = true;
   validationMessages = {
     'NAME': {
-      'required':      'Tên nhóm không được để trống', 
+      'required':      'Tên nhóm không được để trống',
       'maxlength':     'Tên nhóm phải từ 1-200 ký tự',
     },
 
@@ -97,8 +94,15 @@ export class ApplicationGroupComponent implements AfterViewChecked {
         private configService: ConfigService,
         public utilityService: UtilityService,
         private loadingBarService: SlimLoadingBarService,
-        private roleService: UserRoleService
-        ) {this.addApplicationGroup = new ApplicationGroup();  }
+        private roleService: UserRoleService,
+        private membershipService:MembershipService
+        )
+    {
+      dataService.setToken(this.membershipService.getTokenUser());
+      roleService.setToken(this.membershipService.getTokenUser());
+      this.addApplicationGroup = new ApplicationGroup();
+
+    }
 
     ngOnInit() {
         this.apiHost = this.configService.getApiHost();
@@ -118,13 +122,13 @@ export class ApplicationGroupComponent implements AfterViewChecked {
                 this.loadingBarService.complete();
             },
             error => {
-                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+                if (error.status == 401 || error.status == 302 ||error.status==0) {
 
                     this.utilityService.navigateToSignIn();
 
                 }
                 this.loadingBarService.complete();
-                this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+                this.notificationService.printErrorMessage('Có lỗi khi tải, hãy thử đăng nhập lại ' + error);
             });
     }
     loadApplicationGroupsWithSearch(searchString? : string) {
@@ -137,13 +141,13 @@ export class ApplicationGroupComponent implements AfterViewChecked {
                 this.loadingBarService.complete();
             },
             error => {
-                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+                if (error.status == 401 || error.status == 302 ||error.status==0) {
 
                     this.utilityService.navigateToSignIn();
 
                 }
                 this.loadingBarService.complete();
-                this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+                this.notificationService.printErrorMessage('Có lỗi khi tải, hãy thử đăng nhập lại ' + error);
             });
     }
     search(searchstring: string)
@@ -165,7 +169,7 @@ export class ApplicationGroupComponent implements AfterViewChecked {
         },
         error => {
           this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+          this.notificationService.printErrorMessage('Có lỗi khi tải, hãy thử đăng nhập lại ' + error);
         });
   }
 
@@ -188,15 +192,15 @@ formChanged()
         if (!this.viewUserForm) { return; }
         const form = this.viewUserForm.form;
         this.isValid = true;
-        for (const field in this.formErrors) 
+        for (const field in this.formErrors)
         {
             this.formErrors[field] = '';
             const control = form.get(field);
-            if (control && control.dirty && !control.valid) 
+            if (control && control.dirty && !control.valid)
             {
                 this.isValid = false;
                 const messages = this.validationMessages[field];
-                for (const key in control.errors) 
+                for (const key in control.errors)
                 {
                     this.formErrors[field] += messages[key] + ' ';
                 }
@@ -227,7 +231,7 @@ formChanged()
 
             },
             error => {
-                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+                if (error.status == 401 || error.status == 302 ||error.status==0) {
 
                     this.utilityService.navigateToSignIn();
 
@@ -244,7 +248,7 @@ formChanged()
 
         this.addApplicationGroup = new ApplicationGroup();
         this.selectedApplicationGroup = new ApplicationGroup();
-        
+
          this.selectedApplicationGroup.Roles = this.applicationRole;
          //console.log(this.selectedApplicationGroup.Roles);
         // this.loadRoleByGroup();
@@ -262,23 +266,23 @@ deleteApplicationGroup(usr:ApplicationGroup)
                 this.dataService.deleteApplicationGroup(usr.ID)
                     .subscribe(() => {
                         this.itemsService.removeItemFromArray<ApplicationGroup>(this.users, usr);
-                        this.notificationService.printSuccessMessage(usr.Name + ' has been deleted.');
+                        this.notificationService.printSuccessMessage("Nhóm người dùng: " +usr.Name + ' đã được xóa');
                         this.loadingBarService.complete();
                     },
                     error => {
-                        if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+                        if (error.status == 401 || error.status == 302 ||error.status==0) {
 
                     this.utilityService.navigateToSignIn();
 
                 }
                         this.loadingBarService.complete();
-                        this.notificationService.printErrorMessage('Lỗi ' + usr.Name + ' ' + error);
+                        this.notificationService.printErrorMessage('Có lỗi khi xóa: ' + usr.Name + ' Hãy thử đăng nhập lại ' + error);
                     });
             });
 }
 editApplicationGroup(usr: ApplicationGroup) {
       //  console.log(usr);
-        
+
         usr.Roles = this.selectedApplicationGroup.Roles;
         this.loadingBarService.start();
         this.onEdit = true;
@@ -292,11 +296,11 @@ editApplicationGroup(usr: ApplicationGroup) {
                 {
                     this.notificationService.printErrorMessage(res.Message);
                 }
-               
+
                 this.loadingBarService.complete();
             },
             error => {
-                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+                if (error.status == 401 || error.status == 302 ||error.status==0) {
 
                     this.utilityService.navigateToSignIn();
 
@@ -325,7 +329,7 @@ editApplicationGroup(usr: ApplicationGroup) {
             this.childModal.show();
           },
           error => {
-              if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+              if (error.status == 401 || error.status == 302 ||error.status==0) {
 
                     this.utilityService.navigateToSignIn();
 

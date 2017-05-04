@@ -106,6 +106,7 @@ export class Menu implements AfterViewChecked {
   ) {
     this.addApplicationGroup = new MenuRole();
     dataService.setToken(this.membershipService.getTokenUser());
+    roleService.setToken(this.membershipService.getTokenUser())
 
   }
 
@@ -127,13 +128,13 @@ export class Menu implements AfterViewChecked {
           this.loadingBarService.complete();
         },
         error => {
-          if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+          if (error.status == 401 || error.status == 302 ||error.status==0 ) {
 
             this.utilityService.navigateToSignIn();
 
           }
           this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Có lỗi khi tải danh sách quyền ' + error);
+          this.notificationService.printErrorMessage('Có lỗi khi tải danh sách quyền, hãy thử đăng nhập lại ' + error);
         });
   }
 
@@ -147,13 +148,13 @@ export class Menu implements AfterViewChecked {
           this.loadingBarService.complete();
         },
         error => {
-          if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+          if (error.status == 401 || error.status == 302 ||error.status==0) {
 
             this.utilityService.navigateToSignIn();
 
           }
           this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+          this.notificationService.printErrorMessage('Có lỗi khi tải danh sách menu, hãy thử đăng nhập lại ' + error);
         });
   }
 
@@ -184,13 +185,13 @@ export class Menu implements AfterViewChecked {
 
         },
         error => {
-          if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+          if (error.status == 401 || error.status == 302 ||error.status==0) {
 
             this.utilityService.navigateToSignIn();
 
           }
           this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Lỗi- ' + error);
+          this.notificationService.printErrorMessage('Thêm menu thất bại, hãy thử đăng nhập lại ' + error);
         });
     //     this.itemsService.addItemToStart<IScheduleT>(this.schedules, schedule);
     //this.loadSchedules();
@@ -216,13 +217,13 @@ export class Menu implements AfterViewChecked {
           this.loadingBarService.complete();
         },
         error => {
-          if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+          if (error.status == 401 || error.status == 302 ||error.status==0) {
 
             this.utilityService.navigateToSignIn();
 
           }
           this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+          this.notificationService.printErrorMessage('Tìm menu thất bại, hãy thử đăng nhập lại ' + error);
         });
   }
   search(searchstring: string)
@@ -289,19 +290,23 @@ export class Menu implements AfterViewChecked {
               this.loadingBarService.complete();
             },
             error => {
-              if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+              if (error.status == 401 || error.status == 302 ||error.status==0 ) {
 
                 this.utilityService.navigateToSignIn();
 
               }
               this.loadingBarService.complete();
-              this.notificationService.printErrorMessage('Lỗi ' + usr.MenuName + ' ' + error);
+              this.notificationService.printErrorMessage('Xóa menu thất bại, hãy thử đăng nhập lại' + usr.MenuName + ' ' + error);
             });
       });
   }
 
   edit(usr: MenuRole) {
     //console.log(usr);
+    if(this.selectedRole!=undefined)
+      usr.RoleName = this.selectedRole.Name;
+    if(this.selectedMenuParrent!=undefined)
+      usr.MenuParent = this.selectedMenuParrent.MenuId;
     this.loadingBarService.start();
     this.onEdit = true;
     this.dataService.update(usr)
@@ -318,13 +323,13 @@ export class Menu implements AfterViewChecked {
           this.loadingBarService.complete();
         },
         error => {
-          if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+          if (error.status == 401 || error.status == 302 ||error.status==0 ) {
 
             this.utilityService.navigateToSignIn();
 
           }
           this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Cập nhật thất bại ' + error);
+          this.notificationService.printErrorMessage('Cập nhật menu thất bại, hãy thử đăng nhập lại' + error);
         });
 
   }

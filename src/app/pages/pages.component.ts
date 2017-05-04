@@ -4,6 +4,8 @@ import { BaMenuService } from '../theme';
 import {PageMenuService} from "./pages.menu.service";
 import {MembershipService} from "./login/membership.service";
 import { PAGES_MENU } from "./pages.menu";
+import {UtilityService} from "./shared/services/utility.service";
+import {NotificationService} from "./shared/utils/notification.service";
 @Component({
 //  moduleId: module.id,
   selector: 'pages',
@@ -38,65 +40,7 @@ import { PAGES_MENU } from "./pages.menu";
 export class Pages {
 
  private PAGES_MENU2: any;
-
-  // PAGES_MENU2 = [
-  //   {
-  //     "path": "pages",
-  //     children: [
-  //       {
-  //         path: 'messages',
-  //         data: {
-  //           menu: {
-  //             title: 'Thông báo',
-  //             icon: 'ion-android-notifications-none',
-  //             selected: false,
-  //             expanded: false,
-  //             order: 500,
-  //           }
-  //         },
-  //         children: [
-  //           {
-  //             path: 'messagelist',
-  //             data: {
-  //               menu: {
-  //                 title: 'Danh sách thông báo',
-  //               }
-  //             }
-  //           }
-  //         ]
-  //       }]
-  //   },
-  //   {
-  //     path: '',
-  //     children: [
-  //
-  //       {
-  //         path: 'fileupload',
-  //         data: {
-  //           menu: {
-  //             title: 'Upload',
-  //             icon: 'ion-android-notifications-none',
-  //             selected: false,
-  //             expanded: false,
-  //             order: 500,
-  //           }
-  //         },
-  //         children: [
-  //           {
-  //             path: 'fileuploadpage',
-  //             data: {
-  //               menu: {
-  //                 title: 'Upload File',
-  //               }
-  //             }
-  //           }
-  //         ]
-  //       }]
-  //   }];
-
- // PAGES_MENU:any[];
-
-  constructor(private _menuService: BaMenuService, private dataService: PageMenuService, private membershipService:MembershipService) {
+  constructor(private _menuService: BaMenuService, private dataService: PageMenuService, private membershipService:MembershipService,public utilityService: UtilityService, private notificationService: NotificationService) {
     dataService.setToken(this.membershipService.getTokenUser());
 
     this.loadMessages();
@@ -121,17 +65,13 @@ export class Pages {
         },
         error => {
 
-          if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
-
+          if (error.status == 401 || error.status == 302 ||error.status==0) {
           //  this.utilityService.navigateToSignIn();
-
           }
-          console.error('Error: ' + error)
+          this.notificationService.printErrorMessage('Không tải được danh sách menu ' + error);
 
 
-        },
-        () => console.log("Loi"));
-
+        });
   }
 
 

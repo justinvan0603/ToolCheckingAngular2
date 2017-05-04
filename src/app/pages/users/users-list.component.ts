@@ -80,36 +80,36 @@ formErrors = {
     'Password' : '',
     'DOMAIN' : '',
     'DOMAINDESC' : ''
- 
+
   };
   public isValid: boolean = true;
   validationMessages = {
     'EMAIL': {
-      'required':      'Email không được để trống', 
+      'required':      'Email không được để trống',
       'pattern':     'Email không hợp lệ',
     },
     'PHONE': {
-      'required':      'Điện thoại không được để trống', 
+      'required':      'Điện thoại không được để trống',
       'maxlength':     'Điện thoại phải từ 1-20 ký tự',
     },
     'Username': {
-      'required':      'Tên đăng nhập không được để trống', 
+      'required':      'Tên đăng nhập không được để trống',
       'maxlength':     'Tên đăng nhập phải từ 1-50 ký tự',
     },
     'FULLNAME': {
-      'required':      'Họ tên không được để trống', 
+      'required':      'Họ tên không được để trống',
       'maxlength':     'Họ tên phải từ 1-200 ký tự',
     },
     'Password': {
-      'required':      'Mật khẩu không được để trống', 
+      'required':      'Mật khẩu không được để trống',
       'maxlength':     'Mật khẩu phải từ 1-50 ký tự',
     },
     'DOMAIN': {
-      'required':      'Tên miền không được để trống', 
+      'required':      'Tên miền không được để trống',
       'maxlength':     'Tên miền phải từ 1-200 ký tự',
     },
     'DOMAINDESC': {
-      'required':      'Mô tả không được để trống', 
+      'required':      'Mô tả không được để trống',
       'maxlength':     'Mô tả phải từ 1-500 ký tự',
     },
   };
@@ -127,7 +127,7 @@ formErrors = {
         this.apiHost = this.configService.getApiHost();
         this.loadUsers();
 
-        
+
     }
 
     loadUsers() {
@@ -169,15 +169,15 @@ ngAfterViewChecked(): void {
         if (!this.viewUserForm) { return; }
         const form = this.viewUserForm.form;
         this.isValid = true;
-        for (const field in this.formErrors) 
+        for (const field in this.formErrors)
         {
             this.formErrors[field] = '';
             const control = form.get(field);
-            if (control && control.dirty && !control.valid) 
+            if (control && control.dirty && !control.valid)
             {
                 this.isValid = false;
                 const messages = this.validationMessages[field];
-                for (const key in control.errors) 
+                for (const key in control.errors)
                 {
                     this.formErrors[field] += messages[key] + ' ';
                 }
@@ -185,7 +185,7 @@ ngAfterViewChecked(): void {
         }
     }
     addNewUser(usr: User) {
-        
+
         //console.log(user);
         //console.log(this.selectedUser);
         this.loadingBarService.start();

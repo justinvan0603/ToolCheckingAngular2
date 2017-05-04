@@ -33,11 +33,11 @@ export class Login implements OnInit {
           _authenticationResult.Message = res.Message;
           _authenticationResult.Access_token=res.access_token;
           _authenticationResult.Expires_in =res.expires_in;
-          console.log("a"+res.Succeeded+res.access_token);
+       //   console.log("a"+res.Succeeded+res.access_token);
         },
         error => console.error('Error: ' + error),
         () => {
-          console.log("ga");
+         // console.log("ga");
           if (_authenticationResult.Succeeded) {
             this.notificationService.printSuccessMessage('Xin chào, ' + this._user.Username + '!');
             console.log( _authenticationResult.Access_token);

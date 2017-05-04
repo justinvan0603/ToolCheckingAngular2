@@ -109,13 +109,13 @@ export class ApplicationRoleComponent implements AfterViewChecked {
                 this.loadingBarService.complete();
             },
             error => {
-                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+                if (error.status == 401 || error.status == 302 ||error.status==0 ) {
 
                     this.utilityService.navigateToSignIn();
 
                 }
                 this.loadingBarService.complete();
-                this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+                this.notificationService.printErrorMessage('Có lỗi khi tải, hãy thử đăng nhập lại ' + error);
             });
     }
 
@@ -147,13 +147,13 @@ export class ApplicationRoleComponent implements AfterViewChecked {
 
             },
             error => {
-                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+                if (error.status == 401 || error.status == 302 ||error.status==0) {
 
                     this.utilityService.navigateToSignIn();
 
                 }
                 this.loadingBarService.complete();
-                this.notificationService.printErrorMessage('Lỗi- ' + error);
+                this.notificationService.printErrorMessage('Thêm quyền thất bại - ' + error);
             });
    //     this.itemsService.addItemToStart<IScheduleT>(this.schedules, schedule);
             //this.loadSchedules();
@@ -179,7 +179,7 @@ export class ApplicationRoleComponent implements AfterViewChecked {
                 this.loadingBarService.complete();
             },
             error => {
-                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+                if (error.status == 401 || error.status == 302 ||error.status==0) {
 
                     this.utilityService.navigateToSignIn();
 
@@ -252,13 +252,13 @@ export class ApplicationRoleComponent implements AfterViewChecked {
               this.loadingBarService.complete();
             },
             error => {
-                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+                if (error.status == 401 || error.status == 302 ||error.status==0 ) {
 
                     this.utilityService.navigateToSignIn();
 
                 }
               this.loadingBarService.complete();
-              this.notificationService.printErrorMessage('Lỗi ' + usr.Name + ' ' + error);
+              this.notificationService.printErrorMessage('Xóa thất bại ' + usr.Name + ' ' + error);
             });
       });
   }
@@ -281,7 +281,7 @@ export class ApplicationRoleComponent implements AfterViewChecked {
                 this.loadingBarService.complete();
             },
             error => {
-                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+                if (error.status == 401 || error.status == 302 ||error.status==0) {
 
                     this.utilityService.navigateToSignIn();
 
