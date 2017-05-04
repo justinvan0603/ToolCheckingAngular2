@@ -28,7 +28,7 @@
                     <div class="form-group">
                 <label class="control-label col-md-2" >Ghi chú:</label>
                 <div class="col-md-10">
-                <input type="text" class="form-control input-sm"  [(ngModel)]="addUserDomain.NOTES" name="NOTES" #NotesInput="ngModel" required pattern=".{1,500}"/>
+                <input type="text" class="form-control input-sm"  [(ngModel)]="addUserDomain.NOTES" name="NOTES" #NotesInput="ngModel"  pattern=".{1,500}"/>
                 </div>
                 <div class="col-md-10 col-md-offset-2">
                 <button [disabled]="!addOptionForm.form.valid || (selectedManageUser == null ? true:false)" (click)="addNewDomainUser(addUserDomain)" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Thêm</button>

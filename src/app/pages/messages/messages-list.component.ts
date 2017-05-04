@@ -120,7 +120,7 @@ export class MessageListComponent extends Paginated implements AfterViewChecked 
         this.dataShareService.setToken(this.membershipService.getTokenUser());
         this.featureService.setToken(this.membershipService.getTokenUser());
         this.loadMessages('');
-
+        
         //this.cleanFeature();
         //this.feature = new Feature();
       });
@@ -241,7 +241,8 @@ export class MessageListComponent extends Paginated implements AfterViewChecked 
         }
         else
         {
-        this.featureService.createFeedback(feature)
+            var _userData = this.membershipService.getLoggedInUser(); 
+        this.featureService.createFeedback(feature,_userData.Username)
             .subscribe(res => {
                 if(res.Succeeded)
                 {
@@ -281,7 +282,11 @@ export class MessageListComponent extends Paginated implements AfterViewChecked 
         this.feature.Resource = msg.Id.toString();
         
         this.childModal.show();
-        let captcharesponse = this.captcha.getResponse();
+        let captcharesponse;
+        if(this.captcha)
+        {
+             captcharesponse= this.captcha.getResponse();
+        }
         if(!(captcharesponse == null || captcharesponse === ''))
             this.captcha.reset();
     }

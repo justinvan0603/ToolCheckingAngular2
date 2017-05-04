@@ -134,6 +134,7 @@ export class DomainListComponent implements AfterViewChecked {
                 this.selectedManageUser = this.listManageUser[this.listManageUser.length-1];
             },
             error => {
+                
                 if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
 
                     this.utilityService.navigateToSignIn();

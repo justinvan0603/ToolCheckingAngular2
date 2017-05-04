@@ -99,7 +99,8 @@ export class MessageConfigurationsListComponent {
         {
             item.CONF_VALUE = item.CONF_VALUE
         }
-        this.dataService.updateUserConfigs('hieupt',this.userconfigs).subscribe(() => {
+        var _userData = this.membershipService.getLoggedInUser(); 
+        this.dataService.updateUserConfigs(_userData.Username,this.userconfigs).subscribe(() => {
                 this.notificationService.printSuccessMessage('Cập nhật thành công');
                 this.loadingBarService.complete();
                

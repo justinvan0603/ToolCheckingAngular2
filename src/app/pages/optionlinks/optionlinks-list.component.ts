@@ -243,11 +243,12 @@ export class OptionLinkListComponent implements AfterViewChecked {
                 this.notificationService.printErrorMessage('Link đã tồn tại trong danh sách!' );
                 return;
             }
+            var _userData = this.membershipService.getLoggedInUser(); 
             let newItem = new Optionlink();
             newItem.Link = optlink.Link;
             newItem.RecordStatus = '1';
             newItem.CreateDt = new Date();
-            newItem.MakerId = 'thieu1234';
+            newItem.MakerId = _userData.Username;
             newItem.OptionsId = this.currentOptionSearch.ID;
             newItem.DomainId = this.domainid;
             newItem.Id = 0;

@@ -27,13 +27,13 @@ setToken(token:string):void{
 
     }
 
-    createFeedback(feature: Feature): Observable<any> {
+    createFeedback(feature: Feature, username: string): Observable<any> {
         
         //console.log(feature);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Authorization','Bearer '+this._token);
-        return this.http.post(this._baseUrl, JSON.stringify(feature), {
+        return this.http.post(this._baseUrl + '/' + username, JSON.stringify(feature), {
             headers: headers
         })
             .map(res => <any>(<Response>res).json())
