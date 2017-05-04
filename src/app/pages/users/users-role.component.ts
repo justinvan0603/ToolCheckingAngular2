@@ -153,7 +153,7 @@ export class ApplicationRoleComponent implements AfterViewChecked {
 
                 }
                 this.loadingBarService.complete();
-                this.notificationService.printErrorMessage('Thêm quyền thất bại - ' + error);
+                this.notificationService.printErrorMessage('Thêm quyền thất bại, hãy thử đăng nhập lại - ' + error);
             });
    //     this.itemsService.addItemToStart<IScheduleT>(this.schedules, schedule);
             //this.loadSchedules();
@@ -185,7 +185,7 @@ export class ApplicationRoleComponent implements AfterViewChecked {
 
                 }
                 this.loadingBarService.complete();
-                this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+                this.notificationService.printErrorMessage('Có lỗi khi tải quyền,hãy thử đăng nhập lại ' + error);
             });
     }
     search(searchstring: string)
@@ -258,7 +258,7 @@ export class ApplicationRoleComponent implements AfterViewChecked {
 
                 }
               this.loadingBarService.complete();
-              this.notificationService.printErrorMessage('Xóa thất bại ' + usr.Name + ' ' + error);
+              this.notificationService.printErrorMessage('Xóa quyền thất bại, bạn không có quyền này, hãy thử đăng nhập lại ' + error);
             });
       });
   }
@@ -287,7 +287,7 @@ export class ApplicationRoleComponent implements AfterViewChecked {
 
                 }
                 this.loadingBarService.complete();
-                this.notificationService.printErrorMessage('Cập nhật thất bại ' + error);
+                this.notificationService.printErrorMessage('Cập nhật quyền thất bại,hãy thử đăng nhập lại ' + error);
             });
 
     }

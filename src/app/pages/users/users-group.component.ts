@@ -128,7 +128,7 @@ export class ApplicationGroupComponent implements AfterViewChecked {
 
                 }
                 this.loadingBarService.complete();
-                this.notificationService.printErrorMessage('Có lỗi khi tải, hãy thử đăng nhập lại ' + error);
+                this.notificationService.printErrorMessage('Có lỗi khi tải danh sách nhóm, hãy thử đăng nhập lại ' + error);
             });
     }
     loadApplicationGroupsWithSearch(searchString? : string) {
@@ -147,7 +147,7 @@ export class ApplicationGroupComponent implements AfterViewChecked {
 
                 }
                 this.loadingBarService.complete();
-                this.notificationService.printErrorMessage('Có lỗi khi tải, hãy thử đăng nhập lại ' + error);
+                this.notificationService.printErrorMessage('Có lỗi khi tải danh sách nhóm, hãy thử đăng nhập lại ' + error);
             });
     }
     search(searchstring: string)
@@ -169,7 +169,7 @@ export class ApplicationGroupComponent implements AfterViewChecked {
         },
         error => {
           this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Có lỗi khi tải, hãy thử đăng nhập lại ' + error);
+          this.notificationService.printErrorMessage('Có lỗi khi tải danh sách quyền, hãy thử đăng nhập lại ' + error);
         });
   }
 
@@ -224,7 +224,7 @@ formChanged()
 
         this.dataService.createApplicationGroup(this.selectedApplicationGroup)
             .subscribe(() => {
-                this.notificationService.printSuccessMessage('Thêm tài khoản thành công');
+                this.notificationService.printSuccessMessage('Thêm nhóm người dùng thành công');
                 this.loadingBarService.complete();
                 this.addApplicationGroup =new ApplicationGroup();
                 this.loadApplicationGroups();
@@ -237,7 +237,7 @@ formChanged()
 
                 }
                 this.loadingBarService.complete();
-                this.notificationService.printErrorMessage('Lỗi- ' + error);
+                this.notificationService.printErrorMessage('Thêm nhóm người dùng thất bại, hãy thử đăng nhập lại- ' + error);
             });
    //     this.itemsService.addItemToStart<IScheduleT>(this.schedules, schedule);
             //this.loadSchedules();
@@ -306,7 +306,7 @@ editApplicationGroup(usr: ApplicationGroup) {
 
                 }
                 this.loadingBarService.complete();
-                this.notificationService.printErrorMessage('Cập nhật thất bại ' + error);
+                this.notificationService.printErrorMessage('Cập nhật nhóm người dùng thất bại, hãy thử đăng nhập lại ' + error);
             });
 
     }
@@ -335,7 +335,7 @@ editApplicationGroup(usr: ApplicationGroup) {
 
                 }
             this.loadingBarService.complete();
-            this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+            this.notificationService.printErrorMessage('Có lỗi khi tải danh sách nhóm người dùng. ' + error);
           });
 
 

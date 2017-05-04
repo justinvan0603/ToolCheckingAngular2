@@ -155,7 +155,7 @@ public searchString : string;
 
                 }
           this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Có lỗi khi tải danh sách, hãy thử đăng nhập lại  ' + error);
+          this.notificationService.printErrorMessage('Có lỗi khi tải danh sách người dùng, hãy thử đăng nhập lại  ' + error);
         });
   }
   loadGroups() {
@@ -174,7 +174,7 @@ public searchString : string;
 
                 }
           this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Có lỗi khi tải danh sách, hãy thử đăng nhập lại ' + error);
+          this.notificationService.printErrorMessage('Có lỗi khi tải danh sách người dùng, hãy thử đăng nhập lại ' + error);
         });
   }
   loadUsersWithSearch(searchstring?:string) {
@@ -193,7 +193,7 @@ public searchString : string;
 
                 }
           this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Có lỗi khi tải danh sách, hãy thử đăng nhập lại ' + error);
+          this.notificationService.printErrorMessage('Có lỗi khi tải danh sách người dùng, hãy thử đăng nhập lại ' + error);
         });
   }
 search(searchstring: string)
@@ -386,7 +386,7 @@ formChanged()
 
                 }
           this.loadingBarService.complete();
-          this.notificationService.printErrorMessage('Có lỗi khi xem chi tiết, hãy thử đăng nhập lại ' + error);
+          this.notificationService.printErrorMessage('Có lỗi khi xem chi tiết người dùng, hãy thử đăng nhập lại ' + error);
         });
 
 
