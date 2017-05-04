@@ -179,8 +179,8 @@ export class MessageListComponent extends Paginated implements AfterViewChecked 
             error => {
 
                 if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
-
-                    this.utilityService.navigateToSignIn();
+                    this.notificationService.printErrorMessage("Bạn không có quyền truy cập vào chức năng này!");
+                    //this.utilityService.navigateToSignIn();
 
                 }
               //console.error('Error: ' + error)

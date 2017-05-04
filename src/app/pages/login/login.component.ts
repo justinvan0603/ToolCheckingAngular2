@@ -40,7 +40,7 @@ export class Login implements OnInit {
          // console.log("ga");
           if (_authenticationResult.Succeeded) {
             this.notificationService.printSuccessMessage('Xin chào, ' + this._user.Username + '!');
-            console.log( _authenticationResult.Access_token);
+            //console.log( _authenticationResult.Access_token);
             localStorage.setItem('user', JSON.stringify(this._user));
             localStorage.setItem('access_token', _authenticationResult.Access_token);
             this.router.navigate(['pages/messages/messagelist']);
