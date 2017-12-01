@@ -79,11 +79,11 @@
 
 
 
-          <div class="form-group" >
+          <div class="form-group" style="height:325px; overflow-y:auto;">
                   <label><span style="color:red">*</span> Quyền hệ thống:</label>
 
             
-              <div *ngFor="let item of this.selectedApplicationGroup.Roles,let i = index">
+              <div *ngFor="let item of this.selectedApplicationGroup.Roles,let i = index" >
                 
                   <div class="row" *ngIf = "i% 4 == 0">
 

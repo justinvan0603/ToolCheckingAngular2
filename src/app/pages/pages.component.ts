@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Routes } from '@angular/router';
 import { BaMenuService } from '../theme';
 import {PageMenuService} from "./pages.menu.service";
@@ -44,6 +44,16 @@ export class Pages {
     dataService.setToken(this.membershipService.getTokenUser());
 
     this.loadMessages();
+    window.onbeforeunload = function(e)
+    {
+        localStorage.removeItem('user');
+        localStorage.removeItem('access_token');
+    };
+    window.onunload = function(e)
+    {
+          localStorage.removeItem('user');
+          localStorage.removeItem('access_token');
+    };
   }
   ngOnInit() {
 
@@ -73,7 +83,16 @@ export class Pages {
 
         });
   }
-
+  @HostListener('window:beforeunload', [ '$event' ])
+  beforeUnloadHander(event) {
+    localStorage.removeItem('user');
+        localStorage.removeItem('access_token');
+  }
+   @HostListener('window:unload', [ '$event' ])
+  unloadHandler(event) {
+    localStorage.removeItem('user');
+        localStorage.removeItem('access_token');
+  }
 
 
 

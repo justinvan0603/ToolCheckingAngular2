@@ -223,10 +223,9 @@ export class OptionUserListComponent  implements AfterViewChecked{
     loadDomainUser() {
         this.loadingBarService.start();
 
-        this.dataService.getOptionUsers(this.domainid,this.currentPage, this.itemsPerPage)
-            .subscribe((res: PaginatedResult<Array<UserDomain>>) => {
-                this.userdomains = res.result;// schedules;
-                this.totalItems = res.pagination.TotalItems;
+        this.dataService.getOptionUsers(this.domainid)
+            .subscribe((res: UserDomain[]) => {
+                this.userdomains = res;
                 this.loadingBarService.complete();
             },
             error => {

@@ -1,3 +1,5 @@
+import { LinkNotification } from "./linknotification";
+
 export class Optionlink
     {
           Id :number;
@@ -7,6 +9,7 @@ export class Optionlink
           RecordStatus :string;
           CreateDt :Date;
           MakerId :string;
+          UserDomainNotify:LinkNotification
           constructor()
           {
               this.Id = 0;
@@ -16,5 +19,6 @@ export class Optionlink
               this.RecordStatus = '';
               this.CreateDt = new Date();
               this.MakerId = '';
+              this.UserDomainNotify = new LinkNotification();
           }
     }

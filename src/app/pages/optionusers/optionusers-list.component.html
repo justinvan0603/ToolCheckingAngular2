@@ -8,6 +8,7 @@
     <!--<button class="btn btn-primary btn-sm" (click)="viewAddDomain()">
     <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>Tạo domain</button>-->
 <div [@flyInOut]="'in'">
+    <div class="row">
     <div class="col-md-10">
     <form  class="form-horizontal" method="post" #addOptionForm="ngForm"  novalidate>
         <div class="alert alert-danger" [hidden]="isValid">
@@ -38,6 +39,8 @@
 
     </form>
     </div>
+    </div>
+    <div class="row" style="height:370px; overflow:auto;">
     <table class="table table-hover">
         <thead>
             <tr>
@@ -62,13 +65,14 @@
             </tr>
         </tbody>
     </table>
+    </div>
 
-    <pagination [boundaryLinks]="true" [totalItems]="totalItems" [itemsPerPage]="itemsPerPage" [(ngModel)]="currentPage" class="pagination-sm"
-        previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" (pageChanged)="pageChanged($event)"></pagination>
+    <!--<pagination [boundaryLinks]="true" [totalItems]="totalItems" [itemsPerPage]="itemsPerPage" [(ngModel)]="currentPage" class="pagination-sm"
+        previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" (pageChanged)="pageChanged($event)"></pagination>-->
 
         <div class="row">
             <div class="col-md-12 col-md-offset-9">
-                <button (click)="saveOption()" type="button" class="btn btn-info">Lưu</button>
+                <button (click)="saveOption()" type="button" class="btn btn-info btn-md">Lưu</button>
             </div>
         </div>
 </div>

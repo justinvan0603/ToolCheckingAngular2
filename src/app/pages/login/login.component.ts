@@ -18,10 +18,22 @@ export class Login implements OnInit {
 
   constructor(public membershipService: MembershipService,
               public notificationService: NotificationService,
-              public router: Router) { }
+              public router: Router) { 
+                //console.log(this.membershipService.getLoggedInUser());
+                // if(this.membershipService.getLoggedInUser())
+                // {
+                //   this.router.navigate(['pages/messages/messagelist']);
+                // }
+              }
 
   ngOnInit() {
     this._user = new User('', '');
+    //console.log(this.membershipService.getLoggedInUser());
+    // if(this.membershipService.getLoggedInUser())
+    // {
+    //   this.router.navigate(['pages/messages/messagelist']);
+    // }
+    
   }
 
   login(): void {

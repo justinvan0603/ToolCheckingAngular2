@@ -58,7 +58,7 @@ export class DomainListComponent implements AfterViewChecked {
     apiHost: string;
     public listManageUser: ManageUser[];
     public selectedManageUser: ManageUser;
-    public itemsPerPage: number = 10;
+    public itemsPerPage: number = 50;
     public totalItems: number = 0;
     public currentPage: number = 1;
     public searchString : string;
@@ -162,7 +162,10 @@ export class DomainListComponent implements AfterViewChecked {
 
     pageChanged(event: any): void {
         this.currentPage = event.page;
-        this.loadDomains('');
+        if(!this.searchString)
+            this.loadDomains('');
+        else
+            this.loadDomains(this.searchString);
 
     };
 
@@ -214,8 +217,8 @@ ngAfterViewChecked(): void {
                 {
                     this.notificationService.printSuccessMessage(rs.Message);
                      this.domains.push(domain);
-                this.addDomain =new Domain();
-                this.loadDomains('');
+                    this.addDomain =new Domain();
+                    this.loadDomains('');
                 }
                 else
                 {
@@ -229,7 +232,7 @@ ngAfterViewChecked(): void {
             error => {
                 if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
 
-                    this.utilityService.navigateToSignIn();
+                   // this.utilityService.navigateToSignIn();
 
                 }
                 this.loadingBarService.complete();
@@ -240,7 +243,7 @@ ngAfterViewChecked(): void {
         {
             this.loadingBarService.start();
             this.loadingBarService.complete();
-                this.notificationService.printErrorMessage("Lỗi - Tên miền phải chứa tiền tố 'http://' ");
+                this.notificationService.printErrorMessage("Lỗi - Tên miền phải chứa tiền tố 'http://' hoặc 'https://' ");
         }
    //     this.itemsService.addItemToStart<IScheduleT>(this.schedules, schedule);
             //this.loadSchedules();
@@ -312,7 +315,7 @@ editDomain(domain: Domain) {
             error => {
                 if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
 
-                    this.utilityService.navigateToSignIn();
+                    //this.utilityService.navigateToSignIn();
 
                 }
                 this.loadingBarService.complete();
@@ -339,7 +342,7 @@ editDomain(domain: Domain) {
         //this.selectedDomain.EDITOR_ID = '';
         //this.selectedDomain.MAKER_ID = '';
         //this.selectedDomain.FULLNAME = '';
-        console.log(this.selectedDomain);
+        //console.log(this.selectedDomain);
         this.selectedManageUser = this.listManageUser.find(val => val.UserName == domain.USERNAME);
         //alert(this.addingUser);
         this.loadingBarService.complete();

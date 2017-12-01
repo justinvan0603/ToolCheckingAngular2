@@ -27,6 +27,8 @@ import {Subscription} from "rxjs";
 import {MembershipService} from "../login/membership.service";
 import { ReCaptchaComponent } from "angular2-recaptcha";
 import { NgForm } from "@angular/forms";
+import { DomainProfileService } from "./domainprofile.service";
+import { LinkNotificationService } from "./linknotification.service";
 @Component({
     // moduleId: module.id,
 
@@ -49,7 +51,14 @@ import { NgForm } from "@angular/forms";
                 }))
             ])
         ])
-    ]
+    ],
+    styles:[`td
+{
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}`]
 })
 export class MessageListComponent extends Paginated implements AfterViewChecked {
     viewMessageForm : NgForm;
@@ -63,8 +72,11 @@ export class MessageListComponent extends Paginated implements AfterViewChecked 
     public itemsPerPage: number = 10;
     public totalItems: number = 0;
     public currentPage: number = 1;
-
+    public Ip : string;
+    public Domain: string;
     public feature : Feature;
+    public isConfirm: boolean;
+    public isDisableNotify: boolean;
     // Modal properties
     @ViewChild('modal')
     modal: any;
@@ -104,21 +116,29 @@ export class MessageListComponent extends Paginated implements AfterViewChecked 
         public utilityService: UtilityService,
         private dataShareService: DataService,
         private membershipService:MembershipService,
+        private domainProfileService: DomainProfileService,
+        private linkNotificationService: LinkNotificationService,
   private route: ActivatedRoute,
   private router: Router
         )
     {
       super(0, 0, 0);
       this.feature = new Feature();
+      this.isConfirm = false;
+      this.Ip = "";
+      this.Domain = "";
+      this.isDisableNotify = false;
       //this._messageApiUrl = configService.getApiURI() + 'Messages/';
     }
 
     ngOnInit() {
        // this.apiHost = this.configService.getApiHost();
       this.sub = this.route.params.subscribe(params => {
-        this.dataShareService.set( 12);
+        this.dataShareService.set( 30);
         this.dataShareService.setToken(this.membershipService.getTokenUser());
         this.featureService.setToken(this.membershipService.getTokenUser());
+        this.domainProfileService.setToken(this.membershipService.getTokenUser());
+        this.linkNotificationService.setToken(this.membershipService.getTokenUser());
         this.loadMessages('');
         
         //this.cleanFeature();
@@ -178,11 +198,12 @@ export class MessageListComponent extends Paginated implements AfterViewChecked 
             },
             error => {
 
-                if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+                if (error.status == 401 || error.status == 302 || error.status==404) {
                     this.notificationService.printErrorMessage("Bạn không có quyền truy cập vào chức năng này!");
-                    //this.utilityService.navigateToSignIn();
+                    this.utilityService.navigateToSignIn();
 
                 }
+                 this.notificationService.printErrorMessage("Lỗi - " +error);
               //console.error('Error: ' + error)
 
 
@@ -217,7 +238,10 @@ export class MessageListComponent extends Paginated implements AfterViewChecked 
   //Thêm hàm này
   search(i): void {
     super.search(i);
-    this.loadMessages('');
+    if( !this.searchString)
+        this.loadMessages('');
+    else
+    this.loadMessages(this.searchString);
   };
     searchitem(searchstring: string)
     {
@@ -229,9 +253,6 @@ export class MessageListComponent extends Paginated implements AfterViewChecked 
     addFeature(feature: Feature) {
         // console.log(feature);
         // this.loadingBarService.start();
-        feature.RecordStatus = '1';
-        feature.AuthStatus = 'U';
-        feature.Resource = this.selectedMessage.Id.toString();
         let captcharesponse = this.captcha.getResponse();
         this.loadingBarService.start();
         if(captcharesponse == null || captcharesponse === '')
@@ -241,6 +262,73 @@ export class MessageListComponent extends Paginated implements AfterViewChecked 
         }
         else
         {
+            if(this.isDisableNotify)
+            {
+                var _userData = this.membershipService.getLoggedInUser(); 
+                this.linkNotificationService.updateLinkNotification(_userData.Username,this.selectedMessage.Domain,this.selectedMessage.Type,'1')
+                .subscribe( rs =>
+                {
+                    if(rs.Succeeded)
+                    {
+                    this.notificationService.printSuccessMessage(rs.Message);
+  
+                    }
+                    else
+                    {
+                        this.notificationService.printErrorMessage(rs.Message);
+                    }
+                
+                    this.loadingBarService.complete();
+
+                },
+                error =>
+                {
+                    if (error.status == 401 || error.status == 302  || error.status==404) {
+
+                        this.utilityService.navigateToSignIn();
+
+                    }
+                    this.loadingBarService.complete();
+                    this.notificationService.printErrorMessage('Lỗi- ' + error);
+                }
+
+            )
+        }
+        if(this.isConfirm)
+        {
+            this.domainProfileService.updateProfile(this.selectedMessage.Domain,this.selectedMessage.Type)
+            .subscribe( rs =>
+                {
+                    if(rs.Succeeded)
+                    {
+                    this.notificationService.printSuccessMessage(rs.Message);
+  
+                    }
+                    else
+                    {
+                        this.notificationService.printErrorMessage(rs.Message);
+                    }
+                
+                    this.loadingBarService.complete();
+
+                },
+                error =>
+                {
+                    if (error.status == 401 || error.status == 302 ||error.status==0 || error.status==404) {
+
+                        //this.utilityService.navigateToSignIn();
+
+                    }
+                    this.loadingBarService.complete();
+                    this.notificationService.printErrorMessage('Lỗi- ' + error);
+                }
+
+            )
+        }
+        feature.RecordStatus = '1';
+        feature.AuthStatus = 'U';
+        feature.Resource = this.selectedMessage.Id.toString();
+        
             var _userData = this.membershipService.getLoggedInUser(); 
         this.featureService.createFeedback(feature,_userData.Username)
             .subscribe(res => {
@@ -271,7 +359,44 @@ export class MessageListComponent extends Paginated implements AfterViewChecked 
 
 
     public viewMessageDetails(msg: Message): void {
-        
+        if(msg.Status === '1')
+        {
+            this.dataShareService.updateMessageRead(msg).subscribe(
+                rs =>{
+
+                },
+                error=>{
+
+                }
+        );
+        }
+        this.isDisableNotify = false;
+        if(msg.Type === 'CIP')
+        {
+            this.domainProfileService.getIp(msg.Domain).subscribe(
+                (data:any) =>
+            {
+                this.Ip = data._body;
+                this.loadingBarService.complete();
+            },
+            error => {
+                this.loadingBarService.complete();
+                this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+            })
+            
+        }
+        if(msg.Type === 'RDOM')
+        {
+            this.domainProfileService.getNewDomain(msg.Domain).subscribe((data:any) =>
+            {
+                this.Domain = data._body;
+                this.loadingBarService.complete();
+            },
+            error => {
+                this.loadingBarService.complete();
+                this.notificationService.printErrorMessage('Có lỗi khi tải. ' + error);
+            })
+        }
         this.addingUser = false;
         this.selectedMessage = new Message();
         this.selectedMessage = msg;

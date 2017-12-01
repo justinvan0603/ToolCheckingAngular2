@@ -19,18 +19,22 @@
         <thead>
             <tr>
 
-                <th>Username</th>
-                <th>Tiêu đề</th>
-                <th>Trạng thái</th>
-                <th>Domain</th>
-                <th>Thao tác</th>
+                <!--<th>Username</th>-->
+                <th class="col-md-3">Tiêu đề</th>
+                <th class="col-md-2">Nội dung</th>
+                <th class="col-md-1">Trạng thái</th>
+                <th class="col-md-1">Ngày nhận</th>
+                <th class="col-md-3">Domain</th>
+                <th class="col-md-2">Thao tác</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let msg of messages">
-                <td> {{msg.User}}</td>
+                <!--<td> {{msg.User}}</td>-->
                 <td>{{msg.Title}}</td>
-                <td>{{msg.Status}}</td>
+                <td>{{msg.Content}}</td>
+                <td>{{msg.Status == 0 ? 'Đã xem': 'Chưa xem'}}</td>
+                <td>{{msg.CreateDt | date:"dd/MM/yy HH:mm:ss"}}</td>
                 <td>{{msg.Domain}}</td>
                 <td><a class="btn btn-success" (click)="viewMessageDetails(msg)"><i class="fa fa-pencil-square-o" ></i>Chi tiết</a></td>
 
@@ -88,18 +92,58 @@
     <label for="email">Nội dung:</label>
     <textarea  type="text" class="form-control" readonly>{{selectedMessage.Content}}</textarea>
   </div>
+  <form class="form form-inline ">
+  
+      <div class="checkbox">
+            <label class="inputdefault">Không nhận loại thông báo lỗi này trong tương lai <input type="checkbox" class="form-check-input form-control form-control-md"  [checked]="this.isDisableNotify" (change)="this.isDisableNotify = $event.target.checked"></label>
+        </div>
+  
+  </form>
   <button class="btn btn-primary" data-toggle="collapse" data-target="#feedback">Nhập phản hồi</button>
 
                     <div class="collapse form-group " id="feedback">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 <label class="control-label"><i class="fa fa-user" aria-hidden="true"></i>Nhập phản hồi:</label>
                                 <input type="text" class="form-control" [(ngModel)]="this.feature.Contents" name="CONTENTS" #CONTENTSInput="ngModel"  pattern=".{1,500}" required/>
                             </div>
-                                    
+                            
                         </div>
+                        <div class="row" *ngIf="selectedMessage.Type === 'CIP'">
+                                <div class="col-md-10">
+                                        
+                                        <label class="control-label">Có phải IP mới của bạn là:</label>
+                                        <form class="form-inline row">
+                                            <div class="form-group col-md-8">
+                                                <input type="text" class="form-control" value={{this.Ip}} name="IP" readonly/>
+                                                
+                                            </div>
+                                            <div class="checkbox">
+                                                <label class="inputdefault"><input type="checkbox" class="form-check-input form-control input-md"  [checked]="this.isConfirm" (change)="this.isConfirm = $event.target.checked"/>Đúng</label>
+                                            </div>
+                                        </form>
+                                </div>
+                                
+                            </div>
+                            <div class="row" *ngIf="selectedMessage.Type === 'RDOM'">
+                                <div class="col-md-10">
+                                    <label class="control-label">Có phải tên miền mới của bạn là:</label>
+                                    <form class="form-inline row">
+                                         <div class="form-group col-md-8">
+                                        <input type="text" class="form-control" value={{this.Domain}} name="DOMAIN" readonly/>
+                                        </div>
+                                        <div class="checkbox">
+                                        <label class="inputdefault"><input type="checkbox" class="form-check-input form-control form-control-sm"  [checked]="this.isConfirm" (change)="this.isConfirm = $event.target.checked">Đúng</label>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">
                         <re-captcha site_key="6LdYTxsUAAAAAG0lAiX0hqgQu6hVhs6PS6gadku1"></re-captcha>
                         <button  (click)="addFeature(feature)" [disabled]="!viewMessageForm.form.valid" type="button" class="btn btn-primary">Lưu</button>
+                            </div>
+                            </div>
                     </div>
                     <hr/>
 

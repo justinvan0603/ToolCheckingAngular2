@@ -29,28 +29,19 @@ export class OptionUserService {
       this._token=token;
 
     }
-    getOptionUsers(domain: string,page?: number, itemsPerPage?: number): Observable<PaginatedResult<UserDomain[]>> {
-        var peginatedResult: PaginatedResult<Array<UserDomain>> = new PaginatedResult<UserDomain[]>();
+    getOptionUsers(domain: string): Observable<UserDomain[]> {
+        //var peginatedResult: PaginatedResult<Array<UserDomain>> = new PaginatedResult<UserDomain[]>();
 
         let headers = new Headers();
-        if (page != null && itemsPerPage != null) {
-            headers.append('Pagination', page + ',' + itemsPerPage);
-        }
+        // if (page != null && itemsPerPage != null) {
+        //     headers.append('Pagination', page + ',' + itemsPerPage);
+        // }
         headers.append('Authorization','Bearer '+this._token);
         return this.http.get(this._baseUrl +'?domain=' +domain, {
             headers: headers
         })
             .map((res: Response) => {
-                //console.log(res.headers.keys());
-                peginatedResult.result = res.json();
-
-                if (res.headers.get("Pagination") != null) {
-                    //var pagination = JSON.parse(res.headers.get("Pagination"));
-                    var paginationHeader: Pagination = this.itemsService.getSerialized<Pagination>(JSON.parse(res.headers.get("Pagination")));
-                    //console.log(paginationHeader);
-                    peginatedResult.pagination = paginationHeader;
-                }
-                return peginatedResult;
+                return res.json();
             })
             .catch(this.handleError);
     }

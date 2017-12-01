@@ -35,6 +35,7 @@
       <td>{{usr.Email}}</td>
       <td class="text-xs-left">{{usr.PHONE}}</td>
       <td><a class="btn btn-warning" (click)="viewUserDetails(usr)"><i class="fa fa-pencil-square-o"></i> Cập nhật</a>
+      <a class="btn btn-success" [routerLink]="['/pages/domainuser/domainuserlist',usr.UserName]"><i class="fa fa-link" ></i> Tên miền</a>
         <a class="btn btn-danger" (click)="deleteUser(usr)"><i class="fa fa-trash-o"></i> Xóa</a>
       </td>
 
@@ -78,14 +79,14 @@
                                 <li>{{formErrors.FULLNAME}}</li>
                             </ul>
 
-                            <ul *ngIf="formErrors.Password ">
+                            <ul *ngIf="formErrors.Password && this.addingUser">
                                     <li>{{formErrors.Password}}</li>
                             </ul>
                             
-                            <ul *ngIf="formErrors.DOMAIN ">
+                            <ul *ngIf="formErrors.DOMAIN && this.addingUser">
                                     <li>{{formErrors.DOMAIN}}</li>
                             </ul>
-                            <ul *ngIf="formErrors.DOMAINDESC ">
+                            <ul *ngIf="formErrors.DOMAINDESC && this.addingUser">
                                     <li>{{formErrors.DOMAINDESC}}</li>
                             </ul>
                             
@@ -136,7 +137,7 @@
                    #DOMAINDESCInput="ngModel" required pattern=".{1,500}"/>
 
           </div>
-          <div class="form-group" >
+          <div class="form-group" style="height:90px; overflow-y:scroll;">
                   <label><span style="color:red">*</span> Quyền hệ thống:</label>
 
             

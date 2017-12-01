@@ -59,7 +59,7 @@ viewUserForm : NgForm;
   selectedUser: UserManager;
   apiHost: string;
 public searchString : string;
-  public itemsPerPage: number = 10;
+  public itemsPerPage: number = 30;
   public totalItems: number = 0;
   public currentPage: number = 1;
 
@@ -144,7 +144,8 @@ public searchString : string;
 
     this.dataService.getUsers(this.currentPage, this.itemsPerPage)
       .subscribe((res: PaginatedResult<UserManager[]>) => {
-          this.users = res.result;// schedules;
+          this.users = res.result;
+          //this.totalItems = res.pagination.TotalItems;// schedules;
          // this.totalItems = res.pagination.TotalItems;
           this.loadingBarService.complete();
         },
@@ -206,7 +207,10 @@ search(searchstring: string)
     }
   pageChanged(event: any): void {
     this.currentPage = event.page;
-    this.loadUsers();
+    if(!this.searchString)
+      this.loadUsers();
+    else
+      this.loadUsersWithSearch(this.searchString);
 
   };
 
@@ -235,17 +239,25 @@ formChanged()
             const control = form.get(field);
             if (control && control.dirty && !control.valid)
             {
+              if(!this.addingUser && field != 'DOMAIN' && field != 'DOMAINDESC' && field !='PASSWORD')
+              {
+                this.isValid = true;
+              }
+              else
+              {
                 this.isValid = false;
                 const messages = this.validationMessages[field];
                 for (const key in control.errors)
                 {
                     this.formErrors[field] += messages[key] + ' ';
                 }
+              }
             }
         }
     }
   addNewUser(usr: UserManager) {
     if(this.selectedUser.Domain.includes(DomainListComponent.DOMAIN_PREFIX) || this.selectedUser.Domain.includes(DomainListComponent.DOMAIN_PREFIX_HTTPS)) {
+      
       this.loadingBarService.start();
       this.dataService.createUser(this.selectedUser)
         .subscribe(res => {

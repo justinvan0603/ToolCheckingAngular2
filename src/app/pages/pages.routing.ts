@@ -33,7 +33,7 @@ export const routes: Routes = [
       { path: 'domains', loadChildren: 'app/pages/domains/domains.module#DomainModule' },
       { path: 'optionlinks', loadChildren: 'app/pages/optionlinks/optionlinks.module#OptionLinkModule' },
       { path: 'optionusers', loadChildren: 'app/pages/optionusers/optionusers.module#OptionUserModule' },
-
+{ path: 'domainuser', loadChildren: 'app/pages/domainuser/domainuser.module#DomainUserModule' },
       { path: 'tables', loadChildren: 'app/pages/tables/tables.module#TablesModule' },
        { path: 'schedules', loadChildren: 'app/pages/schedules/schedules.module#SchedulesModule' },
        { path: 'menu', loadChildren: 'app/pages/menu/menu.module#MenuModule' }

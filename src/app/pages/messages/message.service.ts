@@ -81,19 +81,17 @@ public _pageSize: number;
     }
 
 
-    // updateMessage(schedule: IMessage): Observable<void> {
+    updateMessageRead(message: Message): Observable<any> {
+        //console.log(message);
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
 
-    //     let headers = new Headers();
-    //     headers.append('Content-Type', 'application/json');
-
-    //     return this.http.put(this._baseUrl + schedule.Id, JSON.stringify(schedule), {
-    //         headers: headers
-    //     })
-    //         .map((res: Response) => {
-    //             return;
-    //         })
-    //         .catch(this.handleError);
-    // }
+        return this.http.put(this._baseUrl + 'MessageRead?messageid=' + message.Id, {
+            headers: headers
+        })
+           .map(res => <any>(<Response>res).json())
+            .catch(this.handleError);
+    }
 
     // createMessage(user: IMessage): Observable<IMessage> {
 

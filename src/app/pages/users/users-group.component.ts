@@ -58,7 +58,7 @@ export class ApplicationGroupComponent implements AfterViewChecked {
     selectedApplicationGroup: ApplicationGroup;
     apiHost: string;
     public searchString : string;
-    public itemsPerPage: number = 10;
+    public itemsPerPage: number = 30;
     public totalItems: number = 0;
     public currentPage: number = 1;
 

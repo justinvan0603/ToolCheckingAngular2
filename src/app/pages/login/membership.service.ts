@@ -36,6 +36,14 @@ export class MembershipService {
     logout() {
         this.accountService.set(this._accountLogoutAPI);
         return this.accountService.post(null, false);
+        // .subscribe(res => {
+            
+        //   localStorage.removeItem('user');
+        //   localStorage.removeItem('access_token');
+      
+        // },
+        // error => console.error('Error: ' + error),
+        // () => { });
     }
 
     isUserAuthenticated(): boolean {

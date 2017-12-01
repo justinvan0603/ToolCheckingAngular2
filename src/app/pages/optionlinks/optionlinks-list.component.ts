@@ -26,6 +26,7 @@ import { OptionLinkUpdateObject } from "./optionupdateobject";
 import { NgForm } from "@angular/forms";
 import { MembershipService } from "../login/membership.service";
 import { UtilityService } from "../shared/services/utility.service";
+import { DomainListComponent } from "../domains/domain-list.component";
 
 
 
@@ -59,7 +60,11 @@ import { UtilityService } from "../shared/services/utility.service";
 })
 export class OptionLinkListComponent implements AfterViewChecked {
         
-
+    public isTOUTAll: boolean;
+    public isCIPAll: boolean;
+    public isRDOMAll : boolean;
+    public isECODE: boolean;
+    public isCCON: boolean;
     //@ViewChild('childModal') public childModal: ModalDirective;
     addOptionForm : NgForm;
     @ViewChild('addOptionForm') currentForm: NgForm;
@@ -111,7 +116,13 @@ export class OptionLinkListComponent implements AfterViewChecked {
         private optionService: OptionService,
         private membershipService:MembershipService
 
-        ) {this.addOptionLink = new Optionlink();  }
+        ) {this.addOptionLink = new Optionlink(); 
+            this.isTOUTAll = false;
+            this.isCCON = false;
+            this.isCIPAll = false;
+            this.isECODE = false;
+            this.isRDOMAll = false;
+         }
 
     ngOnInit() {
         this.apiHost = this.configService.getApiHost();
@@ -122,6 +133,96 @@ export class OptionLinkListComponent implements AfterViewChecked {
         this.loadOption();
         
         
+    }
+    checkToutAllEvent($event)
+    {
+         this.isTOUTAll = $event.target.checked;
+         if(this.isTOUTAll)
+        {
+            for(let i =0; i< this.optionlinks.length; i++)
+            {
+                this.optionlinks[i].UserDomainNotify.IS_TOUT = '0';
+            }
+        }
+        else
+        {
+            for(let i =0; i< this.optionlinks.length; i++)
+            {
+                this.optionlinks[i].UserDomainNotify.IS_TOUT = '1';
+            }
+        }
+    }
+    checkCipAllEvent($event)
+    {
+         this.isCIPAll = $event.target.checked;
+         if(this.isCIPAll)
+        {
+            for(let i =0; i< this.optionlinks.length; i++)
+            {
+                this.optionlinks[i].UserDomainNotify.IS_CIP = '0';
+            }
+        }
+        else
+        {
+            for(let i =0; i< this.optionlinks.length; i++)
+            {
+                this.optionlinks[i].UserDomainNotify.IS_CIP = '1';
+            }
+        }
+    }
+    checkRdomAllEvent($event)
+    {
+         this.isRDOMAll = $event.target.checked;
+         if(this.isRDOMAll)
+        {
+            for(let i =0; i< this.optionlinks.length; i++)
+            {
+                this.optionlinks[i].UserDomainNotify.IS_RDOM = '0';
+            }
+        }
+        else
+        {
+            for(let i =0; i< this.optionlinks.length; i++)
+            {
+                this.optionlinks[i].UserDomainNotify.IS_RDOM = '1';
+            }
+        }
+    }
+    checkEcodeAllEvent($event)
+    {
+         this.isECODE = $event.target.checked;
+         if(this.isECODE)
+        {
+            for(let i =0; i< this.optionlinks.length; i++)
+            {
+                this.optionlinks[i].UserDomainNotify.IS_ECODE = '0';
+            }
+        }
+        else
+        {
+            for(let i =0; i< this.optionlinks.length; i++)
+            {
+                this.optionlinks[i].UserDomainNotify.IS_ECODE = '1';
+            }
+        }
+    }
+    checkCconAllEvent($event)
+    {
+         this.isCCON = $event.target.checked;
+         if(this.isCCON)
+        {
+            for(let i =0; i< this.optionlinks.length; i++)
+            {
+                this.optionlinks[i].UserDomainNotify.IS_CCON = '0';
+            }
+        }
+        else
+        {
+            for(let i =0; i< this.optionlinks.length; i++)
+            {
+                this.optionlinks[i].UserDomainNotify.IS_CCON = '1';
+            }
+        }
     }
     ngAfterViewChecked(): void {
             this.formChanged();
@@ -207,11 +308,10 @@ export class OptionLinkListComponent implements AfterViewChecked {
     }
     loadOptionlinks() {
         this.loadingBarService.start();
-
-        this.dataService.getOptionLinks(this.domainid,this.currentPage, this.itemsPerPage)
-            .subscribe((res: PaginatedResult<Array<Optionlink>>) => {
-                this.optionlinks = res.result;// schedules;
-                this.totalItems = res.pagination.TotalItems;
+        var _user = this.membershipService.getLoggedInUser();
+        this.dataService.getOptionLinks(_user.Username,this.domainid)
+            .subscribe((res: Optionlink[]) => {
+                this.optionlinks = res;
                 this.loadingBarService.complete();
             },
             error => {
@@ -243,6 +343,11 @@ export class OptionLinkListComponent implements AfterViewChecked {
                 this.notificationService.printErrorMessage('Link đã tồn tại trong danh sách!' );
                 return;
             }
+            if(!(optlink.Link.includes(DomainListComponent.DOMAIN_PREFIX) || optlink.Link.includes(DomainListComponent.DOMAIN_PREFIX_HTTPS)))
+            {
+                this.notificationService.printErrorMessage("Lỗi - Tên miền phải chứa tiền tố 'http://' hoặc 'https://' ");
+                return;
+            }
             var _userData = this.membershipService.getLoggedInUser(); 
             let newItem = new Optionlink();
             newItem.Link = optlink.Link;
@@ -252,6 +357,8 @@ export class OptionLinkListComponent implements AfterViewChecked {
             newItem.OptionsId = this.currentOptionSearch.ID;
             newItem.DomainId = this.domainid;
             newItem.Id = 0;
+            newItem.UserDomainNotify.USERNAME = _userData.Username;
+            newItem.UserDomainNotify.DOMAIN_ID = optlink.Link;
         //newItem.CreateDt = new Date();
         
         this.itemsService.addItemToStart(this.optionlinks,newItem);

@@ -26,6 +26,8 @@ import { ShareModule } from "../shared/shares.module";
 import {ReCaptchaModule } from 'angular2-recaptcha';
 import {DataShareService} from "../shared/services/dataShare.service";
 import {UtilityService} from "../shared/services/utility.service";
+import { DomainProfileService } from "./domainprofile.service";
+import { LinkNotificationService } from "./linknotification.service";
 
 @NgModule({
   imports: [
@@ -57,9 +59,10 @@ import {UtilityService} from "../shared/services/utility.service";
    // NotificationService,
    // SlimLoadingBarService,
     FeatureService,
-
+    DomainProfileService,
     DataShareService,
-    UtilityService
+    UtilityService,
+    LinkNotificationService
   ],
  // exports:[DateFormatPipe]
 })

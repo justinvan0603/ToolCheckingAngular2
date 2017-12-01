@@ -52,7 +52,7 @@ export class UserListComponent {
     selectedUser: User;
     apiHost: string;
 
-    public itemsPerPage: number = 10;
+    public itemsPerPage: number = 30;
     public totalItems: number = 0;
     public currentPage: number = 1;
 

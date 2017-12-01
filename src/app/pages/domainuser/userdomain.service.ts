@@ -7,59 +7,74 @@ import 'rxjs/add/operator/catch';
 
 
 
-import { Optionlink } from "./optionlink";
+//import { Option } from "./option";
 
 
 import { ItemsService } from "../shared/utils/items.service";
 import { ConfigService } from "../shared/utils/config.service";
 import { PaginatedResult, Pagination } from "../shared/interfaces";
+//import { OptionLinkUpdateObject } from "./optionupdateobject";
+
+import { DomainUserUpdateObject } from "./domainuserupdateobject";
 
 @Injectable()
-export class OptionLinkService {
+export class UserDomainService {
 
     _baseUrl: string = '';
-public _token : string;
+    public _token : string;
     constructor(private http: Http,
         private itemsService: ItemsService,
         private configService: ConfigService) {
-        this._baseUrl = configService.getApiURI()+ 'OptionLinks';
+        this._baseUrl = configService.getApiURI()+ 'UserDomain';
     }
-   setToken(token:string):void{
+    setToken(token:string):void{
 
       this._token=token;
 
     }
-    getOptionLinks(username: string,domain: string):Observable<Optionlink[]>
+   getDomains(editeduser: string,manageuser: string)
    {
         let headers = new Headers();
          headers.append('Content-Type', 'application/json');
          headers.append('Authorization','Bearer '+this._token);
-         return this.http.get(this._baseUrl + '?username=' + username + '&domain=' + domain,{headers: headers})
+         return this.http.get(this._baseUrl +'/' + editeduser + '/' + manageuser,{headers: headers})
             .map((res: Response) => {
                 return res.json();
             })
             .catch(this.handleError);
    }
-    // getOptionLinks(domain: string,page?: number, itemsPerPage?: number): Observable<PaginatedResult<Optionlink[]>> {
-    //     var peginatedResult: PaginatedResult<Array<Optionlink>> = new PaginatedResult<Optionlink[]>();
+   insertUserDomain(listdomain:DomainUserUpdateObject[],assignuser:string)
+   {
+            let headers = new Headers();
+            var body = {listUserDomain: listdomain,assignUser:assignuser};
+
+        headers.append('Content-Type', 'application/json');
+        headers.append('Authorization','Bearer '+this._token);
+        return this.http.post(this._baseUrl, JSON.stringify(body), {
+            headers: headers
+        })
+            .map(res => <any>(<Response>res).json())
+            .catch(this.handleError);
+   }
+    // getOptionLinks(domain: string,page?: number, itemsPerPage?: number): Observable<PaginatedResult<Option[]>> {
+    //     var peginatedResult: PaginatedResult<Option[]> = new PaginatedResult<Option[]>();
 
     //     let headers = new Headers();
     //     if (page != null && itemsPerPage != null) {
     //         headers.append('Pagination', page + ',' + itemsPerPage);
     //     }
-    //   //  console.log(this._token);
-    //     headers.append('Authorization','Bearer '+this._token);
+
     //     return this.http.get(this._baseUrl +'?domain=' +domain, {
     //         headers: headers
     //     })
     //         .map((res: Response) => {
-    //           //  console.log(res.headers.keys());
+    //             console.log(res.headers.keys());
     //             peginatedResult.result = res.json();
 
     //             if (res.headers.get("Pagination") != null) {
     //                 //var pagination = JSON.parse(res.headers.get("Pagination"));
     //                 var paginationHeader: Pagination = this.itemsService.getSerialized<Pagination>(JSON.parse(res.headers.get("Pagination")));
-    //              //   console.log(paginationHeader);
+    //                 console.log(paginationHeader);
     //                 peginatedResult.pagination = paginationHeader;
     //             }
     //             return peginatedResult;
@@ -67,49 +82,23 @@ public _token : string;
     //         .catch(this.handleError);
     // }
 
-    // getDomain(id: number): Observable<Optionlink> {
-    //     return this.http.get(this._baseUrl + id)
-    //         .map((res: Response) => {
-    //             return res.json();
-    //         })
-    //         .catch(this.handleError);
-    // }
 
 
-    updateOptionLink(optionlinks: Array<Optionlink>): Observable<void> {
 
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
+    // updateOptionLink(optionlinks: Option[]): Observable<void> {
 
-        return this.http.post(this._baseUrl, JSON.stringify(optionlinks), {
-            headers: headers
-        })
-            .map((res: Response) => {
-                return;
-            })
-            .catch(this.handleError);
-    }
-
-    // createDomain(user: Optionlink): Observable<Optionlink> {
-    //     console.log(user);
     //     let headers = new Headers();
-    //     headers.append('Content-Type', 'application/json,');
-    //     //headers.append('Accept', 'application/json');
-    //     //let data = {'users': user,'domain': user.Domain};
-    //     return this.http.post(this._baseUrl, JSON.stringify(user), {headers: headers})
-    //         .map((res: Response) => {
-    //             return res.json();
-    //         })
-    //         .catch(this.handleError);
-    // }
+    //     headers.append('Content-Type', 'application/json');
 
-    // deleteDomain(id: number): Observable<void> {
-    //     return this.http.delete(this._baseUrl + id)
+    //     return this.http.post(this._baseUrl, JSON.stringify(optionlinks), {
+    //         headers: headers
+    //     })
     //         .map((res: Response) => {
     //             return;
     //         })
     //         .catch(this.handleError);
     // }
+
 
     private handleError(error: any) {
         var applicationError = error.headers.get('Application-Error');
@@ -117,7 +106,7 @@ public _token : string;
         var modelStateErrors: string = '';
 
         if (!serverError.type) {
-          //  console.log(serverError);
+           // console.log(serverError);
             for (var key in serverError) {
                 if (serverError[key])
                     modelStateErrors += serverError[key] + '\n';
